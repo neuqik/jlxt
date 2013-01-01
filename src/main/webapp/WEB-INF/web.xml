@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<distributable />
+	<!-- Spring ApplicationContext配置文件的路径,可使用通配符,多个路径用,号分隔 此参数用于后面的Spring Context 
+		Loader wonder -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:applicationContext*.xml</param-value>
+	</context-param>
+	<!--Spring的ApplicationContext 载入 wonder -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Spring 刷新Introspector防止内存泄露 wonder -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+
+	<!-- session超时定义,单位为分钟 wonder -->
+	<session-config>
+		<session-timeout>20</session-timeout>
+	</session-config>
+	<!-- eweb4j -->
+	<filter>
+		<filter-name>EWebFilter</filter-name>
+		<filter-class>org.eweb4j.mvc.EWebFilter</filter-class>
+		<init-param>
+			<param-name>StartFileName</param-name>
+			<param-value>start.xml</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>ConfigBasePath</param-name>
+			<param-value>${RootPath}/WEB-INF/classes/</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>BaseURLKey</param-name>
+			<param-value>BaseURL</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>ReqParamMapKey</param-name>
+			<param-value>ReqParamMap</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>ForwardBasePath</param-name>
+			<param-value>/WEB-INF/classes/</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>EWebFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- eweb4j -->
+	<servlet>
+		<servlet-name>Kaptcha</servlet-name>
+		<servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>
+		<init-param>
+			<param-name>kaptcha.border</param-name>
+			<param-value>yes</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.textproducer.font.color</param-name>
+			<param-value>black</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.textproducer.char.space</param-name>
+			<param-value>5</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Kaptcha</servlet-name>
+		<url-pattern>/users/captcha.jsp</url-pattern>
+	</servlet-mapping>
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.html</location>
+	</error-page>
+</web-app>
