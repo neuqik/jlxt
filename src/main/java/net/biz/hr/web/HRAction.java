@@ -420,4 +420,78 @@ public class HRAction extends BaseAction {
 		}
 		return null;
 	}
+
+	/**
+	 * 打开员工个人资料
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpExt")
+	@POST
+	@GET
+	public String toShowEmpExt(Map<String, String> model) {
+		// TODO:未完成
+
+		try {
+			String empId = MVC.ctx().getRequest().getParameter("empId");
+			List<Map<String, Object>> result = JDBCOracleUtil
+					.executeQuery("SELECT EMP_NAME,IDCARD,DEPT_ID FROM V_HRD_EMP WHERE EMP_ID='"
+							+ empId + "'");
+			model.put("EMP_ID", empId);
+			model.put("EMP_NAME", (String) result.get(0).get("EMP_NAME"));
+			model.put("IDCARD", (String) result.get(0).get("IDCARD"));
+			model.put("DEPT_ID", CodeList.getCodeDesc("DEPT_ID",
+					((String) result.get(0).get("DEPT_ID"))));
+			return "forward:hr/view/showEmpExt.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 显示和修改员工家庭信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpFamily")
+	@POST
+	@GET
+	public String toShowEmpFamily(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+		return "forward:hr/view/showEmpFamily.jsp";
+	}
+
+	/**
+	 * 显示和修改员工工作信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpJob")
+	@POST
+	@GET
+	public String toShowEmpJob(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+		return "forward:hr/view/showEmpJob.jsp";
+	}
+
+	/**
+	 * 显示和修改员工奖励信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpReward")
+	@POST
+	@GET
+	public String toShowEmpReward(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+		return "forward:hr/view/showEmpReward.jsp";
+	}
 }
