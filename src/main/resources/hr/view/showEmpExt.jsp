@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="pageHeader" id="showemptransperf_pageheader">
+<div class="pageHeader" id="showempext_pageheader">
 	<table>
 		<tr>
 			<td>&nbsp;&nbsp;员工编号：</td>

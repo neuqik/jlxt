@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showempfamily_head").height();
-var pageheader = $("#showemptransfamily_pageheader").height();
+var pageheader = $("#showempext_pageheader").height();
 var sql = "select ID,EMP_ID,RELATION_NAME,RELATION_TYPE,RELATION_TEL,WORKDEPT,WORKROLE,MEMO,VALID from V_HRD_EMP_FAMILY WHERE EMP_ID='"
 		+ empId + "'";
 
@@ -14,6 +14,8 @@ var dsOption = {
 		name : 'RELATION_NAME'
 	}, {
 		name : 'RELATION_TYPE'
+	}, {
+		name : 'RELATION_TEL'
 	}, {
 		name : 'WORKDEPT'
 	}, {
@@ -73,6 +75,14 @@ var colsOption = [ {
 			'9' : '其他'
 		},
 		defaultText : '5'
+	}
+}, {
+	id : 'RELATION_TEL',
+	header : "联系电话",
+	width : 100,
+	editable : true,
+	editor : {
+		type : "text"
 	}
 }, {
 	id : 'WORKDEPT',

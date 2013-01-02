@@ -20,6 +20,7 @@ import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
 import net.biz.grid.gt.server.GridServerHandler;
 import net.biz.hr.model.IHRService;
+import net.biz.hr.vo.HRD_EMP_FAMILY;
 import net.biz.hr.vo.HRD_EMP_PERF;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
 import net.biz.hr.vo.HRD_Emp;
@@ -493,5 +494,34 @@ public class HRAction extends BaseAction {
 		String empId = getParam("empId");
 		model.put("EMP_ID", empId);
 		return "forward:hr/view/showEmpReward.jsp";
+	}
+
+	/**
+	 * 保存员工家庭信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpFamily")
+	@POST
+	@GET
+	public String toSaveEmpFamily(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+
+		try {
+			List<Object> insertList = handler
+					.getInsertedRecords(HRD_EMP_FAMILY.class);
+			List<Object> updateList = handler
+					.getUpdatedRecords(HRD_EMP_FAMILY.class);
+			List<Object> deleteList = handler
+					.getDeletedRecords(HRD_EMP_FAMILY.class);
+			myservice.saveEmpFamily(insertList, updateList, deleteList, empId);
+			handler.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			handler.setSuccess(false);
+		}
+		return null;
 	}
 }
