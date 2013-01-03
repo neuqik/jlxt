@@ -132,8 +132,10 @@ public interface IHRService {
 	 */
 	public void saveEmpTrans(List<Object> inserts, List<Object> updates,
 			List<Object> deletes, String empId) throws Exception;
+
 	/**
 	 * 保存员工家庭信息
+	 * 
 	 * @param inserts
 	 * @param updates
 	 * @param deletes
@@ -142,8 +144,10 @@ public interface IHRService {
 	 */
 	public void saveEmpFamily(List<Object> inserts, List<Object> updates,
 			List<Object> deletes, String empId) throws Exception;
+
 	/**
 	 * 保存员工劳动合同
+	 * 
 	 * @param inserts
 	 * @param updates
 	 * @param deletes
@@ -152,4 +156,26 @@ public interface IHRService {
 	 */
 	public void saveEmpJob(List<Object> inserts, List<Object> updates,
 			List<Object> deletes, String empId) throws Exception;
+
+	/**
+	 * @param inserts
+	 * @param updates
+	 * @param deletes
+	 * @param empId
+	 * @throws Exception
+	 */
+	public void saveEmpReward(List<Object> inserts, List<Object> updates,
+			List<Object> deletes, String empId) throws Exception;
+
+	/**
+	 * 保存员工工作经历
+	 * 
+	 * @param insertList
+	 * @param updateList
+	 * @param deleteList
+	 * @param empId
+	 * @throws Exception 
+	 */
+	public void saveEmpWork(List<Object> insertList, List<Object> updateList,
+			List<Object> deleteList, String empId) throws Exception;
 }

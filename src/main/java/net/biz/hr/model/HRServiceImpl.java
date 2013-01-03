@@ -16,7 +16,9 @@ import net.biz.grid.gt.util.SQLUtils;
 import net.biz.hr.vo.HRD_EMP_FAMILY;
 import net.biz.hr.vo.HRD_EMP_JOB;
 import net.biz.hr.vo.HRD_EMP_PERF;
+import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
+import net.biz.hr.vo.HRD_EMP_WORK;
 import net.biz.hr.vo.HRD_Emp;
 import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
@@ -476,6 +478,110 @@ public class HRServiceImpl implements IHRService {
 			List<Object> params = new ArrayList<Object>();
 			params.add(row.getID());
 			String sql1 = "update hrd_emp_job set valid='0' where id=?";
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+
+	}
+
+	@Override
+	public void saveEmpReward(List<Object> inserts, List<Object> updates,
+			List<Object> deletes, String empId) throws Exception {
+
+		// 1.执行插入
+		String sql = "insert into hrd_emp_reward(ID,EMP_ID,REWARDTYPE,REWARDDATE,REWARDDEPT,REWARD,MEMO,VALID ) values(?,?,?,?,?,?,?,?)";
+		Iterator<Object> it = inserts.iterator();
+		while (it.hasNext()) {
+			HRD_EMP_REWARD row = (HRD_EMP_REWARD) it.next();
+			List<Object> params = new ArrayList<Object>();
+			String ID = JDBCOracleUtil.getID();
+			params.add(ID);
+			params.add(empId);
+			params.add(row.getREWARDTYPE());
+			params.add(row.getREWARDDATEForSqlDate());
+			params.add(row.getREWARDDEPT());
+			params.add(row.getREWARD());
+			params.add(row.getMEMO());
+			params.add("1");
+			JDBCOracleUtil.ExecuteDML(sql.toUpperCase(), params);
+		}
+		// 2.执行更新
+
+		Iterator<Object> it1 = updates.iterator();
+		while (it1.hasNext()) {
+
+			HRD_EMP_REWARD row = (HRD_EMP_REWARD) it1.next();
+			String id = row.getID();
+			List<Object> params = new ArrayList<Object>();
+			String sql1 = "update hrd_emp_reward set REWARDTYPE=?,REWARDDATE=?,REWARDDEPT=?,REWARD=?,MEMO=? where id="
+					+ id;
+			params.add(row.getREWARDTYPE());
+			params.add(row.getREWARDDATEForSqlDate());
+			params.add(row.getREWARDDEPT());
+			params.add(row.getREWARD());
+			params.add(row.getMEMO());
+
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+		// 3.执行删除
+		Iterator<Object> it11 = deletes.iterator();
+
+		while (it11.hasNext()) {
+			HRD_EMP_JOB row = (HRD_EMP_JOB) it11.next();
+			List<Object> params = new ArrayList<Object>();
+			params.add(row.getID());
+			String sql1 = "update hrd_emp_reward set valid='0' where id=?";
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+	}
+
+	@Override
+	public void saveEmpWork(List<Object> inserts, List<Object> updates,
+			List<Object> deletes, String empId) throws Exception {
+		// 1.执行插入
+		String sql = "insert into hrd_emp_work(ID,EMP_ID,BEGIN,END,UNIT,DEPT,JOBROLE,MEMO,VALID ) values(?,?,?,?,?,?,?,?,?)";
+		Iterator<Object> it = inserts.iterator();
+		while (it.hasNext()) {
+			HRD_EMP_WORK row = (HRD_EMP_WORK) it.next();
+			List<Object> params = new ArrayList<Object>();
+			String ID = JDBCOracleUtil.getID();
+			params.add(ID);
+			params.add(empId);
+			params.add(row.getBEGINForSqlDate());
+			params.add(row.getENDForSqlDate());
+			params.add(row.getUNIT());
+			params.add(row.getDEPT());
+			params.add(row.getJOBROLE());
+			params.add(row.getMEMO());
+			params.add("1");
+			JDBCOracleUtil.ExecuteDML(sql.toUpperCase(), params);
+		}
+		// 2.执行更新
+
+		Iterator<Object> it1 = updates.iterator();
+		while (it1.hasNext()) {
+
+			HRD_EMP_WORK row = (HRD_EMP_WORK) it1.next();
+			String id = row.getID();
+			List<Object> params = new ArrayList<Object>();
+			String sql1 = "update hrd_emp_work set BEGIN=?,END=?,UNIT=?,DEPT=?,JOBROLE=?,MEMO=? where id="
+					+ id;
+			params.add(row.getBEGINForSqlDate());
+			params.add(row.getENDForSqlDate());
+			params.add(row.getUNIT());
+			params.add(row.getDEPT());
+			params.add(row.getJOBROLE());
+			params.add(row.getMEMO());
+
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+		// 3.执行删除
+		Iterator<Object> it11 = deletes.iterator();
+
+		while (it11.hasNext()) {
+			HRD_EMP_WORK row = (HRD_EMP_WORK) it11.next();
+			List<Object> params = new ArrayList<Object>();
+			params.add(row.getID());
+			String sql1 = "update hrd_emp_work set valid='0' where id=?";
 			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
 		}
 
