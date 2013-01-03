@@ -609,7 +609,7 @@ public class JDBCOracleUtil {
 	}
 
 	/**
-	 * 使用绑定变量方式执行DML语句
+	 * 使用绑定变量方式执行DML语句 内部事务
 	 * 
 	 * @param sql
 	 * @param params

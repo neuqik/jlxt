@@ -16,6 +16,7 @@ import net.biz.grid.gt.util.SQLUtils;
 import net.biz.hr.vo.HRD_EMP_FAMILY;
 import net.biz.hr.vo.HRD_EMP_JOB;
 import net.biz.hr.vo.HRD_EMP_PERF;
+import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
 import net.biz.hr.vo.HRD_EMP_WORK;
@@ -585,5 +586,59 @@ public class HRServiceImpl implements IHRService {
 			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
 		}
 
+	}
+
+	@Override
+	public void saveNewEmpReg(HRD_EMP_REG reg) throws Exception {
+		String sql = "insert into hrd_emp_reg(id, emp_id, regtype, reglevel, regmajor1, regmajor2, regmajor3, regno, certificate, validdate, issuedate, certnumber, certdate, certvaliddate, memo, valid) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		List<Object> params = new ArrayList<Object>();
+		params.add(JDBCOracleUtil.getID());
+		params.add(reg.getEMP_ID());
+		params.add(reg.getREGTYPE());
+		params.add(reg.getREGLEVEL());
+		params.add(reg.getREGMAJOR1());
+		params.add(reg.getREGMAJOR2());
+		params.add(reg.getREGMAJOR3());
+		params.add(reg.getREGNO());
+		params.add(reg.getCERTIFICATE());
+		params.add(reg.getVALIDDATEForSqlDate());
+		params.add(reg.getISSUEDATEForSqlDate());
+		params.add(reg.getCERTNUMBER());
+		params.add(reg.getCERTDATEForSqlDate());
+		params.add(reg.getCERTVALIDDATESqlDate());
+		params.add(reg.getMEMO());
+		params.add("1");
+		JDBCOracleUtil.ExecuteDML(sql, params);
+	}
+
+	@Override
+	public void saveEditEmpReg(HRD_EMP_REG reg) throws Exception {
+		String sql = "update hrd_emp_reg set regtype=?, reglevel=?, regmajor1=?, regmajor2=?, regmajor3=?, regno=?, certificate=?, validdate=?, issuedate=?, certnumber=?, certdate=?, certvaliddate=?, memo=? where id="
+				+ reg.getID();
+		List<Object> params = new ArrayList<Object>();
+
+		params.add(reg.getREGTYPE());
+		params.add(reg.getREGLEVEL());
+		params.add(reg.getREGMAJOR1());
+		params.add(reg.getREGMAJOR2());
+		params.add(reg.getREGMAJOR3());
+		params.add(reg.getREGNO());
+		params.add(reg.getCERTIFICATE());
+		params.add(reg.getVALIDDATEForSqlDate());
+		params.add(reg.getISSUEDATEForSqlDate());
+		params.add(reg.getCERTNUMBER());
+		params.add(reg.getCERTDATEForSqlDate());
+		params.add(reg.getCERTVALIDDATESqlDate());
+		params.add(reg.getMEMO());
+		JDBCOracleUtil.ExecuteDML(sql, params);
+	}
+
+	@Override
+	public void dropEmpReg(String id) throws Exception {
+
+		String sql = "update hrd_emp_reg set valid='0' where id=?";
+		List<Object> params = new ArrayList<Object>();
+		params.add(id);
+		JDBCOracleUtil.ExecuteDML(sql, params);
 	}
 }

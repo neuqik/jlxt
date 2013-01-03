@@ -127,7 +127,7 @@ public abstract class BaseAction {
 	}
 
 	/**
-	 * 处理成功json消息，用于打开navtab页保存成功后的处理
+	 * 处理成功json消息，用于打开navtab页保存成功后的处理 关闭对话框或navtab页面
 	 * 
 	 * @param _mess
 	 * @param openType
@@ -145,6 +145,25 @@ public abstract class BaseAction {
 		String mess = _mess == null ? "操作成功" : _mess;
 		String path = ConfigConstant.BASE_URL + forwardURL;
 		return new CallBackJson("200", mess, rel, path, "closeCurrent", "信息")
+				.toString();
+	}
+
+	/**
+	 * 处理成功json消息 不关闭dialog或navtab
+	 * 
+	 * @param _mess
+	 * @param openType
+	 * @param forwardURL
+	 * @param rel
+	 * @return
+	 */
+	protected String successJSONReload(String _mess, String openType,
+			String forwardURL, String rel) {
+		String callbackType = "dialog".equalsIgnoreCase(openType) ? "reloadTab"
+				: "closeCurrent";
+		String mess = _mess == null ? "操作成功" : _mess;
+		String path = ConfigConstant.BASE_URL + forwardURL;
+		return new CallBackJson("200", mess, rel, path, callbackType, "信息")
 				.toString();
 	}
 

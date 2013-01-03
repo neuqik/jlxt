@@ -23,6 +23,7 @@ import net.biz.hr.model.IHRService;
 import net.biz.hr.vo.HRD_EMP_FAMILY;
 import net.biz.hr.vo.HRD_EMP_JOB;
 import net.biz.hr.vo.HRD_EMP_PERF;
+import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
 import net.biz.hr.vo.HRD_EMP_WORK;
@@ -634,5 +635,166 @@ public class HRAction extends BaseAction {
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
 		return null;
+	}
+
+	@Path("/showEmpProfCert")
+	@POST
+	@GET
+	public String toShowEmpProfCert(Map<String, String> model) {
+		// TODO:未完成
+
+		try {
+			String empId = MVC.ctx().getRequest().getParameter("empId");
+			List<Map<String, Object>> result = JDBCOracleUtil
+					.executeQuery("SELECT EMP_NAME,IDCARD,DEPT_ID FROM V_HRD_EMP WHERE EMP_ID='"
+							+ empId + "'");
+			model.put("EMP_ID", empId);
+			model.put("EMP_NAME", (String) result.get(0).get("EMP_NAME"));
+			model.put("IDCARD", (String) result.get(0).get("IDCARD"));
+			model.put("DEPT_ID", CodeList.getCodeDesc("DEPT_ID",
+					((String) result.get(0).get("DEPT_ID"))));
+			return "forward:hr/view/showEmpProfCert.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/*************************************************************************************************/
+	/**
+	 * 查询和修改员工资质注册信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpReg")
+	@POST
+	@GET
+	public String toShowEmpReg(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+		return "forward:hr/view/showEmpReg.jsp";
+	}
+
+	/**
+	 * 添加员工执业注册信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/addEmpReg")
+	@POST
+	@GET
+	public String toAddEmpReg(Map<String, Object> model) {
+		// 1.获取Codelist
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+		String code1 = "REGTYPE|REGLEVEL|REGMAJOR";
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return "forward:hr/view/addEmpReg.jsp";
+	}
+
+	@Path("/saveNewEmpReg")
+	@POST
+	@GET
+	public String toSaveNewEmpReg(Map<String, String> model) {
+		try {
+			HttpServletRequest req = MVC.ctx().getRequest();
+			HRD_EMP_REG reg = (HRD_EMP_REG) parseRequest(req, new HRD_EMP_REG());
+			myservice.saveNewEmpReg(reg);
+			// 设置员工编号，供其他页面使用
+			model.put("EMP_ID", reg.getEMP_ID());
+			return successJSONReload("添加员工注册信息成功，员工编号：" + reg.getEMP_ID(),
+					"dialog", "hrs/showEmpReg", "tjzc");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 编辑员工注册信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/editEmpReg")
+	@POST
+	@GET
+	public String toEditEmpReg(Map<String, Object> model) {
+		String empId = MVC.ctx().getRequest().getParameter("empId");
+		String id = getParam("ID");
+		try {
+			// 查询
+			// 1.获取Codelist
+			String code1 = "REGTYPE|REGLEVEL|REGMAJOR";
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			model.put("EMP_ID", empId);
+			String sql = "select ID,EMP_ID,REGTYPE,REGLEVEL, REGMAJOR1, REGMAJOR2,REGMAJOR3,REGNO，CERTIFICATE ，TO_CHAR(VALIDDATE,'YYYY-MM-DD') VALIDDATE,TO_CHAR(ISSUEDATE,'YYYY-MM-DD') ISSUEDATE,CERTNUMBER,TO_CHAR(CERTDATE,'YYYY-MM-DD') CERTDATE,TO_CHAR(CERTVALIDDATE,'YYYY-MM-DD') CERTVALIDDATE,MEMO from V_HRD_EMP_REG WHERE ID="
+					+ id;
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql
+					.toUpperCase());
+			HRD_EMP_REG reg = new HRD_EMP_REG();
+			// map转换成bean
+			BeanUtils.populate(reg, result.get(0));
+			model.put("reg", reg);
+			return "forward:hr/view/editEmpReg.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	@Path("/saveEditEmpReg")
+	@POST
+	@GET
+	public String toSaveEditEmpReg(Map<String, String> model) {
+		try {
+			HttpServletRequest req = MVC.ctx().getRequest();
+			HRD_EMP_REG reg = (HRD_EMP_REG) parseRequest(req, new HRD_EMP_REG());
+			myservice.saveEditEmpReg(reg);
+			// 设置员工编号，供其他页面使用
+			model.put("EMP_ID", reg.getEMP_ID());
+			return successJSONReload("修改员工注册信息成功，员工编号：" + reg.getEMP_ID(),
+					"dialog", "hrs/editEmpReg", "zcxx");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 删除注册信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/dropEmpReg")
+	@POST
+	@GET
+	public String toDropEmpReg(Map<String, String> model) {
+		try {
+			String empId = MVC.ctx().getRequest().getParameter("empId");
+			String id = getParam("ID");
+
+			myservice.dropEmpReg(id);
+			// 设置员工编号，供其他页面使用
+			return successJSONReload("删除员工注册信息成功，员工编号：" + empId, "navTab",
+					"hrs/showEmpReg", "sczc");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
 	}
 }

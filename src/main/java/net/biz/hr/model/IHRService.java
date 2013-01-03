@@ -7,6 +7,7 @@ import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
 import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
+import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_Emp;
 
 public interface IHRService {
@@ -174,8 +175,33 @@ public interface IHRService {
 	 * @param updateList
 	 * @param deleteList
 	 * @param empId
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void saveEmpWork(List<Object> insertList, List<Object> updateList,
 			List<Object> deleteList, String empId) throws Exception;
+
+	/**
+	 * 保存员工注册信息
+	 * 
+	 * @param reg
+	 * @return
+	 * @throws Exception
+	 */
+	public void saveNewEmpReg(HRD_EMP_REG reg) throws Exception;
+
+	/**
+	 * 保存员工编辑的注册信息
+	 * 
+	 * @param reg
+	 * @throws Exception
+	 */
+	public void saveEditEmpReg(HRD_EMP_REG reg) throws Exception;
+
+	/**
+	 * 删除员工注册信息
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
+	public void dropEmpReg(String id) throws Exception;
 }

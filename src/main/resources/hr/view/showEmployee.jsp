@@ -13,7 +13,8 @@
 <script type="text/javascript"
 	src="http://localhost:8080/myproject/grid/gt_msg_cn.js"></script>
 <script type="text/javascript"
-	src="http://localhost:8080/myproject/grid/flashchart/fusioncharts/FusionCharts.js"></script-->
+	src="http://localhost:8080/myproject/grid/flashchart/fusioncharts/FusionCharts.js">
+	</script-->
 
 <script type="text/javascript">
 	// 检查是否只有一条记录
@@ -75,6 +76,22 @@
 			});
 		}
 	}
+	// 编辑职称及认证
+	function doEditProfCert() {
+		var id = doCheckIsOnlyRow();
+		if (id < 0) {
+			alertMsg.error("请选择一位员工来编辑职称及认证信息！");
+		} else {
+
+			// 如果只有一条
+			navTab.openTab("zcrz", "${BaseURL}hrs/showEmpProfCert?empId=" + id,
+					{
+						title : "职称及认证",
+						fresh : false,
+						data : {}
+					});
+		}
+	}
 </script>
 
 <div class="pageContent" id="showemployee_head"
@@ -86,8 +103,7 @@
 			<li><a class="edit" onclick="doEditEmpBase();" rel="xgjbxx"><span>修改基本信息</span></a></li>
 			<li><a class="edit" onclick="doEditTrainPerf();" rel="jxpx"><span>绩效及培训</span></a></li>
 			<li><a class="edit" onclick="doEditExt();" rel="grzl"><span>个人资料</span></a></li>
-			<li><a class="edit" href="${BaseURL}hrs/{pojo_id}/editEmp"
-				target="navTab" warn="请选择一条记录"><span>职称及证书</span></a></li>
+			<li><a class="edit" onclick="doEditProfCert();" rel="zcrz"><span>职称及认证</span></a></li>
 			<li><a class="edit" href="${BaseURL}hrs/{pojo_id}/editEmp"
 				target="navTab" warn="请选择一条记录"><span>选择照片</span></a></li>
 			<li><a title="确实要删除这些记录吗?" target="selectedTodo" rel="chk"
