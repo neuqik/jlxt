@@ -21,6 +21,7 @@ import net.biz.grid.gt.model.SortInfo;
 import net.biz.grid.gt.server.GridServerHandler;
 import net.biz.hr.model.IHRService;
 import net.biz.hr.vo.HRD_EMP_FAMILY;
+import net.biz.hr.vo.HRD_EMP_JOB;
 import net.biz.hr.vo.HRD_EMP_PERF;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
 import net.biz.hr.vo.HRD_Emp;
@@ -389,6 +390,7 @@ public class HRAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 			handler.setSuccess(false);
+			return dwz.getFailedJson(e.getMessage()).toString();
 		}
 		return null;
 	}
@@ -418,6 +420,7 @@ public class HRAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 			handler.setSuccess(false);
+			return dwz.getFailedJson(e.getMessage()).toString();
 		}
 		return null;
 	}
@@ -521,6 +524,37 @@ public class HRAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 			handler.setSuccess(false);
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return null;
+	}
+
+	/**
+	 * 保存员工工作合同信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpJob")
+	@POST
+	@GET
+	public String toSaveEmpJob(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+
+		try {
+			List<Object> insertList = handler
+					.getInsertedRecords(HRD_EMP_JOB.class);
+			List<Object> updateList = handler
+					.getUpdatedRecords(HRD_EMP_JOB.class);
+			List<Object> deleteList = handler
+					.getDeletedRecords(HRD_EMP_JOB.class);
+			myservice.saveEmpJob(insertList, updateList, deleteList, empId);
+			handler.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			handler.setSuccess(false);
+			return dwz.getFailedJson(e.getMessage()).toString();
 		}
 		return null;
 	}

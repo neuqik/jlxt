@@ -61,6 +61,20 @@
 					});
 		}
 	}
+	// 编辑个人资料
+	function doEditExt() {
+		var id = doCheckIsOnlyRow();
+		if (id < 0) {
+			alertMsg.error("请选择一位员工来编辑个人资料！");
+		} else {
+			// 如果只有一条
+			navTab.openTab("grzl", "${BaseURL}hrs/showEmpExt?empId=" + id, {
+				title : "个人资料",
+				fresh : false,
+				data : {}
+			});
+		}
+	}
 </script>
 
 <div class="pageContent" id="showemployee_head"
@@ -71,10 +85,9 @@
 				target="navTab" title="添加员工"><span>添加员工</span></a></li>
 			<li><a class="edit" onclick="doEditEmpBase();" rel="xgjbxx"><span>修改基本信息</span></a></li>
 			<li><a class="edit" onclick="doEditTrainPerf();" rel="jxpx"><span>绩效及培训</span></a></li>
+			<li><a class="edit" onclick="doEditExt();" rel="grzl"><span>个人资料</span></a></li>
 			<li><a class="edit" href="${BaseURL}hrs/{pojo_id}/editEmp"
-				target="navTab" warn="请选择一条记录"><span>修改个人资料</span></a></li>
-			<li><a class="edit" href="${BaseURL}hrs/{pojo_id}/editEmp"
-				target="navTab" warn="请选择一条记录"><span>修改证书信息</span></a></li>
+				target="navTab" warn="请选择一条记录"><span>认证及证书</span></a></li>
 			<li><a class="edit" href="${BaseURL}hrs/{pojo_id}/editEmp"
 				target="navTab" warn="请选择一条记录"><span>选择照片</span></a></li>
 			<li><a title="确实要删除这些记录吗?" target="selectedTodo" rel="chk"

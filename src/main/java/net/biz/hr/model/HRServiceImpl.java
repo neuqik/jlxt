@@ -14,6 +14,7 @@ import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
 import net.biz.grid.gt.util.SQLUtils;
 import net.biz.hr.vo.HRD_EMP_FAMILY;
+import net.biz.hr.vo.HRD_EMP_JOB;
 import net.biz.hr.vo.HRD_EMP_PERF;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
 import net.biz.hr.vo.HRD_Emp;
@@ -423,6 +424,58 @@ public class HRServiceImpl implements IHRService {
 			List<Object> params = new ArrayList<Object>();
 			params.add(row.getID());
 			String sql1 = "update hrd_emp_family set valid='0' where id=?";
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+
+	}
+
+	@Override
+	public void saveEmpJob(List<Object> inserts, List<Object> updates,
+			List<Object> deletes, String empId) throws Exception {
+
+		// 1.执行插入
+		String sql = "insert into hrd_emp_job(ID,EMP_ID,JOB_START,JOB_END,ACCIDENT_START,ACCIDENT_END,MEMO,VALID ) values(?,?,?,?,?,?,?,?)";
+		Iterator<Object> it = inserts.iterator();
+		while (it.hasNext()) {
+			HRD_EMP_JOB row = (HRD_EMP_JOB) it.next();
+			List<Object> params = new ArrayList<Object>();
+			String ID = JDBCOracleUtil.getID();
+			params.add(ID);
+			params.add(empId);
+			params.add(row.getJOB_STARTForSqlDate());
+			params.add(row.getJOB_ENDForSqlDate());
+			params.add(row.getACCIDENT_STARTForSqlDate());
+			params.add(row.getACCIDENT_ENDForSqlDate());
+			params.add(row.getMEMO());
+			params.add("1");
+			JDBCOracleUtil.ExecuteDML(sql.toUpperCase(), params);
+		}
+		// 2.执行更新
+
+		Iterator<Object> it1 = updates.iterator();
+		while (it1.hasNext()) {
+
+			HRD_EMP_JOB row = (HRD_EMP_JOB) it1.next();
+			String id = row.getID();
+			List<Object> params = new ArrayList<Object>();
+			String sql1 = "update hrd_emp_job set JOB_START=?,JOB_END=?,ACCIDENT_START=?,ACCIDENT_END=?,MEMO=? where id="
+					+ id;
+			params.add(row.getJOB_STARTForSqlDate());
+			params.add(row.getJOB_ENDForSqlDate());
+			params.add(row.getACCIDENT_STARTForSqlDate());
+			params.add(row.getACCIDENT_ENDForSqlDate());
+			params.add(row.getMEMO());
+
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+		// 3.执行删除
+		Iterator<Object> it11 = deletes.iterator();
+
+		while (it11.hasNext()) {
+			HRD_EMP_JOB row = (HRD_EMP_JOB) it11.next();
+			List<Object> params = new ArrayList<Object>();
+			params.add(row.getID());
+			String sql1 = "update hrd_emp_job set valid='0' where id=?";
 			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
 		}
 

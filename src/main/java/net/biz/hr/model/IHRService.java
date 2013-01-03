@@ -142,4 +142,14 @@ public interface IHRService {
 	 */
 	public void saveEmpFamily(List<Object> inserts, List<Object> updates,
 			List<Object> deletes, String empId) throws Exception;
+	/**
+	 * 保存员工劳动合同
+	 * @param inserts
+	 * @param updates
+	 * @param deletes
+	 * @param empId
+	 * @throws Exception
+	 */
+	public void saveEmpJob(List<Object> inserts, List<Object> updates,
+			List<Object> deletes, String empId) throws Exception;
 }
