@@ -47,7 +47,10 @@
 					$.post('${BaseURL}hrs/dropEmpReg?empId=${EMP_ID}&ID=' + id,
 							{
 								empId : ''
-							}, DWZ.ajaxDone, "json");
+							}, function() {
+								DWZ.ajaxDone;
+								showempreg_grid.reload();
+							}, "json");
 				}
 			});
 		}
@@ -70,18 +73,43 @@
 						resizable : true,
 						drawable : true,
 						fresh : true,
-						close : 'onCloseMe'
+						close : function() {
+							// 对话框关闭时执行刷新
+							showempreg_grid.reload();
+							return true;
+						}
 					});
+
 		}
+	}
+	//checkbox编辑员工基本信息
+	function doAddEmpReg() {
+		// 如果只有一条
+		$.pdialog.open("${BaseURL}hrs/addEmpReg?empId=${EMP_ID}", 'tjzc',
+				"添加注册", {
+					width : 640,
+					height : 480,
+					max : false,
+					mask : true,
+					mixable : true,
+					minable : true,
+					resizable : true,
+					drawable : true,
+					fresh : true,
+					close : function() {
+						// 对话框关闭时执行刷新
+						showempreg_grid.reload();
+						return true;
+					}
+				});
+
 	}
 </script>
 <div class="pageContent" id="showempreg_head"
 	style="overflow-x: hidden; overflow-y: hidden">
 	<div class="panelBar" id="showempreg_bar">
 		<ul class="toolBar">
-			<li><a class="add"
-				href="${BaseURL}hrs/addEmpReg?empId=${EMP_ID}" target="dialog"
-				title="添加注册" rel="tjzc"><span>添加注册</span></a></li>
+			<li><a class="add" onclick="doAddEmpReg();" rel="tjzc"><span>添加注册</span></a></li>
 			<li><a class="edit" onclick="doEditEmpReg();" rel="xgzc"><span>修改注册</span></a></li>
 			<li><a class="delete" onclick="doDropEmpReg();" rel="sczc"><span>删除注册</span></a></li>
 		</ul>

@@ -766,8 +766,9 @@ public class HRAction extends BaseAction {
 			myservice.saveEditEmpReg(reg);
 			// 设置员工编号，供其他页面使用
 			model.put("EMP_ID", reg.getEMP_ID());
+			model.put("empId", reg.getEMP_ID());
 			return successJSONReload("修改员工注册信息成功，员工编号：" + reg.getEMP_ID(),
-					"dialog", "hrs/editEmpReg", "zcxx");
+					"dialog", "hrs/showEmpReg", "xgzc");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
