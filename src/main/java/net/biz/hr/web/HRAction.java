@@ -23,7 +23,9 @@ import net.biz.hr.model.IHRService;
 import net.biz.hr.vo.HRD_EMP_FAMILY;
 import net.biz.hr.vo.HRD_EMP_JOB;
 import net.biz.hr.vo.HRD_EMP_PERF;
+import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
+import net.biz.hr.vo.HRD_EMP_WORK;
 import net.biz.hr.vo.HRD_Emp;
 import net.biz.util.BeanUtil;
 import net.biz.util.JDBCOracleUtil;
@@ -500,6 +502,21 @@ public class HRAction extends BaseAction {
 	}
 
 	/**
+	 * 显示和修改员工工作经历
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpWork")
+	@POST
+	@GET
+	public String toShowEmpWork(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+		return "forward:hr/view/showEmpWork.jsp";
+	}
+
+	/**
 	 * 保存员工家庭信息
 	 * 
 	 * @param model
@@ -550,6 +567,66 @@ public class HRAction extends BaseAction {
 			List<Object> deleteList = handler
 					.getDeletedRecords(HRD_EMP_JOB.class);
 			myservice.saveEmpJob(insertList, updateList, deleteList, empId);
+			handler.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			handler.setSuccess(false);
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return null;
+	}
+
+	/**
+	 * 保存奖惩信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpReward")
+	@POST
+	@GET
+	public String toSaveEmpReward(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+
+		try {
+			List<Object> insertList = handler
+					.getInsertedRecords(HRD_EMP_REWARD.class);
+			List<Object> updateList = handler
+					.getUpdatedRecords(HRD_EMP_REWARD.class);
+			List<Object> deleteList = handler
+					.getDeletedRecords(HRD_EMP_REWARD.class);
+			myservice.saveEmpReward(insertList, updateList, deleteList, empId);
+			handler.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			handler.setSuccess(false);
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return null;
+	}
+
+	/**
+	 * 保存员工工作经历
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpWork")
+	@POST
+	@GET
+	public String toSaveEmpWork(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+
+		try {
+			List<Object> insertList = handler
+					.getInsertedRecords(HRD_EMP_WORK.class);
+			List<Object> updateList = handler
+					.getUpdatedRecords(HRD_EMP_WORK.class);
+			List<Object> deleteList = handler
+					.getDeletedRecords(HRD_EMP_WORK.class);
+			myservice.saveEmpWork(insertList, updateList, deleteList, empId);
 			handler.setSuccess(true);
 		} catch (Exception e) {
 			e.printStackTrace();
