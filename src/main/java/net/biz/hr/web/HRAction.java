@@ -940,7 +940,7 @@ public class HRAction extends BaseAction {
 					+ ".jpg";
 			model.put("EMP_ID", empId);
 			Map<String, List<UploadFile>> result = MVC.ctx().getUploadMap();
-			if(result.size()<=0)
+			if (result.size() <= 0)
 				return dwz.getFailedJson("没有上传文件").toString();
 			UploadFile file = result.get("file1").get(0);
 			FileUtil.copy(file.getTmpFile(), new File(path));
@@ -950,6 +950,18 @@ public class HRAction extends BaseAction {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
+	}
 
+	/**
+	 * 显示员工调转页面
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpTransfer")
+	@POST
+	@GET
+	public String toShowEmpTransfer(Map<String, String> model) {
+			return "forward:hr/view/editEmpTransfer.jsp";
 	}
 }
