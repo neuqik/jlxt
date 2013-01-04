@@ -96,7 +96,7 @@
 					<!--<li><a class="buttonActive" href="javascript:;"><span>保存</span></a></li>-->
 					<li><div class="buttonActive">
 							<div class="buttonContent">
-								<button type="submit" class="cloase">保存</button>
+								<button type="submit" class="close">保存</button>
 							</div>
 						</div></li>
 					<li>

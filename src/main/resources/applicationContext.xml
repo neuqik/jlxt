@@ -39,4 +39,11 @@
 	<bean id="codeList" class="net.biz.framework.codelist.CodeList"
 		lazy-init="false" init-method="init">
 	</bean>
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>1048576</value>
+		</property>
+	</bean>
 </beans>

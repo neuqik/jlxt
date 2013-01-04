@@ -1,5 +1,6 @@
 package net.biz.hr.web;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -34,7 +35,10 @@ import net.biz.util.BeanUtil;
 import net.biz.util.JDBCOracleUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.eweb4j.config.ConfigConstant;
 import org.eweb4j.mvc.MVC;
+import org.eweb4j.mvc.upload.UploadFile;
+import org.eweb4j.util.FileUtil;
 
 @Path("/hrs")
 public class HRAction extends BaseAction {
@@ -364,7 +368,7 @@ public class HRAction extends BaseAction {
 	@Path("/showEmpTrans")
 	@POST
 	@GET
-	public String toShowEmpTrans(Map model) {
+	public String toShowEmpTrans(Map<String, String> model) {
 		String empId = getParam("empId");
 		model.put("EMP_ID", empId);
 		return "forward:hr/view/showEmpTrans.jsp";
@@ -889,5 +893,63 @@ public class HRAction extends BaseAction {
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
 		return null;
+	}
+
+	/**
+	 * 显示和修改员工照片
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpPic")
+	@POST
+	@GET
+	public String toShowEmpPic(Map<String, String> model) {
+		try {
+			String empId = MVC.ctx().getRequest().getParameter("empId");
+			List<Map<String, Object>> result = JDBCOracleUtil
+					.executeQuery("SELECT EMP_NAME,IDCARD,DEPT_ID FROM V_HRD_EMP WHERE EMP_ID='"
+							+ empId + "'");
+			model.put("EMP_ID", empId);
+			model.put("EMP_NAME", (String) result.get(0).get("EMP_NAME"));
+			model.put("IDCARD", (String) result.get(0).get("IDCARD"));
+			model.put("DEPT_ID", CodeList.getCodeDesc("DEPT_ID",
+					((String) result.get(0).get("DEPT_ID"))));
+			return "forward:hr/view/showEmpPic.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 保存员工照片信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpPic")
+	@POST
+	@GET
+	public String toSaveEmpPic(Map<String, String> model) {
+
+		try {
+
+			String empId = getParam("empId");
+			String path = ConfigConstant.ROOT_PATH + "pictures/emp/" + empId
+					+ ".jpg";
+			model.put("EMP_ID", empId);
+			Map<String, List<UploadFile>> result = MVC.ctx().getUploadMap();
+			if(result.size()<=0)
+				return dwz.getFailedJson("没有上传文件").toString();
+			UploadFile file = result.get("file1").get(0);
+			FileUtil.copy(file.getTmpFile(), new File(path));
+			return successJSONReload("保存员工照片成功，员工编号：" + empId, "navTab",
+					"hrs/showEmpPic", "ygzp");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
 	}
 }

@@ -91,6 +91,20 @@
 					});
 		}
 	}
+	// 编辑职称及认证
+	function doEditPic() {
+		var id = doCheckIsOnlyRow();
+		if (id < 0) {
+			alertMsg.error("请选择一位员工来编辑照片！");
+		} else {
+			// 如果只有一条
+			navTab.openTab("ygzp", "${BaseURL}hrs/showEmpPic?empId=" + id, {
+				title : "员工照片",
+				fresh : false,
+				data : {}
+			});
+		}
+	}
 </script>
 
 <div class="pageContent" id="showemployee_head"
@@ -103,8 +117,7 @@
 			<li><a class="edit" onclick="doEditTrainPerf();" rel="jxpx"><span>绩效及培训</span></a></li>
 			<li><a class="edit" onclick="doEditExt();" rel="grzl"><span>个人资料</span></a></li>
 			<li><a class="edit" onclick="doEditProfCert();" rel="zcrz"><span>职称及认证</span></a></li>
-			<li><a class="edit" href="${BaseURL}hrs/{pojo_id}/editEmp"
-				target="navTab" warn="请选择一条记录"><span>选择照片</span></a></li>
+			<li><a class="edit" onclick="doEditPic();" rel="ygzp"><span>员工照片</span></a></li>
 			<li><a title="确实要删除这些记录吗?" target="selectedTodo" rel="chk"
 				href="${BaseURL}hrs/batchRemove?_method=delete" class="delete"><span>删除</span></a></li>
 			<li class="line">line</li>
