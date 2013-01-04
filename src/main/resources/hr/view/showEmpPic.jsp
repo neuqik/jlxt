@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8; "
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <script type="text/javascript">
 	//得到图片的完整路径  
 	function getFullPath(obj) {
@@ -85,7 +86,7 @@
 				<p>
 					<label>选择照片：</label> <input id="file1" name="file1" type="file" />
 				</p>
-				<div>
+				<div id="pic_img">
 					<img alt="员工照片" src="${BaseURL}pictures/emp/${EMP_ID}.jpg"
 						width="300px" height="300px" id="pic" name="pic" border="2" />
 				</div>

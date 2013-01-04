@@ -100,7 +100,7 @@ public class ActionExecution {
 	// 要执行的Action方法
 	private Method method;
 	private Field[] fields;
-	
+
 	private Context context;
 
 	private Object actionObject;
@@ -111,7 +111,9 @@ public class ActionExecution {
 	// 验证器
 	private void handleValidator() throws Exception {
 
-		this.context.setValidation(ValidateExecution.checkValidate(context.getActionConfigBean().getValidator(), context.getQueryParamMap(), context.getRequest()));
+		this.context.setValidation(ValidateExecution.checkValidate(context
+				.getActionConfigBean().getValidator(), context
+				.getQueryParamMap(), context.getRequest()));
 	}
 
 	public ActionExecution(String uri, String httpMethod, Context context) {
@@ -125,20 +127,27 @@ public class ActionExecution {
 	public boolean findAction() throws Exception {
 		// URL参数
 		Map<String, List<?>> pathParams = null;
-		if (ActionConfigBeanCache.containsKey(this.context.getUri())|| (pathParams = ActionConfigBeanCache.getByMatches(this.context.getUri(), this.context.getHttpMethod())) != null) {
+		if (ActionConfigBeanCache.containsKey(this.context.getUri())
+				|| (pathParams = ActionConfigBeanCache.getByMatches(
+						this.context.getUri(), this.context.getHttpMethod())) != null) {
 
 			// 处理形如" /xxx/{id}/{name} "的URI
 			if (pathParams != null && pathParams.containsKey("mvcBean")) {
 				// 根据Url配置的UrlParam获取参数值
-				this.context.setActionConfigBean((ActionConfigBean) pathParams.get("mvcBean").get(0));
+				this.context.setActionConfigBean((ActionConfigBean) pathParams
+						.get("mvcBean").get(0));
 
-				this.context.getPathParamMap().putAll(ParamUtil.getPathParamMap(pathParams));
-				this.context.getQueryParamMap().putAll(this.context.getPathParamMap());
+				this.context.getPathParamMap().putAll(
+						ParamUtil.getPathParamMap(pathParams));
+				this.context.getQueryParamMap().putAll(
+						this.context.getPathParamMap());
 			} else
-				this.context.setActionConfigBean(ActionConfigBeanCache.get(this.context.getUri()));
+				this.context.setActionConfigBean(ActionConfigBeanCache
+						.get(this.context.getUri()));
 
 			// 将request的请求参数转到另外一个map中去
-			this.context.getQueryParamMap().putAll(ParamUtil.copyReqParams(this.context.getRequest()));
+			this.context.getQueryParamMap().putAll(
+					ParamUtil.copyReqParams(this.context.getRequest()));
 
 			if (this.context.getActionConfigBean() != null)
 				return true;
@@ -148,7 +157,8 @@ public class ActionExecution {
 	}
 
 	private Object initPojo() throws Exception {
-		Class<?> clazz = ActionClassCache.get(this.context.getActionConfigBean().getClazz());
+		Class<?> clazz = ActionClassCache.get(this.context
+				.getActionConfigBean().getClazz());
 		Annotation singletonAnn = clazz.getAnnotation(Singleton.class);
 		if (singletonAnn != null) {
 			this.actionObject = SingleBeanCache.get(clazz);
@@ -192,13 +202,15 @@ public class ActionExecution {
 
 	private void exeActionLog() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("execute ").append(this.context.getUri()).append(ActionMethod.CON)
-			.append(this.context.getHttpMethod()).append("[Action]; ");
+		sb.append("execute ").append(this.context.getUri())
+				.append(ActionMethod.CON).append(this.context.getHttpMethod())
+				.append("[Action]; ");
 
 		log.debug(sb.toString());
 	}
 
-	private Object[] assemParams(Class<?>[] paramTypes, Annotation[][] paramAnns)throws Exception {
+	private Object[] assemParams(Class<?>[] paramTypes, Annotation[][] paramAnns)
+			throws Exception {
 		Object[] params = new Object[paramTypes.length];
 		int pathParamIndex = 0;
 		for (int i = 0; i < paramTypes.length; ++i) {
@@ -239,7 +251,8 @@ public class ActionExecution {
 
 			if (ActionProp.class.isAssignableFrom(paramClass)) {
 				if (this.context.getActionProp() == null)
-					this.context.setActionProp(new ActionProp(this.actionObject.getClass().getName()));
+					this.context.setActionProp(new ActionProp(this.actionObject
+							.getClass().getName()));
 
 				params[i] = this.context.getActionProp();
 				continue;
@@ -296,101 +309,108 @@ public class ActionExecution {
 			}
 
 			PathParam pathParamAnn = this.getPathParamAnn(anns);
-            if (pathParamAnn != null) {
-                paramValue = this.getPathParamValue(pathParamAnn.value());
-                params[i] = ClassUtil.getParamVal(paramClass, paramValue[0]);
-                continue;
-            }
+			if (pathParamAnn != null) {
+				paramValue = this.getPathParamValue(pathParamAnn.value());
+				params[i] = ClassUtil.getParamVal(paramClass, paramValue[0]);
+				continue;
+			}
 
 			QueryParam queryParamAnn = this.getQueryParamAnn(anns);
 
-            // 视图模型
-            if (queryParamAnn == null && Map.class.isAssignableFrom(paramClass)) {
-                    params[i] = this.context.getModel();
-                    continue;
-            }
+			// 视图模型
+			if (queryParamAnn == null && Map.class.isAssignableFrom(paramClass)) {
+				params[i] = this.context.getModel();
+				continue;
+			}
 
-            if (queryParamAnn != null) {
-            	final String fieldName = queryParamAnn.value();
+			if (queryParamAnn != null) {
+				final String fieldName = queryParamAnn.value();
 				if (File.class.isAssignableFrom(paramClass)) {
 					if (!this.context.getUploadMap().containsKey(fieldName))
 						continue;
-					List<UploadFile> list = this.context.getUploadMap().get(fieldName);
+					List<UploadFile> list = this.context.getUploadMap().get(
+							fieldName);
 					if (list == null || list.isEmpty())
 						continue;
-					
+
 					UploadFile uploadFile = list.get(0);
 					File file = uploadFile.getTmpFile();
 					params[i] = file;
-					
+
 					continue;
 				}
-				
-				if (File[].class.isAssignableFrom(paramClass)){
+
+				if (File[].class.isAssignableFrom(paramClass)) {
 					if (!this.context.getUploadMap().containsKey(fieldName))
 						continue;
-					List<UploadFile> list = this.context.getUploadMap().get(fieldName);
+					List<UploadFile> list = this.context.getUploadMap().get(
+							fieldName);
 					if (list == null || list.isEmpty())
 						continue;
 					File[] files = new File[list.size()];
 					for (int j = 0; j < files.length; j++)
 						files[j] = list.get(j).getTmpFile();
-					
+
 					params[i] = files;
 				}
-				
+
 				if (UploadFile.class.isAssignableFrom(paramClass)) {
 					if (!this.context.getUploadMap().containsKey(fieldName))
 						continue;
-					List<UploadFile> list = this.context.getUploadMap().get(fieldName);
+					List<UploadFile> list = this.context.getUploadMap().get(
+							fieldName);
 					if (list == null || list.isEmpty())
 						continue;
-					
+
 					UploadFile uploadFile = list.get(0);
 					params[i] = uploadFile;
-					
+
 					continue;
 				}
-				
-				if (UploadFile[].class.isAssignableFrom(paramClass)){
+
+				if (UploadFile[].class.isAssignableFrom(paramClass)) {
 					if (!this.context.getUploadMap().containsKey(fieldName))
 						continue;
-					List<UploadFile> list = this.context.getUploadMap().get(fieldName);
+					List<UploadFile> list = this.context.getUploadMap().get(
+							fieldName);
 					if (list == null || list.isEmpty())
 						continue;
-					
-					params[i] = list.toArray(new UploadFile[]{});
+
+					params[i] = list.toArray(new UploadFile[] {});
 				}
-				
+
 				String defaultValue = null;
 				DefaultValue defaultValueAnn = this.getDefaultValueAnn(anns);
-				if (defaultValueAnn != null)defaultValue = defaultValueAnn.value();
-	
+				if (defaultValueAnn != null)
+					defaultValue = defaultValueAnn.value();
+
 				paramValue = this.getQueryParamValue(fieldName, defaultValue);
-	
+
 				if (java.util.Date.class.isAssignableFrom(paramClass)) {
 					params[i] = this.getDateParam(anns, paramValue[0]);
 					continue;
 				}
-	
+
 				String startName = fieldName;
 				if (ClassUtil.isPojo(paramClass)) {
 					params[i] = this.injectParam2Pojo(paramClass, startName);
 					continue;
 				}
-	
+
 				if (Map.class.isAssignableFrom(paramClass)) {
 					params[i] = this.injectParam2Map(startName);
 					continue;
 				}
-	
+
 				if (paramClass.isArray())
 					params[i] = ClassUtil.getParamVals(paramClass, paramValue);
 				else
-					params[i] = ClassUtil.getParamVal(paramClass, paramValue[0]);
-            } else {
+					params[i] = ClassUtil
+							.getParamVal(paramClass, paramValue[0]);
+			} else {
 				// 如果是基本数据类型，则按照排序进行注入
-				paramValue = this.getPathParamValue(this.context.getActionConfigBean().getPathParams()[pathParamIndex]);
+				paramValue = this.getPathParamValue(this.context
+						.getActionConfigBean().getPathParams()[pathParamIndex]);
 				params[i] = ClassUtil.getParamVal(paramClass, paramValue[0]);
 				pathParamIndex++;
 				continue;
@@ -431,7 +451,8 @@ public class ActionExecution {
 	}
 
 	private String[] getParamValue(String[] paramValue, String defaultValue) {
-		if (paramValue == null || paramValue.length == 0 || paramValue[0] == null) {
+		if (paramValue == null || paramValue.length == 0
+				|| paramValue[0] == null) {
 			if (defaultValue != null)
 				paramValue = new String[] { defaultValue };
 			else
@@ -511,7 +532,7 @@ public class ActionExecution {
 
 		return null;
 	}
-	
+
 	private DefaultValue getDefaultValueAnn(Annotation[] anns) {
 		for (Annotation a : anns) {
 			if (a == null)
@@ -526,79 +547,85 @@ public class ActionExecution {
 		return null;
 	}
 
-	private void handleDownload(File file) throws Exception{
-		if (file.exists()){
+	private void handleDownload(File file) throws Exception {
+		if (file.exists()) {
 			HttpServletResponse response = this.context.getResponse();
 			String filename = URLEncoder.encode(file.getName(), "utf-8");
-            response.reset();
-            response.setContentType("application/x-msdownload");
-            response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-            int fileLength = (int) file.length();
-            response.setContentLength(fileLength);
-            /*如果文件长度大于0*/
-            if (fileLength != 0) {
-                /*创建输入流*/
-                InputStream inStream = new FileInputStream(file);
-                byte[] buf = new byte[4096];
-                /*创建输出流*/
-                ServletOutputStream servletOS = response.getOutputStream();
-                int readLength;
-                while (((readLength = inStream.read(buf)) != -1)) {
-                    servletOS.write(buf, 0, readLength);
-                }
-                inStream.close();
-                servletOS.flush();
-                servletOS.close();
-            }
+			response.reset();
+			response.setContentType("application/x-msdownload");
+			response.addHeader("Content-Disposition", "attachment; filename=\""
+					+ filename + "\"");
+			int fileLength = (int) file.length();
+			response.setContentLength(fileLength);
+			/* 如果文件长度大于0 */
+			if (fileLength != 0) {
+				/* 创建输入流 */
+				InputStream inStream = new FileInputStream(file);
+				byte[] buf = new byte[4096];
+				/* 创建输出流 */
+				ServletOutputStream servletOS = response.getOutputStream();
+				int readLength;
+				while (((readLength = inStream.read(buf)) != -1)) {
+					servletOS.write(buf, 0, readLength);
+				}
+				inStream.close();
+				servletOS.flush();
+				servletOS.close();
+			}
 		}
 	}
+
 	private void handleResult() throws Exception {
 
 		this.exeActionLog();
 
 		if (retn == null)
 			return;
-		String baseUrl = (String) this.context.getServletContext().getAttribute(MVCConfigConstant.BASE_URL_KEY);
-		if (File.class.isAssignableFrom(retn.getClass())){
-			File file = (File)retn;
+		String baseUrl = (String) this.context.getServletContext()
+				.getAttribute(MVCConfigConstant.BASE_URL_KEY);
+		if (File.class.isAssignableFrom(retn.getClass())) {
+			File file = (File) retn;
 			this.handleDownload(file);
-			return ;
-		}else if(File[].class.isAssignableFrom(retn.getClass())){
-			File[] files = (File[])retn;
-			
-			String fileName = StringUtil.getNowTime("yyyyMMddHHmmss")+ "_" + "download.zip";
-			
+			return;
+		} else if (File[].class.isAssignableFrom(retn.getClass())) {
+			File[] files = (File[]) retn;
+
+			String fileName = StringUtil.getNowTime("yyyyMMddHHmmss") + "_"
+					+ "download.zip";
+
 			HttpServletResponse resp = this.context.getResponse();
 			resp.reset();
-			resp.setContentType("application/zip");  
-            resp.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-	          
-	        ServletOutputStream outputStream = resp.getOutputStream();  
-	        ZipOutputStream zip = new ZipOutputStream(outputStream);  
-	       
-	        for (File file :files){
-	        	byte[] b = new byte[1024];  
-	 	        int len;  
-	        	zip.putNextEntry(new ZipEntry(file.getName()));  
-	        	FileInputStream fis = new FileInputStream(file);  
-	 	        while ((len = fis.read(b)) != -1) {  
-	 	            zip.write(b, 0, len);  
-	 	        }  
-	 	        
-	 	        fis.close();
-	        }
-	          
-	        zip.flush();  
-	        zip.close();  
-	        outputStream.flush();  
-			
+			resp.setContentType("application/zip");
+			resp.addHeader("Content-Disposition", "attachment; filename=\""
+					+ fileName + "\"");
+
+			ServletOutputStream outputStream = resp.getOutputStream();
+			ZipOutputStream zip = new ZipOutputStream(outputStream);
+
+			for (File file : files) {
+				byte[] b = new byte[1024];
+				int len;
+				zip.putNextEntry(new ZipEntry(file.getName()));
+				FileInputStream fis = new FileInputStream(file);
+				while ((len = fis.read(b)) != -1) {
+					zip.write(b, 0, len);
+				}
+
+				fis.close();
+			}
+
+			zip.flush();
+			zip.close();
+			outputStream.flush();
+
 			return;
 		}
-		
+
 		String re = null;
 
 		String mimeType = MIMEType.JSON;
-		List<String> produces = this.context.getActionConfigBean().getProduces();
+		List<String> produces = this.context.getActionConfigBean()
+				.getProduces();
 		if (produces != null && produces.size() > 0)
 			for (String produce : produces) {
 				mimeType = produce;
@@ -609,10 +636,12 @@ public class ActionExecution {
 			if (this.context.getWriter() == null)
 				this.context.setWriter(this.context.getResponse().getWriter());
 
-			if (MIMEType.JSON.equals(mimeType) || "json".equalsIgnoreCase(mimeType)) {
+			if (MIMEType.JSON.equals(mimeType)
+					|| "json".equalsIgnoreCase(mimeType)) {
 				this.context.getResponse().setContentType(MIMEType.JSON);
 				this.context.getWriter().print(JsonConverter.convert(retn));
-			} else if (MIMEType.XML.equals(mimeType) || "xml".equalsIgnoreCase(mimeType)) {
+			} else if (MIMEType.XML.equals(mimeType)
+					|| "xml".equalsIgnoreCase(mimeType)) {
 				Class<?> cls = retn.getClass();
 				if (Collection.class.isAssignableFrom(cls)) {
 					Class<?> _cls = ClassUtil.getPojoClass(this.method);
@@ -628,9 +657,10 @@ public class ActionExecution {
 				this.context.getResponse().setContentType(MIMEType.XML);
 				this.context.getWriter().print(writer.toXml());
 			} else {
-				this.context.getWriter().print("@Produces 注解暂时不支持JSON 、XML以外的渲染技术");
+				this.context.getWriter().print(
+						"@Produces 注解暂时不支持JSON 、XML以外的渲染技术");
 			}
-			
+
 			this.context.getWriter().flush();
 			return;
 		}
@@ -645,7 +675,7 @@ public class ActionExecution {
 			String name = f.getName();
 			if (this.context.getModel().containsKey(name))
 				continue;
-			
+
 			this.context.getModel().put(name, getter.invoke(actionObject));
 		}
 
@@ -656,7 +686,8 @@ public class ActionExecution {
 			String url = re.substring((RenderType.REDIRECT + ":").length());
 			String location = url;
 
-			this.context.getResponse().sendRedirect(StringUtil.replaceChinese2Utf8(location));
+			this.context.getResponse().sendRedirect(
+					StringUtil.replaceChinese2Utf8(location));
 
 			return;
 		} else if (re.startsWith(RenderType.ACTION + ":")) {
@@ -674,38 +705,48 @@ public class ActionExecution {
 		} else if (re.startsWith(RenderType.FORWARD + ":")) {
 			String location = re.substring((RenderType.FORWARD + ":").length());
 			HttpServletRequest request = this.context.getRequest();
-			request.setAttribute(MVCConfigConstant.REQ_PARAM_MAP_NAME, this.context.getQueryParamMap());
+			request.setAttribute(MVCConfigConstant.REQ_PARAM_MAP_NAME,
+					this.context.getQueryParamMap());
 
-			for (Iterator<Entry<String, Object>> it = this.context.getModel().entrySet().iterator(); it.hasNext(); ) {
+			for (Iterator<Entry<String, Object>> it = this.context.getModel()
+					.entrySet().iterator(); it.hasNext();) {
 				Entry<String, Object> entry = it.next();
 				request.setAttribute(entry.getKey(), entry.getValue());
 			}
 
 			// 服务端跳转
-			request.getRequestDispatcher(MVCConfigConstant.FORWARD_BASE_PATH + location).forward(request, this.context.getResponse());
+			request.getRequestDispatcher(
+					MVCConfigConstant.FORWARD_BASE_PATH + location).forward(
+					request, this.context.getResponse());
 
 			return;
-		}else if (re.startsWith(RenderType.FORWARDPAGE + ":")) {
-			String location = re.substring((RenderType.FORWARDPAGE + ":").length());
+		} else if (re.startsWith(RenderType.FORWARDPAGE + ":")) {
+			String location = re.substring((RenderType.FORWARDPAGE + ":")
+					.length());
 			HttpServletRequest request = this.context.getRequest();
-			request.setAttribute(MVCConfigConstant.REQ_PARAM_MAP_NAME, this.context.getQueryParamMap());
+			request.setAttribute(MVCConfigConstant.REQ_PARAM_MAP_NAME,
+					this.context.getQueryParamMap());
 
-			for (Iterator<Entry<String, Object>> it = this.context.getModel().entrySet().iterator(); it.hasNext(); ) {
+			for (Iterator<Entry<String, Object>> it = this.context.getModel()
+					.entrySet().iterator(); it.hasNext();) {
 				Entry<String, Object> entry = it.next();
 				request.setAttribute(entry.getKey(), entry.getValue());
 			}
 
 			// 服务端跳转
-			request.getRequestDispatcher("/pages/" + location).forward(request, this.context.getResponse());
+			request.getRequestDispatcher("/pages/" + location).forward(request,
+					this.context.getResponse());
 
 			return;
-		} 
-		else if (re.startsWith(RenderType.FREEMARKER + ":")) {
-			String location = re.substring((RenderType.FREEMARKER + ":").length());
+		} else if (re.startsWith(RenderType.FREEMARKER + ":")) {
+			String location = re.substring((RenderType.FREEMARKER + ":")
+					.length());
 			// FreeMarker 渲染
 			Configuration cfg = new Configuration();
 			// 指定模板从何处加载的数据源，这里设置成一个文件目录。
-			cfg.setDirectoryForTemplateLoading(new File(ConfigConstant.ROOT_PATH + MVCConfigConstant.FORWARD_BASE_PATH));
+			cfg.setDirectoryForTemplateLoading(new File(
+					ConfigConstant.ROOT_PATH
+							+ MVCConfigConstant.FORWARD_BASE_PATH));
 			// 指定模板如何检索数据模型
 			cfg.setObjectWrapper(new DefaultObjectWrapper());
 			cfg.setDefaultEncoding("utf-8");
@@ -717,7 +758,8 @@ public class ActionExecution {
 
 			return;
 		} else {
-			List<ResultConfigBean> results = this.context.getActionConfigBean().getResult();
+			List<ResultConfigBean> results = this.context.getActionConfigBean()
+					.getResult();
 
 			if (results == null || results.size() == 0) {
 				this.context.getWriter().print(retn);
@@ -728,39 +770,45 @@ public class ActionExecution {
 			boolean isOut = true;
 			for (ResultConfigBean r : results) {
 				if (!"_props_".equals(r.getName()) && !r.getName().equals(re)
-						&& !"".equals(re)){
+						&& !"".equals(re)) {
 					continue;
 				}
-				
+
 				isOut = false;
 				String type = r.getType();
 				String location = r.getLocation();
 				if (RenderType.REDIRECT.equalsIgnoreCase(type)) {
-					this.context.getResponse().sendRedirect(StringUtil.replaceChinese2Utf8(location));
-					
-					return ;
+					this.context.getResponse().sendRedirect(
+							StringUtil.replaceChinese2Utf8(location));
+
+					return;
 				} else if (RenderType.FORWARD.equalsIgnoreCase(type)) {
 					HttpServletRequest request = this.context.getRequest();
-					request.setAttribute(MVCConfigConstant.REQ_PARAM_MAP_NAME, this.context.getQueryParamMap());
+					request.setAttribute(MVCConfigConstant.REQ_PARAM_MAP_NAME,
+							this.context.getQueryParamMap());
 
 					fields = ru.getFields();
 					if (fields == null)
 						return;
 
-					for (Iterator<Entry<String, Object>> it = this.context.getModel().entrySet()
-							.iterator(); it.hasNext();) {
+					for (Iterator<Entry<String, Object>> it = this.context
+							.getModel().entrySet().iterator(); it.hasNext();) {
 						Entry<String, Object> entry = it.next();
 						request.setAttribute(entry.getKey(), entry.getValue());
 					}
 					// 服务端跳转
-					request.getRequestDispatcher(MVCConfigConstant.FORWARD_BASE_PATH + location).forward(request, this.context.getResponse());
-					
-					return ;
+					request.getRequestDispatcher(
+							MVCConfigConstant.FORWARD_BASE_PATH + location)
+							.forward(request, this.context.getResponse());
+
+					return;
 				} else if (RenderType.FREEMARKER.equalsIgnoreCase(type)) {
 					// FreeMarker 渲染
 					Configuration cfg = new Configuration();
 					// 指定模板从何处加载的数据源，这里设置成一个文件目录。
-					cfg.setDirectoryForTemplateLoading(new File(ConfigConstant.ROOT_PATH + MVCConfigConstant.FORWARD_BASE_PATH));
+					cfg.setDirectoryForTemplateLoading(new File(
+							ConfigConstant.ROOT_PATH
+									+ MVCConfigConstant.FORWARD_BASE_PATH));
 					// 指定模板如何检索数据模型
 					cfg.setObjectWrapper(new DefaultObjectWrapper());
 					cfg.setDefaultEncoding("utf-8");
@@ -768,24 +816,25 @@ public class ActionExecution {
 					Template template = cfg.getTemplate(location);
 					template.setEncoding("utf-8");
 
-					template.process(this.context.getModel(), this.context.getWriter());
-					
-					return ;
+					template.process(this.context.getModel(),
+							this.context.getWriter());
+
+					return;
 				} else if (RenderType.ACTION.equalsIgnoreCase(type)) {
 					// ACTION 重定向
 					handleActionRedirect(context, location, baseUrl);
 
-					return ;
+					return;
 				} else if (RenderType.OUT.equalsIgnoreCase(type)
 						|| location.trim().length() == 0) {
 					this.context.getWriter().print(location);
 					this.context.getWriter().flush();
-					
-					return ;
-				} 
+
+					return;
+				}
 			}
-			
-			if (isOut){
+
+			if (isOut) {
 				this.context.getWriter().print(retn);
 				this.context.getWriter().flush();
 			}
@@ -793,8 +842,8 @@ public class ActionExecution {
 
 	}
 
-	public static void handleActionRedirect(Context context, String path, String baseUrl)
-			throws IOException {
+	public static void handleActionRedirect(Context context, String path,
+			String baseUrl) throws IOException {
 		String method;
 		String location;
 		if (!path.contains("@")) {
@@ -813,20 +862,23 @@ public class ActionExecution {
 			String[] params = param.split("&");
 			for (String para : params) {
 				String[] p = para.split("=");
-				sb.append(String.format("<input name='%s' value='%s' />", p[0], p[1]));
+				sb.append(String.format("<input name='%s' value='%s' />", p[0],
+						p[1]));
 			}
 
 			method = method.substring(0, method.indexOf("?"));
 		}
 
 		if (HttpMethod.GET.equalsIgnoreCase(method)) {
-			String pa = param == null ? "" : "?" + StringUtil.replaceChinese2Utf8(param);
+			String pa = param == null ? "" : "?"
+					+ StringUtil.replaceChinese2Utf8(param);
 			context.getResponse().sendRedirect(baseUrl + location + pa);
 			return;
 		}
 
 		String _method = "";
-		if (HttpMethod.PUT.equalsIgnoreCase(method) || HttpMethod.DELETE.equalsIgnoreCase(method)) {
+		if (HttpMethod.PUT.equalsIgnoreCase(method)
+				|| HttpMethod.DELETE.equalsIgnoreCase(method)) {
 			_method = new String(method);
 			method = HttpMethod.POST;
 		}
@@ -834,104 +886,126 @@ public class ActionExecution {
 		String action = baseUrl + location;
 		// 构造一个Form表单模拟客户端发送新的Action请求
 		String format = "<form id='ACTION_REDIRECT_FORM' action='%s' method='%s' ><input name='_method' value='%s' />%s<input type='submit' /></form>";
-		String form = String.format(format, action, method, _method, sb.toString());
+		String form = String.format(format, action, method, _method,
+				sb.toString());
 		String js = "<script>document.getElementById('ACTION_REDIRECT_FORM').submit();</script>";
 		context.getWriter().print(form + js);
 	}
 
-	private void handleUpload() throws Exception{
-		ConfigBean cb = (ConfigBean) SingleBeanCache.get(ConfigConstant.CONFIGBEAN_ID);
-		
+	private void handleUpload() throws Exception {
+		ConfigBean cb = (ConfigBean) SingleBeanCache
+				.get(ConfigConstant.CONFIGBEAN_ID);
+
 		Upload upload = method.getAnnotation(Upload.class);
 		UploadConfigBean ucb = cb.getMvc().getUpload();
 		String tmpDir = ucb.getTmp();
-		int memoryMax = StringUtil.strToInt(StringUtil.parseFileSize(ucb.getMaxMemorySize())+"");
+		int memoryMax = StringUtil.strToInt(StringUtil.parseFileSize(ucb
+				.getMaxMemorySize()) + "");
 		long sizeMax = StringUtil.parseFileSize(ucb.getMaxRequestSize());
-		//String[] suffix = ucb.getSuffix().split(",");
-		if (upload != null){
+		// String[] suffix = ucb.getSuffix().split(",");
+		if (upload != null) {
 			if (upload.tmpDir().trim().length() > 0)
 				tmpDir = upload.tmpDir();
-			
+
 			if (upload.maxMemorySize().trim().length() > 0)
-				memoryMax =  StringUtil.strToInt(StringUtil.parseFileSize(upload.maxMemorySize())+"");
-			
+				memoryMax = StringUtil.strToInt(StringUtil.parseFileSize(upload
+						.maxMemorySize()) + "");
+
 			if (upload.maxRequestSize().trim().length() > 0)
 				sizeMax = StringUtil.parseFileSize(upload.maxRequestSize());
-			
-			//if (upload.suffix().length > 0)
-				//suffix = upload.suffix();
+
+			// if (upload.suffix().length > 0)
+			// suffix = upload.suffix();
 		}
-		
+
 		if (tmpDir.trim().length() == 0)
-			tmpDir = "${RootPath}"+File.separator+"WEB-INF"+File.separator+"tmp";
-		
+			tmpDir = "${RootPath}" + File.separator + "WEB-INF"
+					+ File.separator + "tmp";
+
 		tmpDir = tmpDir.replace("${RootPath}", ConfigConstant.ROOT_PATH);
-		
+
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		factory.setSizeThreshold(memoryMax);
 		factory.setRepository(new File(tmpDir));
-		
+
 		ServletFileUpload _upload = new ServletFileUpload(factory);
 		_upload.setSizeMax(sizeMax);
-		if (upload != null){
+		if (upload != null) {
 			Class<?> clazz = upload.listener();
-			if (!void.class.isAssignableFrom(clazz) && ProgressListener.class.isAssignableFrom(clazz))
-				_upload.setProgressListener((ProgressListener) clazz.newInstance());
+			if (!void.class.isAssignableFrom(clazz)
+					&& ProgressListener.class.isAssignableFrom(clazz))
+				_upload.setProgressListener((ProgressListener) clazz
+						.newInstance());
 		}
-		
-		try{
-			List<FileItem> items = _upload.parseRequest(this.context.getRequest());
+
+		try {
+			List<FileItem> items = _upload.parseRequest(this.context
+					.getRequest());
 			Iterator<FileItem> it = items.iterator();
-			while (it.hasNext()){
+			while (it.hasNext()) {
 				FileItem item = it.next();
 				String fieldName = item.getFieldName();
-				if (item.isFormField()){
+				if (item.isFormField()) {
 					String value = item.getString();
-					this.context.getQueryParamMap().put(fieldName, new String[]{value});
+					this.context.getQueryParamMap().put(fieldName,
+							new String[] { value });
 				} else {
 					String fileName = item.getName();
+
 					if (fileName == null || fileName.trim().length() == 0)
 						continue;
-					
+					else {
+						// 如果是windows字符 IE下上传的文件名长含路径
+						if (fileName.indexOf(":\\") > 0) {
+							fileName = fileName.substring(
+									fileName.lastIndexOf("\\") + 1,
+									fileName.length());
+						}
+					}
+
 					String stamp = StringUtil.getNowTime("yyyyMMddHHmmss");
-					File tmpFile = new File(tmpDir + File.separator + stamp + "_" + fileName);
+					File tmpFile = new File(tmpDir + File.separator + stamp
+							+ "_" + fileName);
 					item.write(tmpFile);
-					
-					UploadFile uploadFile = new UploadFile(tmpFile, fileName, fieldName, item.getSize(), item.getContentType());
-					
-					if (this.context.getUploadMap().containsKey(fieldName)){
-						this.context.getUploadMap().get(fieldName).add(uploadFile);
-					}else{
+
+					UploadFile uploadFile = new UploadFile(tmpFile, fileName,
+							fieldName, item.getSize(), item.getContentType());
+
+					if (this.context.getUploadMap().containsKey(fieldName)) {
+						this.context.getUploadMap().get(fieldName)
+								.add(uploadFile);
+					} else {
 						List<UploadFile> uploads = new ArrayList<UploadFile>();
 						uploads.add(uploadFile);
 						this.context.getUploadMap().put(fieldName, uploads);
 					}
 				}
 			}
-		}catch(InvalidContentTypeException e){
-			
-		} 
+		} catch (InvalidContentTypeException e) {
+
+		}
 	}
-	
+
 	/**
 	 * 执行Action
 	 * 
 	 * @param methodName
 	 * @throws Exception
 	 */
-	private void excuteMethod(String methodName) throws Exception{
+	private void excuteMethod(String methodName) throws Exception {
 
-		/* 对于外部配置的前置拦截器，方法体内的前置拦截器较后执行  */
+		/* 对于外部配置的前置拦截器，方法体内的前置拦截器较后执行 */
 		Before before = method.getAnnotation(Before.class);
-		if (before != null){
-			InterExecution before_interExe = new InterExecution("before", context);
+		if (before != null) {
+			InterExecution before_interExe = new InterExecution("before",
+					context);
 			before_interExe.execute(before.value());
-			if (before_interExe.getError() != null){
+			if (before_interExe.getError() != null) {
 				before_interExe.showErr();
-				return ;
+				return;
 			}
 		}
-		
+
 		boolean isTrans = false;
 		if (method.getAnnotation(Transactional.class) != null)
 			isTrans = true;
@@ -953,7 +1027,7 @@ public class ActionExecution {
 			else
 				retn = method.invoke(actionObject);
 		} else {
-			
+
 			Annotation[][] paramAnns = method.getParameterAnnotations();
 			// 拿到方法所需要的参数
 			final Object[] params = assemParams(paramTypes, paramAnns);
@@ -1029,7 +1103,7 @@ public class ActionExecution {
 
 		// 注入框架mvc action 上下文环境
 		this.injectActionCxt2Pojo(this.ru);
-		
+
 		if (IAction.class.isAssignableFrom(this.actionObject.getClass())) {
 			// struts2风格
 			IAction action = (IAction) actionObject;
@@ -1037,10 +1111,10 @@ public class ActionExecution {
 			retn = action.execute();
 			// 对Action执行返回结果的处理
 			this.handleResult();
-			
-			return ;
+
+			return;
 		}
-		
+
 		String methodName = this.context.getActionConfigBean().getMethod();
 		Method[] methods = ru.getMethods(methodName);
 		if (methods == null || methods.length == 0)
@@ -1049,56 +1123,59 @@ public class ActionExecution {
 		method = this.getFirstMethd(methods);
 		if (method == null)
 			return;
-		
+
 		// 执行验证器
 		this.handleValidator();
-		try{
+		try {
 			// upload files
 			this.handleUpload();
-			
+
 			// 注入mvc action 请求参数
 			ParamUtil.injectParam(this.context, this.ru, null);
-	
+
 			// execute the action method
 			excuteMethod(methodName);
-			
-			/* 方法体内的后置拦截器先执行  */
+
+			/* 方法体内的后置拦截器先执行 */
 			After after = method.getAnnotation(After.class);
-			if (after != null){
+			if (after != null) {
 				// 后置拦截器
-				InterExecution after_interExe = new InterExecution("after", context);
+				InterExecution after_interExe = new InterExecution("after",
+						context);
 				after_interExe.execute(after.value());
-				if (after_interExe.getError() != null){
+				if (after_interExe.getError() != null) {
 					after_interExe.showErr();
-					return ;
+					return;
 				}
 			}
-			
+
 			/* 外部配置的后置拦截器后执行 */
-			InterExecution after_interExe = new InterExecution("after", this.context);// 7.后置拦截器
+			InterExecution after_interExe = new InterExecution("after",
+					this.context);// 7.后置拦截器
 			if (after_interExe.findAndExecuteInter()) {
 				after_interExe.showErr();
 				return;
 			}
-			
+
 			// 对Action执行返回结果的处理
 			this.handleResult();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-		}finally{
+		} finally {
 			// Action方法执行之后，清空临时文件
 			if (!this.context.getUploadMap().isEmpty())
-				for (Iterator<Entry<String, List<UploadFile>>> it = this.context.getUploadMap().entrySet().iterator(); it.hasNext(); ){
+				for (Iterator<Entry<String, List<UploadFile>>> it = this.context
+						.getUploadMap().entrySet().iterator(); it.hasNext();) {
 					Entry<String, List<UploadFile>> en = it.next();
 					if (en.getValue() == null)
 						continue;
-					
-					for (UploadFile f : en.getValue()){
+
+					for (UploadFile f : en.getValue()) {
 						FileUtil.deleteFile(f.getTmpFile());
+					}
 				}
-			}
 		}
-		
+
 	}
 }
