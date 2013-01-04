@@ -20,31 +20,31 @@
 	src="http://localhost:8080/myproject/grid/flashchart/fusioncharts/FusionCharts.js"></script-->
 <script type="text/javascript">
 	// 检查是否只有一条记录
-	function doCheckIsOnlyRow() {
+	function doCheckIsOnlyRow1() {
 		var recs = showempreg_grid.getSelectedRecords();
-		var empIds = new Array();
+		var empIds1 = new Array();
 		var i = 0;
 		$.each(showempreg_grid.checkedRows, function(key, value) {
-			//alert("key:" + key + "value:" + value);
-			empIds[i] = key;
+			alert("key:" + key + "value:" + value);
+			empIds1[i] = key;
 			i++;
 		});
-		if (empIds.length != 1) {
+		if (empIds1.length != 1) {
 			return -1;
 		} else {
-			return empIds[0];
+			return empIds1[0];
 		}
 	}
 	//checkbox编辑员工基本信息
 	function doDropEmpReg() {
-		var id = doCheckIsOnlyRow();
-		if (id < 0) {
+		var id1 = doCheckIsOnlyRow1();
+		if (id1 < 0) {
 			alertMsg.error("请选择一位员工来删除注册信息！");
 		} else {
 			// 如果只有一条
 			alertMsg.confirm("是否确定删除该注册信息？", {
 				okCall : function() {
-					$.post('${BaseURL}hrs/dropEmpReg?empId=${EMP_ID}&ID=' + id,
+					$.post('${BaseURL}hrs/dropEmpReg?empId=${EMP_ID}&ID=' + id1,
 							{
 								empId : ''
 							}, function() {
@@ -57,12 +57,12 @@
 	}
 	//checkbox编辑员工基本信息
 	function doEditEmpReg() {
-		var id = doCheckIsOnlyRow();
-		if (id < 0) {
+		var id1 = doCheckIsOnlyRow1();
+		if (id1 < 0) {
 			alertMsg.error("请选择一位员工编辑注册信息！");
 		} else {
 			// 如果只有一条
-			$.pdialog.open('${BaseURL}hrs/editEmpReg?empId=${EMP_ID}&ID=' + id,
+			$.pdialog.open('${BaseURL}hrs/editEmpReg?empId=${EMP_ID}&ID=' + id1,
 					'xgzc', "修改注册信息", {
 						width : 640,
 						height : 480,

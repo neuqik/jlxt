@@ -13,9 +13,11 @@ import net.biz.component.appinfo.RequestInfo;
 import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
 import net.biz.grid.gt.util.SQLUtils;
+import net.biz.hr.vo.HRD_EMP_CERT;
 import net.biz.hr.vo.HRD_EMP_FAMILY;
 import net.biz.hr.vo.HRD_EMP_JOB;
 import net.biz.hr.vo.HRD_EMP_PERF;
+import net.biz.hr.vo.HRD_EMP_PROF;
 import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
@@ -196,7 +198,7 @@ public class HRServiceImpl implements IHRService {
 			List<Object> deletes, String empId) throws Exception {
 		// 1.执行插入
 		String sql = "insert into hrd_emp_perf(ID,EMP_ID,PERIOD,PERFORMANCE,PROF_PERF,WORK_PERF,MANAGE_PERF,MEMO,VALID) values(?,?,?,?,?,?,?,?,?)";
-		Iterator it = inserts.iterator();
+		Iterator<Object> it = inserts.iterator();
 		Object[] params = new Object[9];
 		int i = 0;
 		while (it.hasNext()) {
@@ -223,7 +225,7 @@ public class HRServiceImpl implements IHRService {
 		}
 		// 2.执行更新
 
-		Iterator it1 = updates.iterator();
+		Iterator<Object> it1 = updates.iterator();
 		Object[] params1 = new Object[6];
 		int i1 = 0;
 		while (it1.hasNext()) {
@@ -251,7 +253,7 @@ public class HRServiceImpl implements IHRService {
 			JDBCOracleUtil.executeDML(sql1.toUpperCase(), params1);
 		}
 		// 3.执行删除
-		Iterator it11 = deletes.iterator();
+		Iterator<Object> it11 = deletes.iterator();
 		Object[] params11 = new Object[1];
 
 		while (it11.hasNext()) {
@@ -267,7 +269,7 @@ public class HRServiceImpl implements IHRService {
 			List<Object> deletes, String empId) throws Exception {
 		// 1.执行插入
 		String sql = "insert into hrd_emp_train(ID,EMP_ID,TRAININGDATE,TRAINING,KNOWLEDGE,TRAININGDEPT,FEE,INTERTRAINING,MEMO,VALID ) values(?,?,?,?,?,?,?,?,?,?)";
-		Iterator it = inserts.iterator();
+		Iterator<Object> it = inserts.iterator();
 		Object[] params = new Object[10];
 		int i = 0;
 		while (it.hasNext()) {
@@ -296,7 +298,7 @@ public class HRServiceImpl implements IHRService {
 		}
 		// 2.执行更新
 
-		Iterator it1 = updates.iterator();
+		Iterator<Object> it1 = updates.iterator();
 		Object[] params1 = new Object[7];
 		int i1 = 0;
 		while (it1.hasNext()) {
@@ -325,7 +327,7 @@ public class HRServiceImpl implements IHRService {
 			JDBCOracleUtil.executeDML(sql1.toUpperCase(), params1);
 		}
 		// 3.执行删除
-		Iterator it11 = deletes.iterator();
+		Iterator<Object> it11 = deletes.iterator();
 		Object[] params11 = new Object[1];
 
 		while (it11.hasNext()) {
@@ -640,5 +642,113 @@ public class HRServiceImpl implements IHRService {
 		List<Object> params = new ArrayList<Object>();
 		params.add(id);
 		JDBCOracleUtil.ExecuteDML(sql, params);
+	}
+
+	@Override
+	public void saveEmpProf(List<Object> inserts, List<Object> updates,
+			List<Object> deletes, String empId) throws Exception {
+		// 1.执行插入
+		String sql = "insert into hrd_emp_prof(ID,EMP_ID,PROFTYPE,OBTAINTYPE,OBTAINDATE,OBTAINDEPT,PROF_NUM,ENDDATE,MEMO,VALID ) values(?,?,?,?,?,?,?,?,?,?)";
+		Iterator<Object> it = inserts.iterator();
+		while (it.hasNext()) {
+			HRD_EMP_PROF row = (HRD_EMP_PROF) it.next();
+			List<Object> params = new ArrayList<Object>();
+			String ID = JDBCOracleUtil.getID();
+			params.add(ID);
+			params.add(empId);
+
+			params.add(row.getPROFTYPE());
+			params.add(row.getOBTAINTYPE());
+			params.add(row.getOBTAINDATEForSqlDate());
+			params.add(row.getOBTAINDEPT());
+			params.add(row.getPROF_NUM());
+			params.add(row.getENDDATEForSqlDate());
+			params.add(row.getMEMO());
+			params.add("1");
+			JDBCOracleUtil.ExecuteDML(sql.toUpperCase(), params);
+		}
+		// 2.执行更新
+
+		Iterator<Object> it1 = updates.iterator();
+		while (it1.hasNext()) {
+
+			HRD_EMP_PROF row = (HRD_EMP_PROF) it1.next();
+			String id = row.getID();
+			List<Object> params = new ArrayList<Object>();
+			String sql1 = "update hrd_emp_prof set PROFTYPE=?,OBTAINTYPE=?,OBTAINDATE=?,OBTAINDEPT=?,PROF_NUM=?,ENDDATE=?,MEMO=? where id="
+					+ id;
+			params.add(row.getPROFTYPE());
+			params.add(row.getOBTAINTYPE());
+			params.add(row.getOBTAINDATEForSqlDate());
+			params.add(row.getOBTAINDEPT());
+			params.add(row.getPROF_NUM());
+			params.add(row.getENDDATEForSqlDate());
+			params.add(row.getMEMO());
+
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+		// 3.执行删除
+		Iterator<Object> it11 = deletes.iterator();
+
+		while (it11.hasNext()) {
+			HRD_EMP_PROF row = (HRD_EMP_PROF) it11.next();
+			List<Object> params = new ArrayList<Object>();
+			params.add(row.getID());
+			String sql1 = "update hrd_emp_prof set valid='0' where id=?";
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+	}
+
+	@Override
+	public void saveEmpCert(List<Object> inserts, List<Object> updates,
+			List<Object> deletes, String empId) throws Exception {
+		// 1.执行插入
+		String sql = "insert into hrd_emp_cert(ID,EMP_ID,CERT,CERTNO,OBTDATE,CLOSEDATE,CERTDEPT,MEMO,VALID ) values(?,?,?,?,?,?,?,?,?)";
+		Iterator<Object> it = inserts.iterator();
+		while (it.hasNext()) {
+			HRD_EMP_CERT row = (HRD_EMP_CERT) it.next();
+			List<Object> params = new ArrayList<Object>();
+			String ID = JDBCOracleUtil.getID();
+			params.add(ID);
+			params.add(empId);
+			params.add(row.getCERT());
+			params.add(row.getCERTNO());
+			params.add(row.getOBDATEForSqlDate());
+			params.add(row.getCLOSEDATEForSqlDate());
+			params.add(row.getCERTDEPT());
+			params.add(row.getMEMO());
+			params.add("1");
+			JDBCOracleUtil.ExecuteDML(sql.toUpperCase(), params);
+		}
+		// 2.执行更新
+
+		Iterator<Object> it1 = updates.iterator();
+		while (it1.hasNext()) {
+
+			HRD_EMP_CERT row = (HRD_EMP_CERT) it1.next();
+			String id = row.getID();
+			List<Object> params = new ArrayList<Object>();
+			String sql1 = "update hrd_emp_cert set CERT=?,CERTNO=?,OBTDATE=?,CLOSEDATE=?,CERTDEPT=?,MEMO=? where id="
+					+ id;
+			params.add(row.getCERT());
+			params.add(row.getCERTNO());
+			params.add(row.getOBDATEForSqlDate());
+			params.add(row.getCLOSEDATEForSqlDate());
+			params.add(row.getCERTDEPT());
+			params.add(row.getMEMO());
+
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+		// 3.执行删除
+		Iterator<Object> it11 = deletes.iterator();
+
+		while (it11.hasNext()) {
+			HRD_EMP_CERT row = (HRD_EMP_CERT) it11.next();
+			List<Object> params = new ArrayList<Object>();
+			params.add(row.getID());
+			String sql1 = "update hrd_emp_cert set valid='0' where id=?";
+			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+
 	}
 }

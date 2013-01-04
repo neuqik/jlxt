@@ -82,7 +82,6 @@
 		if (id < 0) {
 			alertMsg.error("请选择一位员工来编辑职称及认证信息！");
 		} else {
-
 			// 如果只有一条
 			navTab.openTab("zcrz", "${BaseURL}hrs/showEmpProfCert?empId=" + id,
 					{

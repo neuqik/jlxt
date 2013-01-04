@@ -20,9 +20,11 @@ import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
 import net.biz.grid.gt.server.GridServerHandler;
 import net.biz.hr.model.IHRService;
+import net.biz.hr.vo.HRD_EMP_CERT;
 import net.biz.hr.vo.HRD_EMP_FAMILY;
 import net.biz.hr.vo.HRD_EMP_JOB;
 import net.biz.hr.vo.HRD_EMP_PERF;
+import net.biz.hr.vo.HRD_EMP_PROF;
 import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
@@ -797,5 +799,95 @@ public class HRAction extends BaseAction {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
+	}
+
+	/**
+	 * 显示和修改员工职称信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpProf")
+	@POST
+	@GET
+	public String toShowEmpProf(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+		return "forward:hr/view/showEmpProf.jsp";
+	}
+
+	/**
+	 * 保存员工职称信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpProf")
+	@POST
+	@GET
+	public String toSaveEmpProf(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+
+		try {
+			List<Object> insertList = handler
+					.getInsertedRecords(HRD_EMP_PROF.class);
+			List<Object> updateList = handler
+					.getUpdatedRecords(HRD_EMP_PROF.class);
+			List<Object> deleteList = handler
+					.getDeletedRecords(HRD_EMP_PROF.class);
+			myservice.saveEmpProf(insertList, updateList, deleteList, empId);
+			handler.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			handler.setSuccess(false);
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return null;
+	}
+
+	/**
+	 * 显示和修改员工其他认证信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showEmpCert")
+	@POST
+	@GET
+	public String toShowEmpCert(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+		return "forward:hr/view/showEmpCert.jsp";
+	}
+
+	/**
+	 * 保存员工认证信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpCert")
+	@POST
+	@GET
+	public String toSaveEmpCert(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+
+		try {
+			List<Object> insertList = handler
+					.getInsertedRecords(HRD_EMP_CERT.class);
+			List<Object> updateList = handler
+					.getUpdatedRecords(HRD_EMP_CERT.class);
+			List<Object> deleteList = handler
+					.getDeletedRecords(HRD_EMP_CERT.class);
+			myservice.saveEmpCert(insertList, updateList, deleteList, empId);
+			handler.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			handler.setSuccess(false);
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return null;
 	}
 }

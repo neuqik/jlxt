@@ -204,4 +204,28 @@ public interface IHRService {
 	 * @throws Exception
 	 */
 	public void dropEmpReg(String id) throws Exception;
+
+	/**
+	 * 保存员工职称信息
+	 * 
+	 * @param inserts
+	 * @param updates
+	 * @param deletes
+	 * @param empId
+	 * @throws Exception
+	 */
+	public void saveEmpProf(List<Object> inserts, List<Object> updates,
+			List<Object> deletes, String empId) throws Exception;
+
+	/**
+	 * 保存员工认证信息
+	 * 
+	 * @param inserts
+	 * @param updates
+	 * @param deletes
+	 * @param empId
+	 * @throws Exception
+	 */
+	public void saveEmpCert(List<Object> inserts, List<Object> updates,
+			List<Object> deletes, String empId) throws Exception;
 }

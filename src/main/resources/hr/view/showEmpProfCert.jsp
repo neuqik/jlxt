@@ -34,8 +34,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="tabsContent" style="height: 100%;"
-			id="showempprofcert_tabcontent">
+		<div class="tabsContent" style="height: 100%;">
 			<!-- 要有空的DIV对应tab页的放在下面 -->
 			<div></div>
 			<div></div>
