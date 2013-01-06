@@ -10,13 +10,11 @@
 				style="overflow-x: hidden; overflow-y: hidden">
 				<div class="divider"></div>
 				<p>
-					<label>员工编号：</label> <input name="EMP_ID" type="text" size="30"
-						value="${EMP_ID}" alt="请输入要办理人员的员工编号"
-						suggestFields="orgNum,orgName"
-						suggestUrl="demo/database/db_lookupSuggest.html" lookupGroup="obj"
-						lookupPk="orgName" /> <a class="btnLook"
-						href="demo/database/dwzOrgLookup.html" lookupGroup="obj"
-						lookupPk="orgName">查找带回</a>
+					<label>员工编号：</label><input class="required" name="EMP_ID" size="30"
+						type="text" value="请输入或选择员工编号" lookupGroup="emplookup"
+						lookupName="empid" /> <a class="btnLook"
+						href="${BaseURL}common/doEmpLookup" lookupGroup="emplookup"
+						lookupName="empid">查找带回</a>
 				</p>
 				<p>
 					<label>身份证号：</label> <input name="IDCARD" type="text" size="30"
