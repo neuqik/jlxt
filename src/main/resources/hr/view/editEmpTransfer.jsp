@@ -9,32 +9,33 @@
 			<div class="pageFormContent" layoutH="58"
 				style="overflow-x: hidden; overflow-y: hidden">
 				<div class="divider"></div>
+				<!-- lookup 回填js代码重写，根据ID和返回的json的key匹配，因此必须完全匹配 -->
 				<p>
-					<label>员工编号：</label><input class="required" name="EMP_ID" size="30"
-						type="text" value="请输入或选择员工编号" lookupGroup="emplookup"
-						lookupName="empid" /> <a class="btnLook"
-						href="${BaseURL}common/doEmpLookup" lookupGroup="emplookup"
-						lookupName="empid">查找带回</a>
+					<input id="ID" name="ID" value="" type="hidden" /> <label>员工编号：</label><input
+						class="required" id="EMP_ID" name="EMP_ID" size="30" type="text"
+						alt="" lookupGroup="" lookupName="EMP_ID" /> <a class="btnLook"
+						href="${BaseURL}common/doEmpLookup" lookupGroup=""
+						lookupName="EMP_ID" lookupPk="ID">查找</a>
 				</p>
 				<p>
-					<label>身份证号：</label> <input name="IDCARD" type="text" size="30"
-						value="${IDCARD}" alt="请输入要办理人员的身份证号" />
+					<label>身份证号：</label> <input id="IDCARD" name="IDCARD" type="text"
+						size="30" value="${IDCARD}" readonly="readonly" />
 				</p>
 				<p>
-					<label>姓名：</label> <input name="EMP_NAME" type="text" size="30"
-						value="${EMP_NAME}" readonly="readonly" />
+					<label>姓名：</label> <input id="EMP_NAME" name="EMP_NAME" type="text"
+						size="30" value="${EMP_NAME}" readonly="readonly" />
 				</p>
 				<p>
-					<label>性别：</label> <input name="GENDER" type="text" size="30"
-						value="${GENDER}" readonly="readonly" />
+					<label>性别：</label> <input id="GENDER" name="GENDER" type="text"
+						size="30" value="${GENDER}" readonly="readonly" />
 				</p>
 				<p>
-					<label>年龄：</label> <input name="AGE" type="text" size="30"
+					<label>年龄：</label> <input id="AGE" name="AGE" type="text" size="30"
 						value="${AGE}" readonly="readonly" />
 				</p>
 				<p>
-					<label>部门(分公司)：</label> <input name="DEPT_ID" type="text" size="30"
-						value="${DEPT_ID}" readonly="readonly" />
+					<label>部门(分公司)：</label> <input id="DEPT_ID" name="DEPT_ID"
+						type="text" size="30" value="${DEPT_ID}" readonly="readonly" />
 				</p>
 				<div class="divider"></div>
 				<p>
