@@ -50,6 +50,14 @@ public class AppInfo {
 		return Integer.parseInt(String.valueOf(getBody().getParameter(
 				Const.ROW_COUNT)));
 	}
+	/**
+	 * 获取长行数
+	 * @return
+	 */
+	public long getLongRowCount() {
+		return Long.parseLong(String.valueOf(getBody().getParameter(
+				Const.ROW_COUNT)));
+	}
 
 	/**
 	 * 设置SQL查询的结果对象

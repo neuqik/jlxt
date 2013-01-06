@@ -55,6 +55,10 @@ public class RequestInfo {
 		body.put(Const.ROW_COUNT, totalCount);
 	}
 
+	public void setRowCount(long totalCount) {
+		body.put(Const.ROW_COUNT, totalCount);
+	}
+
 	/**
 	 * 查询SQL参数的内容
 	 * 
