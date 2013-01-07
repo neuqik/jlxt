@@ -19,7 +19,7 @@
 <script type="text/javascript">
 	// 检查是否只有一条记录
 	function doCheckIsOnlyRow() {
-		var recs = showemployee_grid.getSelectedRecords();
+
 		var empIds = new Array();
 		var i = 0;
 		$.each(showemployee_grid.checkedRows, function(key, value) {
@@ -73,6 +73,7 @@
 				title : "个人资料",
 				fresh : false,
 				data : {}
+
 			});
 		}
 	}
@@ -105,6 +106,26 @@
 			});
 		}
 	}
+	// 删除员工
+	function doDelete() {
+		var id_delete = doCheckIsOnlyRow();
+		if (id_delete < 0) {
+			alertMsg.error("请选择一位员工来删除！");
+		} else {
+			alertMsg.confirm("是否要删除编号为" + id_delete + "的员工？删除前请确认该员工没有在建工程。", {
+				okCall : function() {
+					$.post("${BaseURL}hrs/deleteEmp?empId=" + id_delete, {},
+							function() {
+								DWZ.ajaxDone;
+								showemployee_grid.reload();
+								showemployee_grid.checkedRows = {};
+							}, "json");
+
+					//console.log(showemployee_grid.checkedRows);
+				}
+			});
+		}
+	}
 </script>
 
 <div class="pageContent" id="showemployee_head"
@@ -118,8 +139,7 @@
 			<li><a class="edit" onclick="doEditExt();" rel="grzl"><span>个人资料</span></a></li>
 			<li><a class="edit" onclick="doEditProfCert();" rel="zcrz"><span>职称及认证</span></a></li>
 			<li><a class="edit" onclick="doEditPic();" rel="ygzp"><span>员工照片</span></a></li>
-			<li><a title="确实要删除这些记录吗?" target="selectedTodo" rel="chk"
-				href="${BaseURL}hrs/batchRemove?_method=delete" class="delete"><span>删除</span></a></li>
+			<li><a class="delete" onclick="doDelete();" rel="ygsc"><span>删除</span></a></li>
 			<li class="line">line</li>
 			<li><a class="icon" href="javascript:;"><span>导入EXCEL</span></a></li>
 		</ul>

@@ -169,7 +169,7 @@ var colsOption = [ {
 var gridOption = {
 	id : "showemployee_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
-	// saveURL : MyURL + 'hrs/saveOrder',
+	//saveURL : MyURL + 'hrs/deleteEmp',
 	width : "100%", // "100%", // 700,
 	height : c - header, // "100%", // 330,
 	container : "gridbox_showemployee",

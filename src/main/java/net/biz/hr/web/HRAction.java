@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -1035,4 +1036,29 @@ public class HRAction extends BaseAction {
 		}
 	}
 
+	/**
+	 * 删除员工信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/deleteEmp")
+	@POST
+	@GET
+	public String toDeleteEmp(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+
+		try {
+			String sql = "UPDATE HRD_EMP SET VALID='0' WHERE EMP_ID=?";
+			List<Object> params = new ArrayList<Object>();
+			params.add(empId);
+			JDBCOracleUtil.ExecuteDML(sql, params);
+			return successJSONForward("成功删除", "navTab", "/hrs/showEmployee",
+					"yggl");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
 }

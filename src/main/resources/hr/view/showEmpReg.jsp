@@ -21,11 +21,9 @@
 <script type="text/javascript">
 	// 检查是否只有一条记录
 	function doCheckIsOnlyRow1() {
-		var recs = showempreg_grid.getSelectedRecords();
 		var empIds1 = new Array();
 		var i = 0;
 		$.each(showempreg_grid.checkedRows, function(key, value) {
-			alert("key:" + key + "value:" + value);
 			empIds1[i] = key;
 			i++;
 		});
@@ -39,17 +37,19 @@
 	function doDropEmpReg() {
 		var id1 = doCheckIsOnlyRow1();
 		if (id1 < 0) {
-			alertMsg.error("请选择一位员工来删除注册信息！");
+			alertMsg.error("请选择一条注册信息来删除！");
 		} else {
 			// 如果只有一条
 			alertMsg.confirm("是否确定删除该注册信息？", {
 				okCall : function() {
-					$.post('${BaseURL}hrs/dropEmpReg?empId=${EMP_ID}&ID=' + id1,
-							{
+					$.post(
+							'${BaseURL}hrs/dropEmpReg?empId=${EMP_ID}&ID='
+									+ id1, {
 								empId : ''
 							}, function() {
 								DWZ.ajaxDone;
 								showempreg_grid.reload();
+								showempreg_grid.checkedRows = {};
 							}, "json");
 				}
 			});
@@ -59,10 +59,11 @@
 	function doEditEmpReg() {
 		var id1 = doCheckIsOnlyRow1();
 		if (id1 < 0) {
-			alertMsg.error("请选择一位员工编辑注册信息！");
+			alertMsg.error("请选择一条注册信息编辑！");
 		} else {
 			// 如果只有一条
-			$.pdialog.open('${BaseURL}hrs/editEmpReg?empId=${EMP_ID}&ID=' + id1,
+			$.pdialog.open(
+					'${BaseURL}hrs/editEmpReg?empId=${EMP_ID}&ID=' + id1,
 					'xgzc', "修改注册信息", {
 						width : 640,
 						height : 480,
@@ -76,13 +77,14 @@
 						close : function() {
 							// 对话框关闭时执行刷新
 							showempreg_grid.reload();
+							showempreg_grid.checkedRows = {};
 							return true;
 						}
 					});
 
 		}
 	}
-	//checkbox编辑员工基本信息
+
 	function doAddEmpReg() {
 		// 如果只有一条
 		$.pdialog.open("${BaseURL}hrs/addEmpReg?empId=${EMP_ID}", 'tjzc',
