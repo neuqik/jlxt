@@ -107,6 +107,10 @@ public class GridServerHandler {
 				} else if ("save".equalsIgnoreCase(action)) {
 
 				} else if ("export".equalsIgnoreCase(action)) {
+					// wonder add for export 可用 filter
+					initPageInfo();
+					initSortInfo();
+					initFilterInfo();
 					initColumnInfo();
 				}
 			} catch (JSONException e) {
@@ -408,12 +412,14 @@ public class GridServerHandler {
 		xlsw.setEncoding(getEncoding());
 		xlsw.start();
 		xlsw.addRow(headsName);
-		for (int i = 0, len = data.size(); i < len; i++) {
+		// 最多导出1万条记录 wonder
+		for (int i = 0, len = data.size() >= 10000 ? 10000 : data.size(); i < len; i++) {
 			Map record = (Map) data.get(i);
 			xlsw.addRow(map2Array(record, properiesName));
 		}
 		xlsw.end();
 		xlsw.close();
+		out.close();
 	}
 
 	public void printSaveResponseText() {

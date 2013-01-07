@@ -16,6 +16,7 @@ import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
 import net.biz.component.model.CommonService;
 import net.biz.component.vo.EMPLOOKUP;
+import net.biz.grid.gt.server.GridServerHandler;
 import net.biz.util.BeanUtil;
 import net.biz.util.JDBCOracleUtil;
 
@@ -43,6 +44,8 @@ public class CommonAction extends BaseAction {
 	@POST
 	public String doPageQuery() {
 		try {
+//			handler = new GridServerHandler(MVC.ctx().getRequest(), MVC.ctx()
+//					.getResponse());
 			String sql = (String) MVC.ctx().getRequest()
 					.getParameter(Const.SQL).toUpperCase();
 			RequestInfo request = wrapRequest(sql);
@@ -59,10 +62,16 @@ public class CommonAction extends BaseAction {
 	@POST
 	public void doExport() {
 		try {
+			// 重新初始化handler，export的request不一样
+//			handler = new GridServerHandler(MVC.ctx().getRequest(), MVC.ctx()
+//					.getResponse());
 			String sql = (String) MVC.ctx().getRequest()
 					.getParameter(Const.SQL).toUpperCase();
 			RequestInfo request = wrapRequest(sql);
+			request.setPageSize(9999);
+			request.setStartRow(1);
 			AppInfo app = _service.queryListByPage(request);
+			MVC.ctx().getResponse().reset();
 			handler.exportXLSfromMaps(app.getResultData());
 		} catch (Exception e) {
 			e.printStackTrace();
