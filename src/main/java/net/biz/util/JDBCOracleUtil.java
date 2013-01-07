@@ -609,6 +609,32 @@ public class JDBCOracleUtil {
 	}
 
 	/**
+	 * 绑定变量方式执行SQL，用于外部统一控制事务，conn应在外面提交、回滚和关闭
+	 * 
+	 * @param sql
+	 * @param params
+	 * @param conn
+	 * @throws SQLException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
+	public static void executeDML(String sql, Object[] params, Connection conn)
+			throws SQLException {
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement(sql);
+			for (int i = 0; i < params.length; i++) {
+				st.setObject(i + 1, params[i]);
+			}
+			st.execute();
+		} finally {
+			if (st != null)
+				st.close();
+		}
+	}
+
+	/**
 	 * 使用绑定变量方式执行DML语句 内部事务
 	 * 
 	 * @param sql
@@ -627,5 +653,26 @@ public class JDBCOracleUtil {
 			param[i] = params.get(i);
 		}
 		executeDML(sql, param);
+	}
+
+	/**
+	 * 绑定变量方式执行SQL，外部控制连接打开、关闭、提交
+	 * 
+	 * @param sql
+	 * @param params
+	 * @param conn
+	 * @throws SQLException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
+	public static void ExecuteDML(String sql, List<Object> params,
+			Connection conn) throws SQLException, InstantiationException,
+			IllegalAccessException, ClassNotFoundException {
+		Object[] param = new Object[params.size()];
+		for (int i = 0; i < params.size(); i++) {
+			param[i] = params.get(i);
+		}
+		executeDML(sql, param, conn);
 	}
 }

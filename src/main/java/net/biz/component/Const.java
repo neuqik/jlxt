@@ -19,4 +19,8 @@ public class Const {
 	public static final String FILTERS = "filters";
 	// 排序参数
 	public static final String SORTS = "sorts";
+	// 调转类型，内部调转
+	public static final String TRANSFERTYPE_INTER = "02";
+	// 人员类型，终止
+	public static final String EMPTYPE_TERM = "99";
 }

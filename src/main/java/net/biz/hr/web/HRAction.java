@@ -14,6 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 import net.biz.component.BaseAction;
+import net.biz.component.Const;
 import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
 import net.biz.framework.codelist.CodeList;
@@ -29,6 +30,7 @@ import net.biz.hr.vo.HRD_EMP_PROF;
 import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
+import net.biz.hr.vo.HRD_EMP_TRANSFER;
 import net.biz.hr.vo.HRD_EMP_WORK;
 import net.biz.hr.vo.HRD_Emp;
 import net.biz.util.BeanUtil;
@@ -300,12 +302,11 @@ public class HRAction extends BaseAction {
 	@GET
 	public String toSaveEditEmp(Map<String, String> model) {
 		try {
-			HttpServletRequest req = MVC.ctx().getRequest();
-			HRD_Emp emp = (HRD_Emp) parseRequest(req, new HRD_Emp());
+			HRD_Emp emp = (HRD_Emp) parseRequest(new HRD_Emp());
 			myservice.saveEditEmp(emp);
 			// 设置员工编号，供其他页面使用
 			model.put("EMP_ID", emp.getEMP_ID());
-			// TODO:成功的json，清空后继续打开
+			// 成功的json，清空后继续打开
 			return successJSON("修改员工基本信息成功，员工编号：" + emp.getEMP_ID(), "dialog",
 					"hrs/showEmployee", "ygxxwh");
 		} catch (Exception e) {
@@ -961,7 +962,58 @@ public class HRAction extends BaseAction {
 	@Path("/showEmpTransfer")
 	@POST
 	@GET
-	public String toShowEmpTransfer(Map<String, String> model) {
+	public String toShowEmpTransfer(Map<String, Object> model) {
+		try {
+			// 查询
+			// 1.获取Codelist
+			String code1 = "DEPT_ID|TRANSFERTYPE";
+
+			// 代码值
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
 			return "forward:hr/view/editEmpTransfer.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
 	}
+
+	/**
+	 * 保存员工调转信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpTransfer")
+	@POST
+	@GET
+	public String toSaveEmpTransfer(Map<String, Object> model) {
+
+		try {
+			// 1.判断是否是
+			HRD_EMP_TRANSFER emptrans = (HRD_EMP_TRANSFER) parseRequest(new HRD_EMP_TRANSFER());
+			// 1.1.如果是内部调转，则判断是否有新单位选择，且新单位和老单位不一样
+			if (Const.TRANSFERTYPE_INTER.equals(emptrans.getTRANSFERTYPE())) {
+				if ("".equals(emptrans.getNEWDEPT_ID())) {
+					return dwz.getFailedJson("内部调转的新部门不能为空。").toString();
+				}
+				if ((emptrans.getDEPT_IDValue()).equals(emptrans
+						.getNEWDEPT_ID())) {
+					return dwz.getFailedJson("内部调转的新部门不能与原部门相同。").toString();
+				}
+			}
+			emptrans.setPREVDEPT_ID(emptrans.getDEPT_IDValue());
+			myservice.doEmpTransfer(emptrans);
+			// 重新刷新
+			return successJSONForward("员工调转成功，员工编号：" + emptrans.getEMP_ID(),
+					"navTab", "hrs/showEmpTransfer", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
 }

@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.biz.component.Const;
 import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
 import net.biz.grid.gt.model.FilterInfo;
@@ -21,6 +22,7 @@ import net.biz.hr.vo.HRD_EMP_PROF;
 import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
+import net.biz.hr.vo.HRD_EMP_TRANSFER;
 import net.biz.hr.vo.HRD_EMP_WORK;
 import net.biz.hr.vo.HRD_Emp;
 import net.biz.util.DateUtils;
@@ -748,6 +750,60 @@ public class HRServiceImpl implements IHRService {
 			params.add(row.getID());
 			String sql1 = "update hrd_emp_cert set valid='0' where id=?";
 			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
+		}
+
+	}
+
+	@Override
+	public void doEmpTransfer(HRD_EMP_TRANSFER emptrans) throws Exception {
+		Connection conn = null;
+		List<Object> params = null;
+		String sql = "";
+		try {
+			// 判断调转类型，如果是内部调转，则更新人员信息的单位编号，然后记录调转记录
+			if (Const.TRANSFERTYPE_INTER.equals(emptrans.getTRANSFERTYPE())) {
+				// 1.1 更新人员单位
+				sql = "UPDATE HRD_EMP SET DEPT_ID=? WHERE EMP_ID=?";
+				conn = JDBCOracleUtil.getConnection();
+				params = new ArrayList<Object>();
+				params.add(emptrans.getNEWDEPT_ID());
+				params.add(emptrans.getEMP_ID());
+				JDBCOracleUtil.ExecuteDML(sql, params, conn);
+			}
+			// 其他调转则更新人员信息员工状态，记录调转记录
+			else {
+				// 1.1 更新人员单位
+				sql = "UPDATE HRD_EMP SET EMPTYPE=?, VALID=? WHERE EMP_ID=?";
+				conn = JDBCOracleUtil.getConnection();
+				params = new ArrayList<Object>();
+				params.add(Const.EMPTYPE_TERM);
+				params.add("0");
+				params.add(emptrans.getEMP_ID());
+			}
+			JDBCOracleUtil.ExecuteDML(sql, params, conn);
+			// 1.2 插入变动记录
+			String sqlinsert = "INSERT INTO HRD_EMP_TRANSFER(ID,EMP_ID,TRANSFERDATE,TRANSFERTYPE,TRANSFERREASON,PREVDEPT_ID,NEWDEPT_ID,MEMO,VALID) VALUES(?,?,?,?,?,?,?,?,?)";
+			List<Object> paramtrans = new ArrayList<Object>();
+			paramtrans.add(JDBCOracleUtil.getID());
+			paramtrans.add(emptrans.getEMP_ID());
+			paramtrans.add(emptrans.getTRANSFERDATEForSqlDate());
+			paramtrans.add(emptrans.getTRANSFERTYPE());
+			paramtrans.add(emptrans.getTRANSFERREASON());
+			paramtrans.add(emptrans.getPREVDEPT_ID());
+			paramtrans.add(emptrans.getNEWDEPT_ID());
+			paramtrans.add(emptrans.getMEMO());
+			paramtrans.add("1");
+			JDBCOracleUtil.ExecuteDML(sqlinsert, paramtrans, conn);
+			conn.commit();
+		} catch (Exception e) {
+			if (!conn.isClosed()) {
+				conn.rollback();
+			}
+			throw e;
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
 		}
 
 	}

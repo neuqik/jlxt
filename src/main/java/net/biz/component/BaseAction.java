@@ -84,6 +84,16 @@ public abstract class BaseAction {
 	}
 
 	/**
+	 * 从request中解析bean出来
+	 * 
+	 * @param bean
+	 * @return
+	 */
+	protected Object parseRequest(Object bean) {
+		return parseRequest(MVC.ctx().getRequest(), bean);
+	}
+
+	/**
 	 * 从请求中封装bean对象
 	 * 
 	 * @param request
@@ -109,9 +119,14 @@ public abstract class BaseAction {
 				// 如果bean的属性多，则忽略
 				if (reqVal == null)
 					reqVal = "";
-				Object beanValue = ConvertUtils.convert(reqVal, cls);
-				// 添冲Bean值
-				PropertyUtils.setProperty(bean, obj.toString(), beanValue);
+				if (cls != null) {
+					Object beanValue = ConvertUtils.convert(reqVal, cls);
+					// 添冲Bean值
+					PropertyUtils.setProperty(bean, obj.toString(), beanValue);
+				} else {
+					// TODO:用log替代
+					System.out.println("现在忽略:" + reqVal);
+				}
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
@@ -134,6 +149,7 @@ public abstract class BaseAction {
 	 *            窗口打开类型
 	 * @param 转发URL
 	 * @param 窗口的内容
+	 *            rel如果指定非当前窗口的rel，则会重新加载该窗口，不能加载自身，如果需要加载自身，则置空
 	 * @return
 	 */
 	protected String successJSON(String _mess, String openType,
@@ -145,6 +161,27 @@ public abstract class BaseAction {
 		String mess = _mess == null ? "操作成功" : _mess;
 		String path = ConfigConstant.BASE_URL + forwardURL;
 		return new CallBackJson("200", mess, rel, path, "closeCurrent", "信息")
+				.toString();
+	}
+
+	/**
+	 * 返回成功信息后，打开转发url
+	 * 
+	 * @param _mess
+	 * @param openType
+	 * @param forwardURL
+	 * @param rel
+	 * @return
+	 */
+	protected String successJSONForward(String _mess, String openType,
+			String forwardURL, String rel) {
+		// 暂不用
+		// String callbackType = "dialog".equalsIgnoreCase(openType) ?
+		// "reloadTab"
+		// : "closeCurrent";
+		String mess = _mess == null ? "操作成功" : _mess;
+		String path = ConfigConstant.BASE_URL + forwardURL;
+		return new CallBackJson("200", mess, rel, path, "forward", "信息")
 				.toString();
 	}
 

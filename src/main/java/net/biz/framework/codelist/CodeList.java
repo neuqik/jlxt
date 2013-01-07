@@ -145,6 +145,26 @@ public class CodeList {
 	}
 
 	/**
+	 * 根据代码描述获得代码值，用于反向查
+	 * 
+	 * @param codeType
+	 * @param codeValue
+	 * @return
+	 */
+	public static String getCodeValue(String codeType, String codeDesc) {
+		String value = "";
+		Iterator<Code> it = getCodeList(codeType).iterator();
+		while (it.hasNext()) {
+			Code type = (Code) it.next();
+			if (codeDesc.equalsIgnoreCase(type.getCodeDesc())) {
+				value = type.getCodeValue();
+				return value;
+			}
+		}
+		return value;
+	}
+
+	/**
 	 * 根据省获取市的下拉列表
 	 * 
 	 * @param loc1

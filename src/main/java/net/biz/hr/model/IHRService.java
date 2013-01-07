@@ -8,6 +8,7 @@ import net.biz.component.appinfo.RequestInfo;
 import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
 import net.biz.hr.vo.HRD_EMP_REG;
+import net.biz.hr.vo.HRD_EMP_TRANSFER;
 import net.biz.hr.vo.HRD_Emp;
 
 public interface IHRService {
@@ -228,4 +229,10 @@ public interface IHRService {
 	 */
 	public void saveEmpCert(List<Object> inserts, List<Object> updates,
 			List<Object> deletes, String empId) throws Exception;
+	/**
+	 * 处理员工调转
+	 * @param emptrans
+	 * @throws Exception
+	 */
+	public void doEmpTransfer(HRD_EMP_TRANSFER emptrans) throws Exception;
 }
