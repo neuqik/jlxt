@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -200,7 +201,24 @@ public class HRAction extends BaseAction {
 	@POST
 	@GET
 	public String validIDCard(Map model) {
-		// TODO:校验身份证号码
+		String idCard = getParam("IDCARD");
+		try {
+			int rowcount = JDBCOracleUtil.executeTotalCount(
+					"SELECT 1 FROM HRD_EMP WHERE IDCARD='" + idCard + "'", -1);
+			if (rowcount != 0) {
+				return "out:false";
+			} else {
+				return "out:true";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		return "out:true";
 	}
 
