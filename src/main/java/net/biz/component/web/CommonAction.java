@@ -31,7 +31,7 @@ import org.eweb4j.solidbase.user.model.UserActivityLogCons;
 @Path("/common")
 public class CommonAction extends BaseAction {
 
-	CommonService service = (CommonService) BeanUtil.getBean("CommonService");
+	CommonService _service = (CommonService) BeanUtil.getBean("CommonService");
 
 	/**
 	 * 通用分页查询Action，用于sigma grid 必须在sigma gird的参数中提供基础SQL语句
@@ -46,13 +46,27 @@ public class CommonAction extends BaseAction {
 			String sql = (String) MVC.ctx().getRequest()
 					.getParameter(Const.SQL).toUpperCase();
 			RequestInfo request = wrapRequest(sql);
-			AppInfo app = service.queryListByPage(request);
+			AppInfo app = _service.queryListByPage(request);
 			return "out:" + wrapResponse(app);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return null;
+	}
+
+	@Path("/doExport")
+	@GET
+	@POST
+	public void doExport() {
+		try {
+			String sql = (String) MVC.ctx().getRequest()
+					.getParameter(Const.SQL).toUpperCase();
+			RequestInfo request = wrapRequest(sql);
+			AppInfo app = _service.queryListByPage(request);
+			handler.exportXLSfromMaps(app.getResultData());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -108,7 +122,7 @@ public class CommonAction extends BaseAction {
 	}
 
 	/**
-	 * 执行分页查询
+	 * 执行查找带回的分页查询
 	 * 
 	 * @return
 	 */
@@ -174,7 +188,7 @@ public class CommonAction extends BaseAction {
 			request.setStartRow((pageNum - 1) * numPerPage);
 			request.setSQL(sql);
 
-			AppInfo app = service.queryListByPage(request);
+			AppInfo app = _service.queryListByPage(request);
 			allCount = app.getLongRowCount();
 
 			List<Map<String, Object>> result = app.getResultData();
@@ -238,7 +252,7 @@ public class CommonAction extends BaseAction {
 			request.setStartRow(1);
 			request.setSQL(sql);
 
-			AppInfo app = service.queryListByPage(request);
+			AppInfo app = _service.queryListByPage(request);
 			allCount = app.getLongRowCount();
 
 			List<Map<String, Object>> result = app.getResultData();
