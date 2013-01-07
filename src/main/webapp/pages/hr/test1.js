@@ -207,7 +207,7 @@ var gridOption = {
 	allowFreeze : true,
 	allowHide : true,
 	allowGroup : true,
-	toolbarContent : 'nav',
+	toolbarContent : 'nav | xls',
 	dataset : dsOption,
 	columns : colsOption,
 	onHeadClick : function(event, headCell, colObj, grid) {

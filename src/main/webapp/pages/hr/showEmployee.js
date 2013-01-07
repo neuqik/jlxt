@@ -174,7 +174,7 @@ var gridOption = {
 	height : c - header, // "100%", // 330,
 	container : "gridbox_showemployee",
 	toolbarPosition : 'bottom',
-	toobarContent : 'nav | pagesize | reload | print csv xls xml pdf filter chart | state',
+	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',
 	pageSizeList : [ 15, 25, 40, 60, 100, 200 ],
 	pageSize : 15,
 	dataset : dsOption,
@@ -186,8 +186,8 @@ var gridOption = {
 	allowHide : true,
 	showIndexColumn : true,
 	SigmaGridPath : '../grid/',// 图形路径，需要补充
-	exportURL : '',// 导出URL
-	exportFileName : 'file',
+	exportURL : MyURL + 'common/doExport?sql=' + sql,// 导出URL
+	exportFileName : 'emp_info',
 	remotePaging : true, // 服务器分页
 	remoteFilter : true, // 发送请求到LoadURL中，并且填写filterInfo
 	remoteSort : true, // 发送排序请求到LoadURL中，并且填写SortInfo
