@@ -149,7 +149,8 @@ public class HRAction extends BaseAction {
 		try {
 			MVC.ctx().getResponse().setContentType("text/xml;charset=utf-8");
 			MVC.ctx().getRequest().setCharacterEncoding("UTF-8");
-			PrintWriter pw = MVC.ctx().getResponse().getWriter();
+			PrintWriter pw = new PrintWriter(MVC.ctx().getResponse()
+					.getOutputStream());
 			String xml = "<EFSFRAME efsframe=\"urn=www-efsframe-cn\" version=\"1.0\"><QUERYINFO totalpages=\"1\" records=\"1\"><ROW><EVENTTYPEID>0907000006</EVENTTYPEID><EVENTTYPENAME>张谦</EVENTTYPENAME><AFFAIRTYPENAME>42011819850604024X</AFFAIRTYPENAME><DISABLED>2</DISABLED><VISIBLE>zhangqian@163.com</VISIBLE></ROW></QUERYINFO><ERRORINFO><ERRORRESULT>00</ERRORRESULT></ERRORINFO></EFSFRAME>";
 			pw.write(xml);
 			pw.close();
