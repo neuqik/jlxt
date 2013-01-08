@@ -960,11 +960,16 @@ public class HRAction extends BaseAction {
 			String path = ConfigConstant.ROOT_PATH + "pictures/emp/" + empId
 					+ ".jpg";
 			model.put("EMP_ID", empId);
+			String randFileName = empId + "_"
+					+ String.valueOf(Math.round(Math.random() * 10000));
+			model.put("RANDOMFILE", randFileName);
 			Map<String, List<UploadFile>> result = MVC.ctx().getUploadMap();
 			if (result.size() <= 0)
 				return dwz.getFailedJson("没有上传文件").toString();
 			UploadFile file = result.get("file1").get(0);
 			FileUtil.copy(file.getTmpFile(), new File(path));
+//			FileUtil.copy(file.getTmpFile(), new File(ConfigConstant.ROOT_PATH
+//					+ "pictures/emp/tmp/" + randFileName));
 			return successJSONReload("保存员工照片成功，员工编号：" + empId, "navTab",
 					"hrs/showEmpPic", "ygzp");
 		} catch (Exception e) {
