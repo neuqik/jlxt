@@ -49,7 +49,8 @@ var dsOption = {
 // 定义列选项
 var colsOption = [ {
 	id : 'chk',
-	isCheckColumn : true
+	isCheckColumn : true,
+	frozen : true
 }, {
 	id : 'ID',
 	header : "ID",
@@ -60,12 +61,14 @@ var colsOption = [ {
 	id : 'EMP_ID',
 	header : "员工编号",
 	width : 100,
-	editable : false
+	editable : false,
+	frozen : true
 }, {
 	id : 'EMP_NAME',
 	header : "姓名",
 	width : 100,
-	editable : false
+	editable : false,
+	frozen : true
 }, {
 	id : 'EMPTYPE',
 	header : "员工状态",
@@ -169,7 +172,7 @@ var colsOption = [ {
 var gridOption = {
 	id : "showemployee_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
-	//saveURL : MyURL + 'hrs/deleteEmp',
+	// saveURL : MyURL + 'hrs/deleteEmp',
 	width : "100%", // "100%", // 700,
 	height : c - header, // "100%", // 330,
 	container : "gridbox_showemployee",

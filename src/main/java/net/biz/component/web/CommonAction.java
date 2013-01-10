@@ -191,7 +191,7 @@ public class CommonAction extends BaseAction {
 			RequestInfo request = wrapRequest(sql);
 			request.setPageSize(numPerPage);
 			request.setRowCount(-1);
-			request.setStartRow((pageNum - 1) * numPerPage);
+			request.setStartRow((pageNum - 1) * numPerPage + 1);
 			request.setSQL(sql);
 
 			AppInfo app = _service.queryListByPage(request);

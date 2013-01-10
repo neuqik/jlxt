@@ -53,7 +53,8 @@ var dsOption = {
 // 定义列选项
 var colsOption = [ {
 	id : 'chk',
-	isCheckColumn : true
+	isCheckColumn : true,
+	frozen : true
 }, {
 	id : 'ID',
 	header : "ID",
@@ -64,12 +65,14 @@ var colsOption = [ {
 	id : 'EMP_ID',
 	header : "员工编号",
 	width : 100,
-	editable : false
+	editable : false,
+	frozen : true
 }, {
 	id : 'EMP_NAME',
 	header : "姓名",
 	width : 100,
-	editable : false
+	editable : false,
+	frozen : true
 }, {
 	id : 'EMPTYPE',
 	header : "员工状态",

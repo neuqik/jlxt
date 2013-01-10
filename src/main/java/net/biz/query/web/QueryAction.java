@@ -47,10 +47,13 @@ public class QueryAction extends BaseAction {
 			String code1 = "DEPT_ID|GENDER|EMPTYPE|ROLENAME|TITLE_ID|TITLENAME|TITLEWORK|INSUSTATUS|MARRIAGE|POLITIC|ARCHIVEKEEP|MASTER|LOCATION1|NATION";
 
 			model.put("EMP_ID", empId);
-			String sql = "SELECT id, emp_id, emp_name, nation, to_char(birth,'yyyy-mm-dd') birth, age, education, marriage, gender, politic, idcard, native, workdate, workage, emptype, to_char(joindate,'yyyy-mm-dd') joindate, joinage, dept_id, rolename, title_id, titlename, titlework, insustatus, tel, telehome, emergency, graduate, master, to_char(graddate,'yyyy-mm-dd') graddate, location1, reglocation, winterloc, picture, memo, valid, location2, location3, location4, archivekeep FROM V_HRD_EMP WHERE EMP_ID='"
+			String sql = "SELECT id, emp_id, emp_name, nation, to_char(birth,'yyyy-mm-dd') birth, age, education, marriage, gender, politic, idcard, native, workdate, workage, emptype, to_char(joindate,'yyyy-mm-dd') joindate, joinage, dept_id, rolename, title_id, titlename, titlework, insustatus, tel, telehome, emergency, graduate, master, to_char(graddate,'yyyy-mm-dd') graddate, location1, reglocation, winterloc, picture, memo, valid, location2, location3, location4, archivekeep FROM HRD_EMP WHERE EMP_ID='"
 					+ empId + "' AND ROWNUM=1";
 			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql
 					.toUpperCase());
+			if(result.size()<=0){
+				return dwz.getFailedJson("未找到编号为"+empId+"的员工信息!").toString(); 
+			}
 			HRD_Emp emp = new HRD_Emp();
 			// map转换成bean
 			BeanUtils.populate(emp, result.get(0));
@@ -85,7 +88,7 @@ public class QueryAction extends BaseAction {
 		try {
 			String empId = MVC.ctx().getRequest().getParameter("empId");
 			List<Map<String, Object>> result = JDBCOracleUtil
-					.executeQuery("SELECT EMP_NAME,IDCARD,DEPT_ID FROM V_HRD_EMP WHERE EMP_ID='"
+					.executeQuery("SELECT EMP_NAME,IDCARD,DEPT_ID FROM HRD_EMP WHERE EMP_ID='"
 							+ empId + "'");
 			model.put("EMP_ID", empId);
 			model.put("EMP_NAME", (String) result.get(0).get("EMP_NAME"));
