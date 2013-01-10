@@ -1033,7 +1033,7 @@ public class HRAction extends BaseAction {
 			emptrans.setPREVDEPT_ID(emptrans.getDEPT_IDValue());
 			myservice.doEmpTransfer(emptrans);
 			// 重新刷新
-			return successJSONForward("员工调转成功，员工编号：" + emptrans.getEMP_ID(),
+			return successJSONForward("员工异动办理成功，员工编号：" + emptrans.getEMP_ID(),
 					"navTab", "hrs/showEmpTransfer", "");
 		} catch (Exception e) {
 			e.printStackTrace();

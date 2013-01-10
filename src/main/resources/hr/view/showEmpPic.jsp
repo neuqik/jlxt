@@ -76,7 +76,10 @@
 						</div></li>
 					<li><div class="button">
 							<div class="buttonContent">
-								<button type="button" onClick="reloadThis();">刷新</button>
+								<button type="button" onClick="reloadThis();"
+									<c:if test="${READONLY}">
+								disabled="disabled"
+							</c:if>>刷新</button>
 							</div>
 						</div></li>
 					<li><div class="button">
