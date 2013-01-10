@@ -78,12 +78,12 @@ public abstract class ScanPackage {
 	private void scanPackage(File dir, String actionPackage) throws Exception {
 		if (!dir.isDirectory())
 			return;
-		System.out.println("正在扫描:" + actionPackage);
+//		System.out.println("正在扫描:" + actionPackage);
 		File[] files = dir.listFiles();
 		if (files == null || files.length == 0)
 			return;
 		for (File f : files) {
-			System.out.print("扫描文件："+f.getName());
+//			System.out.print("扫描文件："+f.getName());
 			if (f.isDirectory())
 				if (actionPackage.length() == 0)
 					scanPackage(f, f.getName());

@@ -112,7 +112,7 @@ public abstract class BaseAction {
 			Class cls;
 			try {
 				// TODO:用log替代
-				System.out.println("现在映射:" + obj.toString());
+//				System.out.println("现在映射:" + obj.toString());
 				cls = PropertyUtils.getPropertyType(bean, obj.toString());
 				// 把相应的数据转换成对应的数据类型
 				Object reqVal = request.getParameter(obj.toString());
