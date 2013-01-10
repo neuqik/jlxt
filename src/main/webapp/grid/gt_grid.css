@@ -188,7 +188,7 @@ td {	font-size:12px;	}
 	position: relative;
 	cursor: default;
 	padding : 3px 1px 0px 3px;
-	font-weight:bold ;
+	/*font-weight:bold ;*/
 	color : #333333 ;
 	-moz-user-select: none;
 	-khtml-user-select: none;
