@@ -26,54 +26,60 @@ var _GLOBAL_OPEN_TYPE = "navTab";
 
 	$.extend({
 		bringBackSuggest : function(args) {
+			//wonder modify 
 			for ( var key in args) {
 				var _o = document.getElementById(key);
 				if (_o != null)
 					_o.value = args[key];
 			}
-			// var type;
-			// var $box ;
-			// if( type != undefined){
-			// $box = type == "dialog" ? $.pdialog.getCurrent() :
-			// navTab.getCurrentPanel();
-			// }else{
-			// $box = navTab.getCurrentPanel();
-			// }
-			// $box.find(":input").each(function(){
-			// var $input = $(this), inputName = $input.attr("name");
-			// for (var key in args) {
-			// var name = ("id" == key) ? _util.lookupPk(key) :
-			// _util.lookupField(key);
-			// if (name == inputName) {
-			// $input.val(args[key]);
-			// $.cascadeSuggestAndBringBack($input,args);//add by cfuture.weiwei
-			// break;
-			// }
-			// }
-			//				
-			// });
-			// var $box;
-			// if (type != undefined) {
-			// $box = type == "dialog" ? $.pdialog.getCurrent() : navTab
-			// .getCurrentPanel();
-			// } else {
-			// $box = navTab.getCurrentPanel();
-			// }
-			// $box = _lookup['$target'].parents(".unitBox:first");
-			// $box.find(":input").each(
-			// function() {
-			// var $input = $(this), inputName = $input.attr("name");
-			//
-			// for ( var key in args) {
-			// var name = (_lookup.pk == key) ? _util
-			// .lookupPk(key) : _util.lookupField(key);
-			//
-			// if (name == inputName) {
-			// $input.val(args[key]);
-			// break;
-			// }
-			// }
-			// });
+			var type;
+			var $box;
+			if (type != undefined) {
+				$box = type == "dialog" ? $.pdialog.getCurrent() : navTab
+						.getCurrentPanel();
+			} else {
+				$box = navTab.getCurrentPanel();
+			}
+			$box.find(":input").each(
+					function() {
+						var $input = $(this), inputName = $input.attr("name");
+						for ( var key in args) {
+							var name = ("id" == key) ? _util.lookupPk(key)
+									: _util.lookupField(key);
+							if (name == inputName) {
+								$input.val(args[key]);
+								$.cascadeSuggestAndBringBack($input, args);// add
+																			// by
+																			// cfuture.weiwei
+								break;
+							}
+						}
+
+						// });
+						// var $box;
+						// if (type != undefined) {
+						// $box = type == "dialog" ? $.pdialog.getCurrent() :
+						// navTab
+						// .getCurrentPanel();
+						// } else {
+						// $box = navTab.getCurrentPanel();
+						// }
+						// $box = _lookup['$target'].parents(".unitBox:first");
+						// $box.find(":input").each(
+						// function() {
+						// var $input = $(this), inputName =
+						// $input.attr("name");
+						//
+						// for ( var key in args) {
+						// var name = (_lookup.pk == key) ? _util
+						// .lookupPk(key) : _util.lookupField(key);
+						//
+						// if (name == inputName) {
+						// $input.val(args[key]);
+						// break;
+						// }
+						// }
+					});
 		},
 		cascadeSuggestAndBringBack : function($input, json) {
 			// 在这里可以截获当前点击选择的某个节点，然后做级联显示的功能 by CFuture.weiwei

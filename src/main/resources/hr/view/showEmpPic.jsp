@@ -68,7 +68,10 @@
 				<ul>
 					<li><div class="buttonActive">
 							<div class="buttonContent">
-								<button type="submit">提交</button>
+								<button type="submit"
+									<c:if test="${READONLY}">
+								disabled="disabled"
+							</c:if>>提交</button>
 							</div>
 						</div></li>
 					<li><div class="button">
@@ -84,9 +87,11 @@
 				</ul>
 			</div>
 			<div class="pageFormContent">
-				<p>
-					<label>选择照片：</label> <input id="file1" name="file1" type="file" />
-				</p>
+				<c:if test="${READONLY!=true}">
+					<p>
+						<label>选择照片：</label> <input id="file1" name="file1" type="file" />
+					</p>
+				</c:if>
 				<div id="pic_img">
 					<img alt="员工照片" src="${BaseURL}pictures/emp/${EMP_ID}.jpg"
 						width="300px" height="300px" id="empic" name="pic" border="2" />

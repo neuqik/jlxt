@@ -44,8 +44,6 @@ public class CommonAction extends BaseAction {
 	@POST
 	public String doPageQuery() {
 		try {
-//			handler = new GridServerHandler(MVC.ctx().getRequest(), MVC.ctx()
-//					.getResponse());
 			String sql = (String) MVC.ctx().getRequest()
 					.getParameter(Const.SQL).toUpperCase();
 			RequestInfo request = wrapRequest(sql);
@@ -63,8 +61,7 @@ public class CommonAction extends BaseAction {
 	public void doExport() {
 		try {
 			// 重新初始化handler，export的request不一样
-//			handler = new GridServerHandler(MVC.ctx().getRequest(), MVC.ctx()
-//					.getResponse());
+
 			String sql = (String) MVC.ctx().getRequest()
 					.getParameter(Const.SQL).toUpperCase();
 			RequestInfo request = wrapRequest(sql);

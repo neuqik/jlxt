@@ -133,7 +133,11 @@ public class CodeList {
 	 */
 	public static String getCodeDesc(String codeType, String codeValue) {
 		String desc = "";
-		Iterator<Code> it = getCodeList(codeType).iterator();
+		List<Code> list = getCodeList(codeType);
+		if (list == null || list.size() <= 0) {
+			return codeValue;
+		}
+		Iterator<Code> it = list.iterator();
 		while (it.hasNext()) {
 			Code type = (Code) it.next();
 			if (codeValue.equalsIgnoreCase(type.getCodeValue())) {
@@ -152,8 +156,12 @@ public class CodeList {
 	 * @return
 	 */
 	public static String getCodeValue(String codeType, String codeDesc) {
-		String value = "";
-		Iterator<Code> it = getCodeList(codeType).iterator();
+		String value = codeDesc;
+		List<Code> list = getCodeList(codeType);
+		if (list == null || list.size() <= 0) {
+			return codeDesc;
+		}
+		Iterator<Code> it = list.iterator();
 		while (it.hasNext()) {
 			Code type = (Code) it.next();
 			if (codeDesc.equalsIgnoreCase(type.getCodeDesc())) {

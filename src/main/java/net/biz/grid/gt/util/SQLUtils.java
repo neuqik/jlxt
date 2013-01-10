@@ -3,6 +3,7 @@ package net.biz.grid.gt.util;
 import java.util.Iterator;
 import java.util.List;
 
+import net.biz.framework.codelist.CodeList;
 import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
 
@@ -25,31 +26,33 @@ public class SQLUtils {
 	// TODO:需要完善数据类型
 	private static String getSQLcondition(String col, String logic, String value) {
 		if ("Equal".equalsIgnoreCase(logic)) {
-			return col + " = '" + value + "'";
+			return col + " = '" + CodeList.getCodeValue(col, value) + "'";
 		}
 		if ("notEqual".equalsIgnoreCase(logic)) {
-			return col + " <> '" + value + "'";
+			return col + " <> '" + CodeList.getCodeValue(col, value) + "'";
 		}
 		if ("less".equalsIgnoreCase(logic)) {
-			return col + " < " + value;
+			return col + " < " + CodeList.getCodeValue(col, value);
 		}
 		if ("great".equalsIgnoreCase(logic)) {
-			return col + " > " + value;
+			return col + " > " + CodeList.getCodeValue(col, value);
 		}
 		if ("lessEqual".equalsIgnoreCase(logic)) {
-			return col + " <= " + value;
+			return col + " <= " + CodeList.getCodeValue(col, value);
 		}
 		if ("greatEqual".equalsIgnoreCase(logic)) {
-			return col + " >= " + value;
+			return col + " >= " + CodeList.getCodeValue(col, value);
 		}
 		if ("like".equalsIgnoreCase(logic)) {
-			return col + " LIKE '" + "%" + value + "%'";
+			return col + " LIKE '" + "%" + CodeList.getCodeValue(col, value)
+					+ "%'";
 		}
 		if ("startWith".equalsIgnoreCase(logic)) {
-			return col + " LIKE '" + value + "%'";
+			return col + " LIKE '" + CodeList.getCodeValue(col, value) + "%'";
 		}
 		if ("endWith".equalsIgnoreCase(logic)) {
-			return col + " LIKE '" + "%" + value + "'";
+			return col + " LIKE '" + "%" + CodeList.getCodeValue(col, value)
+					+ "'";
 		}
 		return "";
 	}
@@ -86,14 +89,16 @@ public class SQLUtils {
 		}
 		return where;
 	}
+
 	/**
 	 * 拼查询排序
+	 * 
 	 * @param sorts
 	 * @return
 	 */
 	public static String splitSort(List<SortInfo> sorts) {
 		String where = String.valueOf("");
-		if(sorts.size()>0){
+		if (sorts.size() > 0) {
 			where = " ORDER BY ";
 		}
 		Iterator<SortInfo> itor = sorts.iterator();
