@@ -729,10 +729,10 @@ public class HRAction extends BaseAction {
 		return "forward:hr/view/addEmpReg.jsp";
 	}
 
-	@Path("/saveNewEmpReg")
+	@Path("/saveNewEmpReg1")
 	@POST
 	@GET
-	public String toSaveNewEmpReg(Map<String, String> model) {
+	public String toSaveNewEmpReg1(Map<String, String> model) {
 		try {
 			HttpServletRequest req = MVC.ctx().getRequest();
 			HRD_EMP_REG reg = (HRD_EMP_REG) parseRequest(req, new HRD_EMP_REG());

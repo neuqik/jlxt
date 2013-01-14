@@ -3,9 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="page">
 	<div class="pageContent">
-		<form method="post" action="${BaseURL}hrs/saveNewEmpReg"
+		<form method="get" action="${BaseURL}hrs/saveNewEmpReg1"
 			class="pageForm required-validate"
-			onsubmit="return validateCallback(this, dialogAjaxDone)">
+			onsubmit="return validateCallback(this, navTabAjaxDone)">
 			<div class="pageFormContent" layoutH="58">
 				<p>
 					<label>员工编号：</label> <input name="EMP_ID" type="text" size="30"

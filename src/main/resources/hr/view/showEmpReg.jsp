@@ -87,24 +87,28 @@
 
 	function doAddEmpReg() {
 		// 如果只有一条
-		$.pdialog.open("${BaseURL}hrs/addEmpReg?empId=${EMP_ID}", 'tjzc',
-				"添加注册", {
-					width : 640,
-					height : 480,
-					max : false,
-					mask : true,
-					mixable : true,
-					minable : true,
-					resizable : true,
-					drawable : true,
-					fresh : true,
-					close : function() {
-						// 对话框关闭时执行刷新
-						showempreg_grid.reload();
-						return true;
-					}
-				});
-
+		/*		$.pdialog.open("${BaseURL}hrs/addEmpReg?empId=${EMP_ID}", 'tjzc',
+		 "添加注册", {
+		 width : 640,
+		 height : 480,
+		 max : false,
+		 mask : true,
+		 mixable : true,
+		 minable : true,
+		 resizable : true,
+		 drawable : true,
+		 fresh : true,
+		 close : function() {
+		 // 对话框关闭时执行刷新
+		 showempreg_grid.reload();
+		 return true;
+		 }
+		 });*/
+		navTab.openTab('tjzc', "${BaseURL}hrs/addEmpReg?empId=${EMP_ID}", {
+			title : "绩效及培训",
+			fresh : false,
+			data : {}
+		});
 	}
 </script>
 <div class="pageContent" id="showempreg_head"
