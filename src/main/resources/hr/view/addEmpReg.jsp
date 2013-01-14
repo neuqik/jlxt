@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="page">
 	<div class="pageContent">
-		<form method="get" action="${BaseURL}hrs/saveNewEmpReg1"
+		<form method="post" action="${BaseURL}hrs/saveNewEmpReg1"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this, navTabAjaxDone)">
 			<div class="pageFormContent" layoutH="58">
