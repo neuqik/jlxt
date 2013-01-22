@@ -48,7 +48,15 @@ var colsOption = [ {
 	width : 150,
 	editable : true,
 	editor : {
-		type : "text"
+		type : "select",
+		options : {
+			'01' : '省监理工程师证书',
+			'02' : '安全生产培训证书',
+			'03' : '监理员证书',
+			'04' : '房屋建筑见证人证书',
+			'05' : '市政工程见证人证书',
+			'06' : '评价员证书'
+		}
 	}
 }, {
 	id : 'CERTNO',
