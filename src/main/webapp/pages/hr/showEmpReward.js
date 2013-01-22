@@ -1,7 +1,7 @@
 var c = $("#myContent").height();
 var header = $("#showempreward_head").height();
 var pageheader = $("#showempext_pageheader").height();
-var sql = "select ID,EMP_ID,REWARDTYPE,TO_CHAR(REWARDDATE,'YYYY-MM-DD') REWARDDATE,REWARDDEPT,REWARD,MEMO,VALID from V_HRD_EMP_REWARD WHERE EMP_ID='"
+var sql = "select ID,EMP_ID,REWARDTYPE,TO_CHAR(REWARDDATE,'YYYY-MM-DD') REWARDDATE,REWARDDEPT,REWARD,MEMO,VALID,REWARD_PERSON from V_HRD_EMP_REWARD WHERE EMP_ID='"
 		+ empId + "'";
 
 // 定义数据类型
@@ -20,6 +20,8 @@ var dsOption = {
 		name : 'REWARD'
 	}, {
 		name : 'MEMO'
+	}, {
+		name : 'REWARD_PERSON'
 	} ],
 	uniqueField : 'ID',
 	recordType : 'json'
@@ -42,11 +44,37 @@ var colsOption = [ {
 	hidden : true
 }, {
 	id : 'REWARDTYPE',
-	header : "奖惩种类",
-	width : 100,
+	header : "奖项",
+	width : 150,
 	editable : true,
 	editor : {
-		type : "text"
+		type : "select",
+		options : {
+			'01' : '国家级重点奖项',
+			'02' : '鲁班奖',
+			'03' : '世纪杯',
+			'04' : '三省观摩',
+			'05' : '优质主体',
+			'06' : '玫瑰杯',
+			'07' : '新貌杯',
+			'08' : '重点工程'
+		}
+	}
+}, {
+	id : 'REWARD_PERSON',
+	header : "个人获奖证书",
+	width : 150,
+	editable : true,
+	editor : {
+		type : "select",
+		options : {
+			'01' : '国家优总理工程师',
+			'02' : '国家优理工程师',
+			'03' : '省优总监理工程师',
+			'04' : '省优监理工程师',
+			'05' : '市优总监理工程师',
+			'06' : '市优监理工程师'
+		}
 	}
 }, {
 	id : 'REWARDDATE',
@@ -66,7 +94,7 @@ var colsOption = [ {
 	}
 }, {
 	id : 'REWARDDEPT',
-	header : "奖惩单位",
+	header : "奖惩项目",
 	width : 150,
 	editable : true,
 	editor : {

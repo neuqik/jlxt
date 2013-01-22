@@ -12,6 +12,11 @@ public class HRD_EMP_JOB {
 	private String ACCIDENT_START;
 	private String ACCIDENT_END;
 	private String MEMO;
+	private String PENSION;
+	private String MEDIC;
+	private String BEAR;
+	private String UNEMP;
+	private String INSU;
 
 	public String getID() {
 		return ID;
@@ -83,6 +88,46 @@ public class HRD_EMP_JOB {
 
 	public Date getACCIDENT_ENDForSqlDate() {
 		return DateUtils.parseFormerSqlDate(getACCIDENT_END());
+	}
+
+	public String getPENSION() {
+		return PENSION;
+	}
+
+	public void setPENSION(String pENSION) {
+		PENSION = pENSION;
+	}
+
+	public String getMEDIC() {
+		return MEDIC;
+	}
+
+	public void setMEDIC(String mEDIC) {
+		MEDIC = mEDIC;
+	}
+
+	public String getBEAR() {
+		return BEAR;
+	}
+
+	public void setBEAR(String bEAR) {
+		BEAR = bEAR;
+	}
+
+	public String getUNEMP() {
+		return UNEMP;
+	}
+
+	public void setUNEMP(String uNEMP) {
+		UNEMP = uNEMP;
+	}
+
+	public String getINSU() {
+		return INSU;
+	}
+
+	public void setINSU(String iNSU) {
+		INSU = iNSU;
 	}
 
 }

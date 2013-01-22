@@ -47,6 +47,8 @@ public class HRD_Emp {
 	private String WINTERLOC;
 	private String MEMO;
 	private String NATION;
+	private String PENSION_NO;
+	private String MEDICA_NO;
 
 	public String getEMP_ID() {
 		return EMP_ID;
@@ -351,4 +353,21 @@ public class HRD_Emp {
 	public Date getGRADDATEForSqlDate() {
 		return DateUtils.parseFormerSqlDate(getGRADDATE());
 	}
+
+	public String getPENSION_NO() {
+		return PENSION_NO;
+	}
+
+	public void setPENSION_NO(String pENSION_NO) {
+		PENSION_NO = pENSION_NO;
+	}
+
+	public String getMEDICA_NO() {
+		return MEDICA_NO;
+	}
+
+	public void setMEDICA_NO(String mEDICA_NO) {
+		MEDICA_NO = mEDICA_NO;
+	}
+
 }

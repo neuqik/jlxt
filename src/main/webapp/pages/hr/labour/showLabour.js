@@ -1,9 +1,6 @@
 var c = $("#myContent").height();
-var header = $("#viewempjob_head").height();
-
-var sql = "SELECT a.id,a.emp_id,b.pension_no,b.medica_no,b.emp_name,b.idcard,b.TEL,fun_getcodedesc('EMPTYPE',b.emptype) emptype, fun_getcodedesc('GENDER',b.gender) gender,fun_getcodedesc('DEPT_ID',b.dept_id) dept_id,to_char(a.job_start,'YYYY-MM-DD') job_start,to_char(a.job_end,'YYYY-MM-DD') job_end,to_char(a.accident_start,'YYYY-MM-DD') accident_start,to_char(a.accident_end,'YYYY-MM-DD') accident_end,a.pension,a.medica,a.bear,a.unemp,a.insu,a.memo FROM v_hrd_emp_job a, v_hrd_emp b WHERE a.emp_id = b.emp_id and  a.EMP_ID='"
-		+ empId + "'";
-
+var header = $("#showlabour_head").height();
+var sql = "SELECT a.id,a.emp_id,b.pension_no,b.medica_no,b.emp_name,b.idcard,b.TEL,fun_getcodedesc('EMPTYPE',b.emptype) emptype, fun_getcodedesc('GENDER',b.gender) gender,fun_getcodedesc('DEPT_ID',b.dept_id) dept_id,to_char(a.job_start,'YYYY-MM-DD') job_start,to_char(a.job_end,'YYYY-MM-DD') job_end,to_char(a.accident_start,'YYYY-MM-DD') accident_start,to_char(a.accident_end,'YYYY-MM-DD') accident_end,a.pension,a.medica,a.bear,a.unemp,a.insu,a.memo FROM v_hrd_emp_job a, v_hrd_emp b WHERE a.emp_id = b.emp_id and a.JOB_START<=sysdate and a.JOB_END>=sysdate";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
@@ -158,17 +155,19 @@ var colsOption = [ {
 	header : "备注",
 	width : 150,
 	editable : false
-} ];
+}
+
+];
 
 var gridOption = {
-	id : "viewempjob_grid",
+	id : "showlabour_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
-	// saveURL : MyURL + 'hrs/saveEmpJob?empId=' + empId,
+	// saveURL : MyURL + 'hrs/deleteEmp',
 	width : "100%", // "100%", // 700,
 	height : c - header, // "100%", // 330,
-	container : "gridbox_viewempjob",
+	container : "gridbox_showlabour",
 	toolbarPosition : 'bottom',
-	toolbarContent : 'nav | pagesize | reload | print xls | filter chart | state',
+	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',
 	pageSizeList : [ 15, 25, 40, 60, 100, 200 ],
 	pageSize : 15,
 	dataset : dsOption,
@@ -181,7 +180,7 @@ var gridOption = {
 	showIndexColumn : true,
 	SigmaGridPath : '../grid/',// 图形路径，需要补充
 	exportURL : MyURL + 'common/doExport?sql=' + sql,// 导出URL
-	exportFileName : 'file',
+	exportFileName : 'emp_info',
 	remotePaging : true, // 服务器分页
 	remoteFilter : true, // 发送请求到LoadURL中，并且填写filterInfo
 	remoteSort : true, // 发送排序请求到LoadURL中，并且填写SortInfo
@@ -194,5 +193,5 @@ var gridOption = {
 	}
 };
 
-var viewempjob_grid = new Sigma.Grid(gridOption);
-viewempjob_grid.render();
+var showlabour_grid = new Sigma.Grid(gridOption);
+showlabour_grid.render();

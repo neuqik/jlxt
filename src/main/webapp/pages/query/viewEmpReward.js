@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#viewempreward_head").height();
-var sql = "select ID,EMP_ID,fun_getcodedesc('REWARDTYPE',REWARDTYPE) REWARDTYPE,TO_CHAR(REWARDDATE,'YYYY-MM-DD') REWARDDATE,REWARDDEPT,REWARD,MEMO,VALID from V_HRD_EMP_REWARD WHERE EMP_ID='"
+var sql = "select ID,EMP_ID,fun_getcodedesc('REWARDTYPE',REWARDTYPE) REWARDTYPE,TO_CHAR(REWARDDATE,'YYYY-MM-DD') REWARDDATE,REWARDDEPT,REWARD,MEMO,VALID,fun_getcodedesc('REWARD_PERSON',REWARD_PERSON) REWARD_PERSON from V_HRD_EMP_REWARD WHERE EMP_ID='"
 		+ empId + "'";
 
 // 定义数据类型
@@ -19,6 +19,8 @@ var dsOption = {
 		name : 'REWARD'
 	}, {
 		name : 'MEMO'
+	}, {
+		name : 'REWARD_PERSON'
 	} ],
 	uniqueField : 'ID',
 	recordType : 'json'
@@ -41,8 +43,16 @@ var colsOption = [ {
 	hidden : true
 }, {
 	id : 'REWARDTYPE',
-	header : "奖惩种类",
-	width : 100,
+	header : "奖励",
+	width : 150,
+	editable : false,
+	editor : {
+		type : "text"
+	}
+}, {
+	id : 'REWARD_PERSON',
+	header : "个人获奖证书",
+	width : 150,
 	editable : false,
 	editor : {
 		type : "text"
@@ -51,18 +61,8 @@ var colsOption = [ {
 	id : 'REWARDDATE',
 	header : "奖惩日期",
 	width : 150,
-	editable : false,
-	editor : {
-		type : "date",
-		validator : function(value, record, colObj, grid) {
-			// 如果输入了值
-			if (value.length > 0) {
-				return true;
-			} else {
-				return "请输入奖惩日期";
-			}
-		}
-	}
+	editable : false
+
 }, {
 	id : 'REWARDDEPT',
 	header : "奖惩单位",

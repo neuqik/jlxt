@@ -493,7 +493,7 @@ public class HRServiceImpl implements IHRService {
 			List<Object> deletes, String empId) throws Exception {
 
 		// 1.执行插入
-		String sql = "insert into hrd_emp_reward(ID,EMP_ID,REWARDTYPE,REWARDDATE,REWARDDEPT,REWARD,MEMO,VALID ) values(?,?,?,?,?,?,?,?)";
+		String sql = "insert into hrd_emp_reward(ID,EMP_ID,REWARDTYPE,REWARDDATE,REWARDDEPT,REWARD,MEMO,VALID,REWARD_PERSON ) values(?,?,?,?,?,?,?,?,?)";
 		Iterator<Object> it = inserts.iterator();
 		while (it.hasNext()) {
 			HRD_EMP_REWARD row = (HRD_EMP_REWARD) it.next();
@@ -507,6 +507,7 @@ public class HRServiceImpl implements IHRService {
 			params.add(row.getREWARD());
 			params.add(row.getMEMO());
 			params.add("1");
+			params.add(row.getREWARD_PERSON());
 			JDBCOracleUtil.ExecuteDML(sql.toUpperCase(), params);
 		}
 		// 2.执行更新
@@ -517,13 +518,14 @@ public class HRServiceImpl implements IHRService {
 			HRD_EMP_REWARD row = (HRD_EMP_REWARD) it1.next();
 			String id = row.getID();
 			List<Object> params = new ArrayList<Object>();
-			String sql1 = "update hrd_emp_reward set REWARDTYPE=?,REWARDDATE=?,REWARDDEPT=?,REWARD=?,MEMO=? where id="
+			String sql1 = "update hrd_emp_reward set REWARDTYPE=?,REWARDDATE=?,REWARDDEPT=?,REWARD=?,MEMO=?,REWARD_PERSON=? where id="
 					+ id;
 			params.add(row.getREWARDTYPE());
 			params.add(row.getREWARDDATEForSqlDate());
 			params.add(row.getREWARDDEPT());
 			params.add(row.getREWARD());
 			params.add(row.getMEMO());
+			params.add(row.getREWARD_PERSON());
 
 			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
 		}

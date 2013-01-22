@@ -12,6 +12,7 @@ public class HRD_EMP_REWARD {
 	private String REWARDDEPT;
 	private String REWARD;
 	private String MEMO;
+	private String REWARD_PERSON;
 
 	public String getID() {
 		return ID;
@@ -72,4 +73,13 @@ public class HRD_EMP_REWARD {
 	public Date getREWARDDATEForSqlDate() {
 		return DateUtils.parseFormerSqlDate(getREWARDDATE());
 	}
+
+	public String getREWARD_PERSON() {
+		return REWARD_PERSON;
+	}
+
+	public void setREWARD_PERSON(String rEWARD_PERSON) {
+		REWARD_PERSON = rEWARD_PERSON;
+	}
+
 }
