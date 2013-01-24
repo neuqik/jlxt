@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#viewempcert_head").height();
-var sql = "select ID,EMP_ID,CERT,CERTNO,TO_CHAR(OBTDATE,'YYYY-MM-DD') OBTDATE,CERTDEPT,TO_CHAR(CLOSEDATE,'YYYY-MM-DD') CLOSEDATE,MEMO,VALID from V_HRD_EMP_CERT WHERE EMP_ID='"
+var sql = "select ID,EMP_ID,fun_getcodedesc('CERT',CERT) CERT,CERTNO,TO_CHAR(OBTDATE,'YYYY-MM-DD') OBTDATE,CERTDEPT,TO_CHAR(CLOSEDATE,'YYYY-MM-DD') CLOSEDATE,MEMO,VALID from V_HRD_EMP_CERT WHERE EMP_ID='"
 		+ empId + "'";
 
 // 定义数据类型
