@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showlabour_head").height();
-var sql = "SELECT a.id,a.emp_id,b.pension_no,b.medica_no,b.emp_name,b.idcard,b.TEL,fun_getcodedesc('EMPTYPE',b.emptype) emptype, fun_getcodedesc('GENDER',b.gender) gender,fun_getcodedesc('DEPT_ID',b.dept_id) dept_id,to_char(a.job_start,'YYYY-MM-DD') job_start,to_char(a.job_end,'YYYY-MM-DD') job_end,to_char(a.accident_start,'YYYY-MM-DD') accident_start,to_char(a.accident_end,'YYYY-MM-DD') accident_end,a.pension,a.medica,a.bear,a.unemp,a.insu,a.memo FROM v_hrd_emp_job a, v_hrd_emp b WHERE a.emp_id = b.emp_id and a.JOB_START<=sysdate and a.JOB_END>=sysdate";
+var sql = "SELECT a.id,a.emp_id,b.pension_no,b.medica_no,b.emp_name,b.idcard,b.TEL,fun_getcodedesc('EMPTYPE',b.emptype) emptype, fun_getcodedesc('GENDER',b.gender) gender,fun_getcodedesc('DEPT_ID',b.dept_id) dept_id,to_char(a.job_start,'YYYY-MM-DD') job_start,to_char(a.job_end,'YYYY-MM-DD') job_end,to_char(a.accident_start,'YYYY-MM-DD') accident_start,to_char(a.accident_end,'YYYY-MM-DD') accident_end,a.pension,a.medica,a.bear,a.unemp,a.insu,a.memo a__memo FROM v_hrd_emp_job a, v_hrd_emp b WHERE a.emp_id = b.emp_id and a.JOB_START<=sysdate and a.JOB_END>=sysdate";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
@@ -42,7 +42,7 @@ var dsOption = {
 	}, {
 		name : 'TEL'
 	}, {
-		name : 'MEMO'
+		name : 'A__MEMO'  // 用两个下划线自动替换成点
 	} ],
 	uniqueField : 'EMP_ID',
 	recordType : 'json'
@@ -151,7 +151,8 @@ var colsOption = [ {
 	width : 100,
 	editable : false
 }, {
-	id : 'MEMO',
+	id : 'A__MEMO', 
+	fieldName:'A__MEMO',
 	header : "备注",
 	width : 150,
 	editable : false

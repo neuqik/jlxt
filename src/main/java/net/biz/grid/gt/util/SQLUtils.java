@@ -82,6 +82,9 @@ public class SQLUtils {
 		while (itor.hasNext()) {
 			FilterInfo filterInfo = (FilterInfo) itor.next();
 			String col = filterInfo.getColumnId();
+			if (col.contains("__")) {
+				col = col.replaceAll("__", ".");
+			}
 			String logic = filterInfo.getLogic();
 			String value = filterInfo.getValue();
 			String clause = getSQLcondition(col, logic, value);
