@@ -11,6 +11,7 @@ import net.biz.hr.vo.HRD_EMP_EDU;
 import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_TRANSFER;
 import net.biz.hr.vo.HRD_Emp;
+import net.biz.hr.vo.RegQueryParam;
 
 public interface IHRService {
 	/**
@@ -230,29 +231,36 @@ public interface IHRService {
 	 */
 	public void saveEmpCert(List<Object> inserts, List<Object> updates,
 			List<Object> deletes, String empId) throws Exception;
+
 	/**
 	 * 处理员工调转
+	 * 
 	 * @param emptrans
 	 * @throws Exception
 	 */
 	public void doEmpTransfer(HRD_EMP_TRANSFER emptrans) throws Exception;
+
 	/**
 	 * 保存新的员工学历信息
+	 * 
 	 * @param edu
 	 * @throws Exception
 	 */
 	public void saveNewEmpEdu(HRD_EMP_EDU edu) throws Exception;
+
 	/**
 	 * 保存编辑的员工学历信息
+	 * 
 	 * @param edu
 	 * @throws Exception
 	 */
 	public void saveEditEmpEdu(HRD_EMP_EDU edu) throws Exception;
+
 	/**
 	 * 删除员工学历信息
+	 * 
 	 * @param id
 	 * @throws Exception
 	 */
 	public void dropEmpEdu(String id) throws Exception;
-	
 }

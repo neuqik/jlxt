@@ -33,7 +33,7 @@ public class CommonService {
 			where = where.length() > 1 ? " WHERE "
 					+ where.replaceFirst("AND", "") : where;
 		}
-		sql = sql + where;
+		sql = (sql + where).replaceAll("[$]", "%"); // 用特殊字符替换%，防止url传递报错
 		String order = SQLUtils.splitSort(sorts);
 		order = order.length() > 1 ? order.replaceFirst("[,]", "") : order;
 		sql = sql + order;

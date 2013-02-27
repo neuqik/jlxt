@@ -26,6 +26,7 @@ import net.biz.hr.vo.HRD_EMP_TRAIN;
 import net.biz.hr.vo.HRD_EMP_TRANSFER;
 import net.biz.hr.vo.HRD_EMP_WORK;
 import net.biz.hr.vo.HRD_Emp;
+import net.biz.hr.vo.RegQueryParam;
 import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
 

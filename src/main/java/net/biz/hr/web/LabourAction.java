@@ -10,9 +10,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 import net.biz.component.BaseAction;
+import net.biz.hr.model.HRServiceHelper;
 import net.biz.hr.model.IHRService;
 import net.biz.hr.vo.HRD_EMP_EDU;
 import net.biz.hr.vo.HRD_EMP_REG;
+import net.biz.hr.vo.RegQueryParam;
 import net.biz.util.BeanUtil;
 import net.biz.util.JDBCOracleUtil;
 
@@ -24,6 +26,9 @@ public class LabourAction extends BaseAction {
 	@Resource(name = "hrServiceImpl")
 	private IHRService myservice = (IHRService) BeanUtil
 			.getBean("hrServiceImpl");
+	@Resource(name = "hrServiceHelper")
+	private HRServiceHelper myhelper = (HRServiceHelper) BeanUtil
+			.getBean("hrServiceHelper");
 
 	@Path("/list")
 	@GET
@@ -52,7 +57,8 @@ public class LabourAction extends BaseAction {
 	@Path("/showRegEmployee")
 	@GET
 	@POST
-	public String toShowRegEmployee() {
+	public String toShowRegEmployee(Map<String,Object> model) {
+		model.put("regwhere", ""); // 清空初始查询条件
 		return "forward:hr/reg/view/showRegEmployee.jsp";
 	}
 
@@ -329,8 +335,42 @@ public class LabourAction extends BaseAction {
 	@Path("/showAdvanceQuery")
 	@POST
 	@GET
-	public String toShowAdvanceQuery(Map<String, String> model) {
+	public String toShowAdvanceQuery(Map<String, Object> model) {
+		try {
+			// 生成codelist
+			String code1 = "DEPT_ID|REGTYPE|REGLEVEL|REGMAJOR";
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			return "forward:hr/reg/view/queryAdvance.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
 
-		return "forward:hr/reg/view/queryAdvance.jsp";
+	}
+
+	/**
+	 * 根据输入查询信息
+	 * 
+	 * @return
+	 */
+	@Path("/queryByInput")
+	@GET
+	@POST
+	public String toQueryByInput(Map<String, Object> model) {
+		try {
+			// 获取查询条件，保存到bean中
+			RegQueryParam qp = (RegQueryParam) parseRequest(new RegQueryParam());
+			// 拼SQL条件，生成SQL语句，供界面检查
+			String where = myhelper.getConditionByRegQueryParam(qp);
+			model.put("regwhere", where);
+			model.put("qp", qp);
+			return "forward:hr/reg/view/showRegEmployee.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
 	}
 }

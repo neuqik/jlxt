@@ -1,6 +1,12 @@
 var c = $("#myContent").height();
 var header = $("#showregemployee_head").height();
-var sql = "SELECT ID,EMP_ID,EMP_NAME,fun_getcodedesc('EMPTYPE',EMPTYPE) EMPTYPE,TO_CHAR(BIRTH,'YYYY-MM-DD') BIRTH,AGE,fun_getcodedesc('DEPT_ID',DEPT_ID) DEPT_ID,fun_getcodedesc('GENDER',GENDER) GENDER,IDCARD,fun_getcodedesc('ROLENAME',ROLENAME) ROLENAME,TO_CHAR(WORKDATE,'YYYY-MM-DD') WORKDATE,TO_CHAR(JOINDATE,'YYYY-MM-DD') JOINDATE,TEL,EMERGENCY,fun_getloc(LOCATION1) LOCATION1,fun_getloc(LOCATION2) LOCATION2,fun_getloc(LOCATION3) LOCATION3,fun_getcodedesc('ARCHIVEKEEP',ARCHIVEKEEP) ARCHIVEKEEP,MEMO FROM V_HRD_EMP";
+var sql = "SELECT ID,EMP_ID,EMP_NAME,fun_getcodedesc('EMPTYPE',EMPTYPE) EMPTYPE,TO_CHAR(BIRTH,'YYYY-MM-DD') BIRTH,AGE,fun_getcodedesc('DEPT_ID',DEPT_ID) DEPT_ID,fun_getcodedesc('GENDER',GENDER) GENDER,IDCARD,fun_getcodedesc('ROLENAME',ROLENAME) ROLENAME,TO_CHAR(WORKDATE,'YYYY-MM-DD') WORKDATE,TO_CHAR(JOINDATE,'YYYY-MM-DD') JOINDATE,TEL,EMERGENCY,fun_getloc(LOCATION1) LOCATION1,fun_getloc(LOCATION2) LOCATION2,fun_getloc(LOCATION3) LOCATION3,fun_getcodedesc('ARCHIVEKEEP',ARCHIVEKEEP) ARCHIVEKEEP,MEMO FROM V_HRD_EMP ";
+
+var regwhere = $("#regwhere").val();
+if (regwhere.length > 0) {
+	sql = sql + regwhere;
+}
+
 // 定义数据类型
 var dsOption = {
 	fields : [ {

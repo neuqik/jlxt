@@ -64,35 +64,40 @@
 	}
 	function doAdvanceQuery() {
 
-		$.pdialog.open('${BaseURL}labour/showAdvanceQuery',
-				'gjcx', "高级查询", {
-					width : 640,
-					height : 480,
-					max : false,
-					mask : true,
-					mixable : true,
-					minable : true,
-					resizable : true,
-					drawable : true,
-					fresh : true,
-					close : function() {
-						// 对话框关闭时执行刷新
-						showempreg_grid.reload();
-						showempreg_grid.checkedRows = {};
-						return true;
-					}
-				});
+		$.pdialog.open('${BaseURL}labour/showAdvanceQuery', 'gjcx', "高级查询", {
+			width : 640,
+			height : 480,
+			max : false,
+			mask : true,
+			mixable : true,
+			minable : true,
+			resizable : true,
+			drawable : true,
+			fresh : true,
+			close : function() {
+				// 对话框关闭时执行刷新
+				showempreg_grid.reload();
+				showempreg_grid.checkedRows = {};
+				return true;
+			}
+		});
 
+	}
+	function test() {
+		return true;
 	}
 </script>
 
 <div class="pageContent" id="showregemployee_head"
 	style="overflow-x: hidden; overflow-y: hidden">
+	<input id="regwhere"  name="regwhere" type="hidden" value="${regwhere}" />
 	<div class="panelBar">
 		<ul class="toolBar">
 			<li><a class="edit" onclick="doEditReg();" rel="zcbj"><span>注册编辑</span></a></li>
 			<li><a class="edit" onclick="doEditEdu();" rel="xlbj"><span>学历编辑</span></a></li>
-			<li><a class="edit" onclick="doAdvanceQuery();" rel="gjcx"><span>高级查询</span></a></li>
+			<li><a class="edit" href="${BaseURL}labour/showAdvanceQuery"
+				target="dialog" mask="true" title="查询框" width="640" height="480"
+				close="test"><span>高级检索</span></a></li>
 		</ul>
 	</div>
 	<div>
