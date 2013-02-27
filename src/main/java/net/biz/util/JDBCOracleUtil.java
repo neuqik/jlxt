@@ -590,6 +590,7 @@ public class JDBCOracleUtil {
 			IllegalAccessException, ClassNotFoundException {
 		Connection conn = null;
 		PreparedStatement st = null;
+
 		try {
 			conn = getConnection();
 			st = conn.prepareStatement(sql);

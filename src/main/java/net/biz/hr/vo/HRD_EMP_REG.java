@@ -21,6 +21,43 @@ public class HRD_EMP_REG {
 	private String CERTVALIDDATE;
 	private String MEMO;
 	private String VALID;
+	private String PERF_STUDY;
+	private String CONTINUE_NO;
+
+	private String CONTINUE_EDU;
+	private String CONTINUE_DATE;
+
+	public String getPERF_STUDY() {
+		return PERF_STUDY;
+	}
+
+	public void setPERF_STUDY(String pERF_STUDY) {
+		PERF_STUDY = pERF_STUDY;
+	}
+
+	public String getCONTINUE_NO() {
+		return CONTINUE_NO;
+	}
+
+	public void setCONTINUE_NO(String cONTINUE_NO) {
+		CONTINUE_NO = cONTINUE_NO;
+	}
+
+	public String getCONTINUE_EDU() {
+		return CONTINUE_EDU;
+	}
+
+	public void setCONTINUE_EDU(String cONTINUE_EDU) {
+		CONTINUE_EDU = cONTINUE_EDU;
+	}
+
+	public String getCONTINUE_DATE() {
+		return CONTINUE_DATE;
+	}
+
+	public void setCONTINUE_DATE(String cONTINUE_DATE) {
+		CONTINUE_DATE = cONTINUE_DATE;
+	}
 
 	public String getID() {
 		return ID;
@@ -164,5 +201,9 @@ public class HRD_EMP_REG {
 
 	public Date getCERTVALIDDATESqlDate() {
 		return DateUtils.parseFormerSqlDate(getCERTVALIDDATE());
+	}
+
+	public Date getCONTINUEDATESqlDate() {
+		return DateUtils.parseFormerSqlDate(getCONTINUE_DATE());
 	}
 }

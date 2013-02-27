@@ -7,6 +7,7 @@ import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
 import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
+import net.biz.hr.vo.HRD_EMP_EDU;
 import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_TRANSFER;
 import net.biz.hr.vo.HRD_Emp;
@@ -235,4 +236,23 @@ public interface IHRService {
 	 * @throws Exception
 	 */
 	public void doEmpTransfer(HRD_EMP_TRANSFER emptrans) throws Exception;
+	/**
+	 * 保存新的员工学历信息
+	 * @param edu
+	 * @throws Exception
+	 */
+	public void saveNewEmpEdu(HRD_EMP_EDU edu) throws Exception;
+	/**
+	 * 保存编辑的员工学历信息
+	 * @param edu
+	 * @throws Exception
+	 */
+	public void saveEditEmpEdu(HRD_EMP_EDU edu) throws Exception;
+	/**
+	 * 删除员工学历信息
+	 * @param id
+	 * @throws Exception
+	 */
+	public void dropEmpEdu(String id) throws Exception;
+	
 }

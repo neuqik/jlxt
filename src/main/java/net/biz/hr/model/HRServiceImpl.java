@@ -15,6 +15,7 @@ import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
 import net.biz.grid.gt.util.SQLUtils;
 import net.biz.hr.vo.HRD_EMP_CERT;
+import net.biz.hr.vo.HRD_EMP_EDU;
 import net.biz.hr.vo.HRD_EMP_FAMILY;
 import net.biz.hr.vo.HRD_EMP_JOB;
 import net.biz.hr.vo.HRD_EMP_PERF;
@@ -596,7 +597,7 @@ public class HRServiceImpl implements IHRService {
 
 	@Override
 	public void saveNewEmpReg(HRD_EMP_REG reg) throws Exception {
-		String sql = "insert into hrd_emp_reg(id, emp_id, regtype, reglevel, regmajor1, regmajor2, regmajor3, regno, certificate, validdate, issuedate, certnumber, certdate, certvaliddate, memo, valid) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into hrd_emp_reg(id, emp_id, regtype, reglevel, regmajor1, regmajor2, regmajor3, regno, certificate, validdate, issuedate, certnumber, certdate, certvaliddate, memo, valid,perf_study, continue_edu, continue_no, continue_date) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		List<Object> params = new ArrayList<Object>();
 		params.add(JDBCOracleUtil.getID());
 		params.add(reg.getEMP_ID());
@@ -614,12 +615,16 @@ public class HRServiceImpl implements IHRService {
 		params.add(reg.getCERTVALIDDATESqlDate());
 		params.add(reg.getMEMO());
 		params.add("1");
+		params.add(reg.getPERF_STUDY());
+		params.add(reg.getCONTINUE_EDU());
+		params.add(reg.getCONTINUE_NO());
+		params.add(reg.getCONTINUEDATESqlDate());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 	}
 
 	@Override
 	public void saveEditEmpReg(HRD_EMP_REG reg) throws Exception {
-		String sql = "update hrd_emp_reg set regtype=?, reglevel=?, regmajor1=?, regmajor2=?, regmajor3=?, regno=?, certificate=?, validdate=?, issuedate=?, certnumber=?, certdate=?, certvaliddate=?, memo=? where id="
+		String sql = "update hrd_emp_reg set regtype=?, reglevel=?, regmajor1=?, regmajor2=?, regmajor3=?, regno=?, certificate=?, validdate=?, issuedate=?, certnumber=?, certdate=?, certvaliddate=?, memo=?, perf_study=?, continue_edu=?, continue_no=?, continue_date=? where id="
 				+ reg.getID();
 		List<Object> params = new ArrayList<Object>();
 
@@ -636,6 +641,10 @@ public class HRServiceImpl implements IHRService {
 		params.add(reg.getCERTDATEForSqlDate());
 		params.add(reg.getCERTVALIDDATESqlDate());
 		params.add(reg.getMEMO());
+		params.add(reg.getPERF_STUDY());
+		params.add(reg.getCONTINUE_EDU());
+		params.add(reg.getCONTINUE_NO());
+		params.add(reg.getCONTINUEDATESqlDate());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 	}
 
@@ -808,5 +817,45 @@ public class HRServiceImpl implements IHRService {
 			}
 		}
 
+	}
+
+	@Override
+	public void saveNewEmpEdu(HRD_EMP_EDU edu) throws Exception {
+		String sql = "insert into hrd_emp_edu(id, emp_id, GRADUATION, GRADUATEDATE, MAJOR, GRADUATENO, MEMO, VALID) values(?, ?, ?, ?, ?, ?, ?, ?)";
+		List<Object> params = new ArrayList<Object>();
+		params.add(JDBCOracleUtil.getID());
+		params.add(edu.getEMP_ID());
+		params.add(edu.getGRADUATION());
+		params.add(edu.getGRADUATEDATEForSqlDate());
+		params.add(edu.getMAJOR());
+		params.add(edu.getGRADUATENO());
+		params.add(edu.getMEMO());
+		params.add("1");
+		JDBCOracleUtil.ExecuteDML(sql, params);
+
+	}
+
+	@Override
+	public void saveEditEmpEdu(HRD_EMP_EDU edu) throws Exception {
+		String sql = "update hrd_emp_edu set GRADUATION=?, GRADUATEDATE=?, MAJOR=?, GRADUATENO=?, MEMO=? where id="
+				+ edu.getID();
+		List<Object> params = new ArrayList<Object>();
+
+		params.add(edu.getGRADUATION());
+		params.add(edu.getGRADUATEDATEForSqlDate());
+		params.add(edu.getMAJOR());
+		params.add(edu.getGRADUATENO());
+		params.add(edu.getMEMO());
+
+		JDBCOracleUtil.ExecuteDML(sql, params);
+
+	}
+
+	@Override
+	public void dropEmpEdu(String id) throws Exception {
+		String sql = "update hrd_emp_edu set valid='0' where id=?";
+		List<Object> params = new ArrayList<Object>();
+		params.add(id);
+		JDBCOracleUtil.ExecuteDML(sql, params);
 	}
 }
