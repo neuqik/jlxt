@@ -318,4 +318,19 @@ public class LabourAction extends BaseAction {
 		model.put("EMP_ID", empId);
 		return "forward:hr/reg/view/showEmpReg.jsp";
 	}
+
+	/*************************************************************************************************/
+	/**
+	 * 显示高级查询窗口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showAdvanceQuery")
+	@POST
+	@GET
+	public String toShowAdvanceQuery(Map<String, String> model) {
+
+		return "forward:hr/reg/view/queryAdvance.jsp";
+	}
 }

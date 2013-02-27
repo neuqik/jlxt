@@ -62,6 +62,28 @@
 			});
 		}
 	}
+	function doAdvanceQuery() {
+
+		$.pdialog.open('${BaseURL}labour/showAdvanceQuery',
+				'gjcx', "高级查询", {
+					width : 640,
+					height : 480,
+					max : false,
+					mask : true,
+					mixable : true,
+					minable : true,
+					resizable : true,
+					drawable : true,
+					fresh : true,
+					close : function() {
+						// 对话框关闭时执行刷新
+						showempreg_grid.reload();
+						showempreg_grid.checkedRows = {};
+						return true;
+					}
+				});
+
+	}
 </script>
 
 <div class="pageContent" id="showregemployee_head"
