@@ -323,6 +323,14 @@
 						value="${emp.WINTERLOC}" name="WINTERLOC" />
 				</p>
 				<p>
+					<label>养老保险编号：</label> <input type="text" size="30" maxlength="200"
+						value="${emp.PENSION_NO}" name="PENSION_NO" readonly="readonly" />
+				</p>
+				<p>
+					<label>医疗保险编号：</label> <input type="text" size="30" maxlength="200"
+						value="${emp.MEDICA_NO}" name="MEDICA_NO" readonly="readonly" />
+				</p>
+				<p>
 					<label>备注：</label> <input type="text" size="30" name="MEMO"
 						value="${emp.MEMO}" maxlength=" 200" />
 				</p>

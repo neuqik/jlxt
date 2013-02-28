@@ -1,7 +1,7 @@
 var c = $("#myContent").height();
 var header = $("#showempjob_head").height();
 var pageheader = $("#showempext_pageheader").height();
-var sql = "select ID,EMP_ID,TO_CHAR(JOB_START,'YYYY-MM-DD') JOB_START,TO_CHAR(JOB_END,'YYYY-MM-DD') JOB_END,TO_CHAR(ACCIDENT_START,'YYYY-MM-DD') ACCIDENT_START,TO_CHAR(ACCIDENT_END,'YYYY-MM-DD') ACCIDENT_END,MEMO,VALID from V_HRD_EMP_JOB WHERE EMP_ID='"
+var sql = "select ID,EMP_ID,CONTRACT_ID,CONTRACT_NAME,CONTRACTTYPE,CONTRACTPROP,TO_CHAR(BEGINDATE,'YYYY-MM-DD') BEGINDATE,TO_CHAR(ENDDATE,'YYYY-MM-DD') ENDDATE,ADDITION,MEMO,VALID from V_HRD_EMP_CONTRACT WHERE EMP_ID='"
 		+ empId + "'";
 
 // 定义数据类型
@@ -11,13 +11,19 @@ var dsOption = {
 	}, {
 		name : 'EMP_ID'
 	}, {
-		name : 'JOB_START'
+		name : 'CONTRACT_ID'
 	}, {
-		name : 'JOB_END'
+		name : 'CONTRACT_NAME'
 	}, {
-		name : 'ACCIDENT_START'
+		name : 'CONTRACTTYPE'
 	}, {
-		name : 'ACCIDENT_END'
+		name : 'CONTRACTPROP'
+	}, {
+		name : 'BEGINDATE'
+	}, {
+		name : 'ENDDATE'
+	}, {
+		name : 'ADDITION'
 	}, {
 		name : 'MEMO'
 	} ],
@@ -41,7 +47,7 @@ var colsOption = [ {
 	editable : false,
 	hidden : true
 }, {
-	id : 'JOB_START',
+	id : 'BEGINDATE',
 	header : "劳动合同起始日期",
 	width : 150,
 	editable : true,
@@ -57,7 +63,7 @@ var colsOption = [ {
 		}
 	}
 }, {
-	id : 'JOB_END',
+	id : 'ENDDATE',
 	header : "劳动合同终止日期",
 	width : 150,
 	editable : true,
@@ -76,20 +82,44 @@ var colsOption = [ {
 		}
 	}
 }, {
-	id : 'ACCIDENT_START',
-	header : "意外险开始日期",
+	id : 'CONTRACT_ID',
+	header : "合同编号",
 	width : 150,
 	editable : true,
 	editor : {
-		type : "date"
+		type : "text"
 	}
 }, {
-	id : 'ACCIDENT_END',
-	header : "意外险结束日期",
+	id : 'CONTRACT_NAME',
+	header : "合同名称",
 	width : 150,
 	editable : true,
 	editor : {
-		type : "date"
+		type : "text"
+	}
+}, {
+	id : 'CONTRACTTYPE',
+	header : "合同类型",
+	width : 150,
+	editable : true,
+	editor : {
+		type : "text"
+	}
+}, {
+	id : 'CONTRACTPROP',
+	header : "合同性质",
+	width : 150,
+	editable : true,
+	editor : {
+		type : "text"
+	}
+}, {
+	id : 'ADDITION',
+	header : "附加条款",
+	width : 150,
+	editable : true,
+	editor : {
+		type : "text"
 	}
 }, {
 	id : 'MEMO',
