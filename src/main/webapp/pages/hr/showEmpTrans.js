@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showemptrans_head").height();
-var pageheader = $("#showemptransperf_pageheader").height();
+var pageheader = $("#showempext_pageheader").height();
 var sql = "SELECT ID,EMP_ID,TO_CHAR(TRAININGDATE,'YYYY-MM-DD') TRAININGDATE,TRAINING,KNOWLEDGE,TRAININGDEPT,FEE,INTERTRAINING,MEMO FROM V_HRD_EMP_TRAIN WHERE EMP_ID='"
 		+ empId + "'";
 

@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showempperf_head").height();
-var pageheader = $("#showemptransperf_pageheader").height();
+var pageheader = $("#showempext_pageheader").height();
 var sql = "SELECT ID,EMP_ID,PERIOD,PERFORMANCE,PROF_PERF,WORK_PERF,MANAGE_PERF,MEMO FROM V_HRD_EMP_PERF WHERE EMP_ID='"
 		+ empId + "'";
 

@@ -109,7 +109,7 @@ var gridOption = {
 	height : c - header - 50 - pageheader, // "100%", // 330,
 	container : "gridbox_showempjob",
 	toolbarPosition : 'bottom',
-	toolbarContent : 'nav | pagesize | reload |  add del save | print xls | filter chart | state',
+	toolbarContent : 'nav | pagesize | reload |  print xls | filter chart | state',
 	pageSizeList : [ 15, 25, 40, 60, 100, 200 ],
 	pageSize : 15,
 	dataset : dsOption,

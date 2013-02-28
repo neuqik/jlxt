@@ -25,20 +25,35 @@
 
 			<div class="tabsHeaderContent">
 				<ul>
-					<li><a href="${BaseURL}hrs/showEmpFamily?empId=${EMP_ID}"
-						class="j-ajax"><span>家庭成员</span></a></li>
 					<li><a href="${BaseURL}hrs/showEmpJob?empId=${EMP_ID}"
 						class="j-ajax"><span>劳动合同</span></a></li>
-					<li><a href="${BaseURL}hrs/showEmpReward?empId=${EMP_ID}"
-						class="j-ajax"><span>奖惩记录</span></a></li>
+					<li><a href="${BaseURL}hrs/showEmpProf?empId=${EMP_ID}"
+						class="j-ajax"><span>职称评定</span></a></li>
+					<li><a href="${BaseURL}hrs/showEmpCert?empId=${EMP_ID}"
+						class="j-ajax"><span>其他证书</span></a></li>
+					<li><a href="${BaseURL}hrs/showEmpPerf?empId=${EMP_ID}"
+						class="j-ajax"><span>绩效考核</span></a></li>
 					<li><a href="${BaseURL}hrs/showEmpWork?empId=${EMP_ID}"
 						class="j-ajax"><span>工作经历</span></a></li>
+					<li><a href="${BaseURL}hrs/showEmpReg?empId=${EMP_ID}"
+						class="j-ajax"><span>注册信息</span></a></li>
+					<li><a href="${BaseURL}hrs/showEmpTrans?empId=${EMP_ID}"
+						class="j-ajax"><span>培训经历</span></a></li>
+					<li><a href="${BaseURL}hrs/showEmpReward?empId=${EMP_ID}"
+						class="j-ajax"><span>奖惩记录</span></a></li>
+					<li><a href="${BaseURL}hrs/showEmpFamily?empId=${EMP_ID}"
+						class="j-ajax"><span>家庭成员</span></a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="tabsContent" style="height: 100%;"
 			id="showemptransperf_tabcontent">
 			<!-- 要有空的DIV对应tab页的放在下面 -->
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
 			<div></div>
 			<div></div>
 			<div></div>

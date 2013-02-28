@@ -219,8 +219,16 @@ var gridOption = {
 	onMouseOut : function(value, record, cell, row, colNo, rowNo, columnObj,
 			grid) {
 		grid.hideCellToolTip();
+	},
+	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
+			columnObj, grid) {
+		navTab.openTab("xgjbxx", MyURL + "hrs/editEmpBase?empId="
+				+ record.EMP_ID, {
+			title : "修改基本信息",
+			fresh : false,
+			data : {}
+		});
 	}
-
 };
 
 var showemployee_grid = new Sigma.Grid(gridOption);

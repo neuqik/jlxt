@@ -115,9 +115,9 @@
 	style="overflow-x: hidden; overflow-y: hidden">
 	<div class="panelBar" id="showempreg_bar">
 		<ul class="toolBar">
-			<li><a class="add" onclick="doAddEmpReg();" rel="tjzc"><span>添加注册</span></a></li>
-			<li><a class="edit" onclick="doEditEmpReg();" rel="xgzc"><span>修改注册</span></a></li>
-			<li><a class="delete" onclick="doDropEmpReg();" rel="sczc"><span>删除注册</span></a></li>
+			<li><a class="add buttonDisabled" onclick="" rel="tjzc"><span>添加注册</span></a></li>
+			<li><a class="edit buttonDisabled" onclick="" rel="xgzc"><span>修改注册</span></a></li>
+			<li><a class="delete buttonDisabled" onclick="" rel="sczc"><span>删除注册</span></a></li>
 		</ul>
 	</div>
 	<div>

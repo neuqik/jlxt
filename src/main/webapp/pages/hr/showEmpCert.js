@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showempcert_head").height();
-var pageheader = $("#showempprofcert_pageheader").height();
+var pageheader = $("#showempext_pageheader").height();
 var sql = "select ID,EMP_ID,CERT,CERTNO,TO_CHAR(OBTDATE,'YYYY-MM-DD') OBTDATE,CERTDEPT,TO_CHAR(CLOSEDATE,'YYYY-MM-DD') CLOSEDATE,MEMO,VALID from V_HRD_EMP_CERT WHERE EMP_ID='"
 		+ empId + "'";
 

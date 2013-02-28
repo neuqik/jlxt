@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showempprof_head").height();
-var pageheader = $("#showempprofcert_pageheader").height();
+var pageheader = $("#showempext_pageheader").height();
 var sql = "select ID,EMP_ID,PROFTYPE,OBTAINTYPE,TO_CHAR(OBTAINDATE,'YYYY-MM-DD') OBTAINDATE,OBTAINDEPT,PROF_NUM,TO_CHAR(ENDDATE,'YYYY-MM-DD') ENDDATE,MEMO,VALID from V_HRD_EMP_PROF WHERE EMP_ID='"
 		+ empId + "'";
 

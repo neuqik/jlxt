@@ -108,6 +108,8 @@
 	}
 	// 删除员工
 	function doDelete() {
+		console.log(showemployee_grid.getCellValue(1, 1));
+		return;
 		var id_delete = doCheckIsOnlyRow();
 		if (id_delete < 0) {
 			alertMsg.error("请选择一位员工来删除！");
@@ -134,10 +136,8 @@
 		<ul class="toolBar">
 			<li><a class="add" href="${BaseURL}hrs/addEmpBase"
 				target="navTab" title="添加员工"><span>添加员工</span></a></li>
-			<li><a class="edit" onclick="doEditEmpBase();" rel="xgjbxx"><span>修改基本信息</span></a></li>
-			<li><a class="edit" onclick="doEditTrainPerf();" rel="jxpx"><span>绩效及培训</span></a></li>
-			<li><a class="edit" onclick="doEditExt();" rel="grzl"><span>个人资料</span></a></li>
-			<li><a class="edit" onclick="doEditProfCert();" rel="zcrz"><span>职称及认证</span></a></li>
+			<li><a class="edit" onclick="doEditEmpBase();" rel="xgjbxx"><span>基本信息</span></a></li>
+			<li><a class="edit" onclick="doEditExt();" rel="grzl"><span>其他信息</span></a></li>
 			<li><a class="edit" onclick="doEditPic();" rel="ygzp"><span>员工照片</span></a></li>
 			<li><a class="delete" onclick="doDelete();" rel="ygsc"><span>删除</span></a></li>
 			<li class="line">line</li>
