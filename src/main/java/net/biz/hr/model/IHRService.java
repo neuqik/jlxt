@@ -10,7 +10,7 @@ import net.biz.grid.gt.model.SortInfo;
 import net.biz.hr.vo.HRD_EMP_EDU;
 import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_TRANSFER;
-import net.biz.hr.vo.HRD_Emp;
+import net.biz.hr.vo.HRD_EMP;
 import net.biz.hr.vo.RegQueryParam;
 
 public interface IHRService {
@@ -91,7 +91,7 @@ public interface IHRService {
 	 * @return 新员工ID
 	 * @throws Exception
 	 */
-	public String saveNewEmp(HRD_Emp emp) throws Exception;
+	public String saveNewEmp(HRD_EMP emp) throws Exception;
 
 	/**
 	 * 保存编辑的员工信息
@@ -100,7 +100,7 @@ public interface IHRService {
 	 * @return
 	 * @throws Exception
 	 */
-	public void saveEditEmp(HRD_Emp emp) throws Exception;
+	public void saveEditEmp(HRD_EMP emp) throws Exception;
 
 	/**
 	 * 根据传入的录入信息生成员工编号
@@ -109,7 +109,7 @@ public interface IHRService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String genNewEmpID(HRD_Emp emp) throws Exception;
+	public String genNewEmpID(HRD_EMP emp) throws Exception;
 
 	/**
 	 * 保存员工绩效考核信息

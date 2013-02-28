@@ -10,7 +10,7 @@ import net.biz.util.DateUtils;
  * @author
  * 
  */
-public class HRD_Emp {
+public class HRD_EMP {
 	private String EMP_ID;
 	private String EMP_NAME;
 	private String DEPT_ID;

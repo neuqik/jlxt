@@ -179,7 +179,7 @@
 				</p>
 				<p>
 					<label>保险状态：</label> <select name="INSUSTATUS"
-						class="required combox"><option value="">请选择...</option>
+						class="" disabled><option value="">请选择...</option>
 						<c:forEach var="item" items="${INSUSTATUS}">
 							<option value="${item.codeValue}"
 								<c:if test="${item.codeValue == emp.INSUSTATUS}">

@@ -2,8 +2,8 @@
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript"
-	src="${BaseURL}pages/hr/reg/showRegEmployee.js"></script>
-	
+	src="${BaseURL}pages/hr/labour/showEmpLabour.js"></script>
+
 <!-- script type="text/javascript"
 	src="http://localhost:8080/myproject/grid/calendar/calendar.js"></script>
 <script type="text/javascript"
@@ -35,34 +35,21 @@
 			return empIds[0];
 		}
 	}
-	// 注册编辑
-	function doEditReg() {
+	// 修改劳动信息
+	function doEditLabour() {
 		var id = doCheckIsOnlyRegRow();
 		if (id < 0) {
-			alertMsg.error("请选择一位员工来编辑注册信息！");
+			alertMsg.error("请选择一位员工来编辑劳动关系！");
 		} else {
 			// 如果只有一条
-			navTab.openTab("zcbj", "${BaseURL}labour/showEmpReg?empId=" + id, {
-				title : id + " 注册",
+			navTab.openTab("ldgx", "${BaseURL}labour/editEmpLabour?empId=" + id, {
+				title : "劳动关系",
 				fresh : false,
 				data : {}
 			});
 		}
 	}
-	// 学历编辑
-	function doEditEdu() {
-		var id = doCheckIsOnlyRegRow();
-		if (id < 0) {
-			alertMsg.error("请选择一位员工来编辑学历信息！");
-		} else {
-			// 如果只有一条
-			navTab.openTab("xlbj", "${BaseURL}labour/showEmpEdu?empId=" + id, {
-				title : id + " 学历",
-				fresh : false,
-				data : {}
-			});
-		}
-	}
+	
 	function doAdvanceQuery() {
 
 		$.pdialog.open('${BaseURL}labour/showAdvanceQuery', 'gjcx', "高级查询", {
@@ -89,19 +76,18 @@
 	}
 </script>
 
-<div class="pageContent" id="showregemployee_head"
+<div class="pageContent" id="showlabouremployee_head"
 	style="overflow-x: hidden; overflow-y: hidden">
-	<input id="regwhere"  name="regwhere" type="hidden" value="${regwhere}" />
+	<input id="regwhere" name="regwhere" type="hidden" value="${regwhere}" />
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="edit" onclick="doEditReg();" rel="zcbj"><span>注册编辑</span></a></li>
-			<li><a class="edit" onclick="doEditEdu();" rel="xlbj"><span>学历编辑</span></a></li>
+			<li><a class="edit" onclick="doEditLabour();" rel="zcbj"><span>劳动关系</span></a></li>
 			<li><a class="edit" href="${BaseURL}labour/showAdvanceQuery"
 				target="dialog" mask="true" title="查询框" width="640" height="480"
 				close="test"><span>高级检索</span></a></li>
 		</ul>
 	</div>
 	<div>
-		<div id="gridbox_showregemployee"></div>
+		<div id="gridbox_showlabouremployee"></div>
 	</div>
 </div>

@@ -34,7 +34,7 @@ import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
 import net.biz.hr.vo.HRD_EMP_TRANSFER;
 import net.biz.hr.vo.HRD_EMP_WORK;
-import net.biz.hr.vo.HRD_Emp;
+import net.biz.hr.vo.HRD_EMP;
 import net.biz.util.BeanUtil;
 import net.biz.util.JDBCOracleUtil;
 
@@ -261,7 +261,7 @@ public class HRAction extends BaseAction {
 	public String toSaveNewEmp(Map<String, String> model) {
 		try {
 			HttpServletRequest req = MVC.ctx().getRequest();
-			HRD_Emp emp = (HRD_Emp) parseRequest(req, new HRD_Emp());
+			HRD_EMP emp = (HRD_EMP) parseRequest(req, new HRD_EMP());
 			String empId = myservice.saveNewEmp(emp);
 			// 设置员工编号，供其他页面使用
 			model.put("EMP_ID", empId);
@@ -296,7 +296,7 @@ public class HRAction extends BaseAction {
 					+ empId + "' AND ROWNUM=1";
 			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql
 					.toUpperCase());
-			HRD_Emp emp = new HRD_Emp();
+			HRD_EMP emp = new HRD_EMP();
 			// map转换成bean
 			BeanUtils.populate(emp, result.get(0));
 			model.put("emp", emp);
@@ -322,7 +322,7 @@ public class HRAction extends BaseAction {
 	@GET
 	public String toSaveEditEmp(Map<String, String> model) {
 		try {
-			HRD_Emp emp = (HRD_Emp) parseRequest(new HRD_Emp());
+			HRD_EMP emp = (HRD_EMP) parseRequest(new HRD_EMP());
 			myservice.saveEditEmp(emp);
 			// 设置员工编号，供其他页面使用
 			model.put("EMP_ID", emp.getEMP_ID());

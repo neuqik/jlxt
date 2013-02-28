@@ -43,6 +43,10 @@ var dsOption = {
 	}, {
 		name : 'ARCHIVEKEEP'
 	}, {
+		name : 'PENSION_NO'
+	}, {
+		name : 'MEDICA_NO'
+	}, {
 		name : 'MEMO'
 	} ],
 	uniqueField : 'EMP_ID',

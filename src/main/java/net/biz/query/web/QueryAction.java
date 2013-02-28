@@ -12,7 +12,7 @@ import org.eweb4j.mvc.MVC;
 
 import net.biz.component.BaseAction;
 import net.biz.framework.codelist.CodeList;
-import net.biz.hr.vo.HRD_Emp;
+import net.biz.hr.vo.HRD_EMP;
 import net.biz.util.JDBCOracleUtil;
 
 @Path("/query")
@@ -54,7 +54,7 @@ public class QueryAction extends BaseAction {
 			if(result.size()<=0){
 				return dwz.getFailedJson("未找到编号为"+empId+"的员工信息!").toString(); 
 			}
-			HRD_Emp emp = new HRD_Emp();
+			HRD_EMP emp = new HRD_EMP();
 			// map转换成bean
 			BeanUtils.populate(emp, result.get(0));
 			model.put("emp", emp);

@@ -25,7 +25,7 @@ import net.biz.hr.vo.HRD_EMP_REWARD;
 import net.biz.hr.vo.HRD_EMP_TRAIN;
 import net.biz.hr.vo.HRD_EMP_TRANSFER;
 import net.biz.hr.vo.HRD_EMP_WORK;
-import net.biz.hr.vo.HRD_Emp;
+import net.biz.hr.vo.HRD_EMP;
 import net.biz.hr.vo.RegQueryParam;
 import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
@@ -114,7 +114,7 @@ public class HRServiceImpl implements IHRService {
 	}
 
 	@Override
-	public String saveNewEmp(HRD_Emp emp) throws Exception {
+	public String saveNewEmp(HRD_EMP emp) throws Exception {
 		String id = "";
 		String sql = "INSERT INTO HRD_EMP(id, emp_id,emp_name, nation,birth,age,education,marriage, gender,politic,idcard, native,workdate,workage,emptype,joindate,joinage,dept_id,rolename,title_id,titlename,titlework,insustatus,tel,telehome,emergency,graduate,master,graddate,location1,reglocation,winterloc,picture,memo,valid,location2,location3,location4,archivekeep) values (?, ?, ?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 				.toUpperCase();
@@ -190,7 +190,7 @@ public class HRServiceImpl implements IHRService {
 	}
 
 	@Override
-	public String genNewEmpID(HRD_Emp emp) throws Exception {
+	public String genNewEmpID(HRD_EMP emp) throws Exception {
 		// 生成新的员工编号，员工编号规则
 		String pre = emp.getDEPT_ID().substring(0, 1); // 取前缀
 		String num = JDBCOracleUtil.getSequence("SEQ_A_EMPID");
@@ -343,7 +343,7 @@ public class HRServiceImpl implements IHRService {
 	}
 
 	@Override
-	public void saveEditEmp(HRD_Emp emp) throws Exception {
+	public void saveEditEmp(HRD_EMP emp) throws Exception {
 		String sql = "	update hrd_emp set emp_name=?, nation=?, birth=?, age=?, education=?, marriage=?, gender=?, politic=?, idcard=?, native=?, workdate=?, workage=?, emptype=?,  joindate=?, joinage=?, dept_id=?, rolename=?, title_id=?, titlename=?, titlework=?, insustatus=?, tel=?, telehome=?, emergency=?, graduate=?, master=?, graddate=?, location1=?, reglocation=?, winterloc=?,memo=?, location2=?, location3=?, location4=?, archivekeep=? where emp_id='"
 				+ emp.getEMP_ID() + "'";
 		List<Object> params = new ArrayList<Object>();

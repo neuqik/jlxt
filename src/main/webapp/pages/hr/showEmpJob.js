@@ -1,7 +1,7 @@
 var c = $("#myContent").height();
 var header = $("#showempjob_head").height();
 var pageheader = $("#showempext_pageheader").height();
-var sql = "select ID,EMP_ID,CONTRACT_ID,CONTRACT_NAME,CONTRACTTYPE,CONTRACTPROP,TO_CHAR(BEGINDATE,'YYYY-MM-DD') BEGINDATE,TO_CHAR(ENDDATE,'YYYY-MM-DD') ENDDATE,ADDITION,MEMO,VALID from V_HRD_EMP_CONTRACT WHERE EMP_ID='"
+var sql = "select ID,EMP_ID,CONTRACT_ID,CONTRACT_NAME,CONTRACTTYPE,CONTRACTPROP,TO_CHAR(BEGINDATE,'YYYY-MM-DD') BEGINDATE,TO_CHAR(ENDDATE,'YYYY-MM-DD') ENDDATE,ADDITION,TO_CHAR(ACCIDENT_START,'YYYY-MM-DD') ACCIDENT_START,TO_CHAR(ACCIDENT_END,'YYYY-MM-DD') ACCIDENT_END,INSU,MEMO,VALID from V_HRD_EMP_CONTRACT WHERE EMP_ID='"
 		+ empId + "'";
 
 // 定义数据类型
@@ -24,6 +24,12 @@ var dsOption = {
 		name : 'ENDDATE'
 	}, {
 		name : 'ADDITION'
+	}, {
+		name : 'ACCIDENT_START'
+	}, {
+		name : 'ACCIDENT_END'
+	}, {
+		name : 'INSU'
 	}, {
 		name : 'MEMO'
 	} ],
@@ -72,7 +78,7 @@ var colsOption = [ {
 		validator : function(value, record, colObj, grid) {
 			// 如果输入了值
 			if (value.length > 0) {
-				if (Date.parse(record.JOB_START) - Date.parse(value) > 0)
+				if (Date.parse(record.BEGINDATE) - Date.parse(value) > 0)
 					return "结束日期早于开始日期";
 				else
 					return true;
@@ -120,6 +126,54 @@ var colsOption = [ {
 	editable : true,
 	editor : {
 		type : "text"
+	}
+}, {
+	id : 'ACCIDENT_START',
+	header : "意外险起始日期",
+	width : 150,
+	editable : true,
+	editor : {
+		type : "date",
+		validator : function(value, record, colObj, grid) {
+			// 如果输入了值
+			if (value.length > 0) {
+				return true;
+			} else {
+				return "请输入意外险起始日期";
+			}
+		}
+	}
+}, {
+	id : 'ACCIDENT_END',
+	header : "意外险终止日期",
+	width : 150,
+	editable : true,
+	editor : {
+		type : "date",
+		validator : function(value, record, colObj, grid) {
+			// 如果输入了值
+			if (value.length > 0) {
+				if (Date.parse(record.ACCIDENT_START) - Date.parse(value) > 0)
+					return "结束日期早于开始日期";
+				else
+					return true;
+			} else {
+				return "请输入劳动合同终止日期";
+			}
+		}
+	}
+}, {
+	id : 'INSU',
+	header : "意外险参加标志",
+	width : 100,
+	editable : true,
+	editor : {
+		type : "select",
+		options : {
+			'1' : '已参加',
+			'0' : '未参加'
+		},
+		defaultText : '0'
 	}
 }, {
 	id : 'MEMO',

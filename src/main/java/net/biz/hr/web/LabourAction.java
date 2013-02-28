@@ -12,6 +12,8 @@ import javax.ws.rs.Path;
 import net.biz.component.BaseAction;
 import net.biz.hr.model.HRServiceHelper;
 import net.biz.hr.model.IHRService;
+import net.biz.hr.vo.HRD_EMP;
+import net.biz.hr.vo.HRD_EMP_CONTRACT;
 import net.biz.hr.vo.HRD_EMP_EDU;
 import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.RegQueryParam;
@@ -37,16 +39,104 @@ public class LabourAction extends BaseAction {
 		return "forward:hr/labour/view/showLabour.jsp";
 	}
 
-	@Path("/maintainLabour")
-	@GET
-	@POST
+
 	/**
 	 * 维护劳动关系打开界面
 	 * @param model
 	 * @return
 	 */
-	public String toMaintainLabour(Map<String, Object> model) {
-		return "forward:hr/labour/view/maintainLabour.jsp";
+	@Path("/showEmpLabour")
+	@GET
+	@POST
+	public String toShowEmpLabour(Map<String, Object> model) {
+		return "forward:hr/labour/view/showEmpLabour.jsp";
+	}
+
+	/**
+	 * 打开劳动关系编辑页面
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/editEmpLabour")
+	@GET
+	@POST
+	public String toEditEmpLabour(Map<String, Object> model) {
+		try {
+			String empId = getParam("empId");
+
+			// 1.获取Codelist
+			String code1 = "DEPT_ID|GENDER|EMPTYPE|ROLENAME|INSUSTATUS";
+			model.put("EMP_ID", empId);
+			String sql = "SELECT id, emp_id, emp_name, idcard, gender, to_char(birth,'yyyy-mm-dd') birth, age, emptype, dept_id, rolename, insustatus, memo, pension_no, medica_no FROM V_HRD_EMP WHERE EMP_ID='"
+					+ empId + "' AND ROWNUM=1";
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql
+					.toUpperCase());
+			HRD_EMP emp = new HRD_EMP();
+			// map转换成bean
+			BeanUtils.populate(emp, result.get(0));
+			model.put("emp", emp);
+			// 代码值
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			return "forward:hr/labour/view/editEmpLabour.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 保存员工劳动关系信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpLabourGrid")
+	@POST
+	@GET
+	public String toSaveEmpLabourGrid(Map<String, String> model) {
+		String empId = getParam("empId");
+		model.put("EMP_ID", empId);
+		try {
+			List<Object> insertList = handler
+					.getInsertedRecords(HRD_EMP_CONTRACT.class);
+			List<Object> updateList = handler
+					.getUpdatedRecords(HRD_EMP_CONTRACT.class);
+			List<Object> deleteList = handler
+					.getDeletedRecords(HRD_EMP_CONTRACT.class);
+			myhelper.saveEmpLabour(insertList, updateList, deleteList, empId);
+			handler.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			handler.setSuccess(false);
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return null;
+	}
+
+	/**
+	 * 保存员工劳动关系信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveEmpLabour")
+	@POST
+	@GET
+	public String toSaveEmpLabour(Map<String, String> model) {
+		try {
+			HRD_EMP emp = (HRD_EMP) parseRequest(new HRD_EMP());
+			myhelper.saveEmpLabour(emp);
+			// 成功的json，清空后继续打开
+			return successJSON("修改劳动关系成功，员工编号：" + emp.getEMP_ID(), "dialog",
+					"labour/showEmpLabour", "ldgxwh");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
 	}
 
 	/**
@@ -57,7 +147,7 @@ public class LabourAction extends BaseAction {
 	@Path("/showRegEmployee")
 	@GET
 	@POST
-	public String toShowRegEmployee(Map<String,Object> model) {
+	public String toShowRegEmployee(Map<String, Object> model) {
 		model.put("regwhere", ""); // 清空初始查询条件
 		return "forward:hr/reg/view/showRegEmployee.jsp";
 	}
