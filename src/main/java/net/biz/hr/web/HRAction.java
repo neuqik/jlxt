@@ -292,7 +292,7 @@ public class HRAction extends BaseAction {
 			String code1 = "DEPT_ID|GENDER|EMPTYPE|ROLENAME|TITLE_ID|TITLENAME|TITLEWORK|INSUSTATUS|MARRIAGE|POLITIC|ARCHIVEKEEP|MASTER|LOCATION1|NATION";
 
 			model.put("EMP_ID", empId);
-			String sql = "SELECT id, emp_id, emp_name, nation, to_char(birth,'yyyy-mm-dd') birth, age, education, marriage, gender, politic, idcard, native, workdate, workage, emptype, to_char(joindate,'yyyy-mm-dd') joindate, joinage, dept_id, rolename, title_id, titlename, titlework, insustatus, tel, telehome, emergency, graduate, master, to_char(graddate,'yyyy-mm-dd') graddate, location1, reglocation, winterloc, picture, memo, valid, location2, location3, location4, archivekeep FROM V_HRD_EMP WHERE EMP_ID='"
+			String sql = "SELECT id, emp_id, emp_name, nation, to_char(birth,'yyyy-mm-dd') birth, age, education, marriage, gender, politic, idcard, native, workdate, workage, emptype, to_char(joindate,'yyyy-mm-dd') joindate, joinage, dept_id, rolename, title_id, titlename, titlework, insustatus, tel, telehome, emergency, graduate, master, to_char(graddate,'yyyy-mm-dd') graddate, location1, reglocation, winterloc, picture, memo, valid, location2, location3, location4, archivekeep, pension_no, medica_no FROM V_HRD_EMP WHERE EMP_ID='"
 					+ empId + "' AND ROWNUM=1";
 			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql
 					.toUpperCase());
