@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.biz.hr.vo.HRD_EMP;
 import net.biz.hr.vo.HRD_EMP_CONTRACT;
+import net.biz.hr.vo.LabourQueryParam;
 import net.biz.hr.vo.RegQueryParam;
 import net.biz.util.JDBCOracleUtil;
 
@@ -22,11 +23,8 @@ public class HRServiceHelper {
 	 */
 	public String getConditionByRegQueryParam(RegQueryParam qp)
 			throws Exception {
-		if (qp.isEmpty())
-			return "";
 		// 非空
 		List<String> where = new ArrayList<String>();
-		;
 		// 如果录入了EMP_ID
 		if (!"".equals(qp.getEMP_ID())) {
 			where.add(" (EMP_ID LIKE '" + qp.getEMP_ID() + "$') ");
@@ -80,6 +78,93 @@ public class HRServiceHelper {
 		String wheres = where.toString().replaceAll("[,]", "AND");
 		wheres = wheres.substring(1, wheres.length() - 1);
 		return " WHERE " + wheres;
+	}
+
+	/**
+	 * 根据高级查询参数，生成SQL语句的WHERE 条件
+	 * 
+	 * @param qp
+	 * @return
+	 * @throws Exception
+	 */
+	public String getConditionByLabourQueryParam(LabourQueryParam qp)
+			throws Exception {
+		if (qp.isEmpty())
+			return "";
+		// 非空
+		List<String> where = new ArrayList<String>();
+		;
+		// 如果录入了EMP_ID
+		if (!"".equals(qp.getEMP_ID())) {
+			where.add(" (EMP_ID LIKE '" + qp.getEMP_ID() + "$') ");
+		}
+		// 如果录入了姓名
+		if (!"".equals(qp.getEMP_NAME())) {
+			where.add(" (EMP_ID IN (SELECT EMP_ID FROM V_HRD_EMP WHERE EMP_NAME LIKE '$"
+					+ qp.getEMP_NAME() + "$')) ");
+		}
+		// 如果录入了部门
+		if (!"".equals(qp.getDEPT_ID())) {
+			where.add(" (EMP_ID IN (SELECT EMP_ID FROM V_HRD_EMP WHERE DEPT_ID = '"
+					+ qp.getDEPT_ID() + "')) ");
+		}
+		// 如果录入了备注
+		if (!"".equals(qp.getMEMO())) {
+			where.add(" (EMP_ID IN (SELECT EMP_ID FROM V_HRD_EMP_CONTRACT WHERE MEMO LIKE '$"
+					+ qp.getMEMO() + "$')) ");
+		}
+		// 保险状态
+		if (!"".equals(qp.getINSUSTATUS())) {
+			where.add(" (EMP_ID IN (SELECT EMP_ID FROM V_HRD_EMP WHERE INSUSTATUS = '"
+					+ qp.getINSUSTATUS() + "')) ");
+		}
+		// 判断保险状态
+		if (qp.isPENSION()) {
+			where.add(" (EMP_ID IN (SELECT EMP_ID FROM V_HRD_EMP WHERE PENSION_NO IS NOT NULL)) ");
+		}
+		if (qp.isMEDICA()) {
+			where.add(" (EMP_ID IN (SELECT EMP_ID FROM V_HRD_EMP WHERE MEDICA_NO IS NOT NULL)) ");
+		}
+		String wheres = where.toString().replaceAll("[,]", "AND");
+		wheres = wheres.substring(1, wheres.length() - 1);
+		// 判断合同状态和截至日期
+		if (!"".equals(qp.getCONTRACT_FLAG())) {
+			String tmpWhere = "";
+			// 如果选择了劳动合同标记，则联合合同状态和截至日期查询
+			if (!qp.isCONTRACE()) { // 如果没签合同
+				tmpWhere = " (EMP_ID IN (select emp_id from v_hrd_emp where not exists(select 1 from v_hrd_emp_contract where v_hrd_emp.emp_id = v_hrd_emp_contract.emp_id and enddate > to_date('"
+						+ qp.getENDDATE() + "','YYYY-MM-DD')))) ";
+			} else { // 如果选择有效合同
+				tmpWhere = " (EMP_ID IN (select emp_id from v_hrd_emp where exists(select 1 from v_hrd_emp_contract where v_hrd_emp.emp_id = v_hrd_emp_contract.emp_id and enddate > to_date('"
+						+ qp.getENDDATE() + "','YYYY-MM-DD')))) ";
+			}
+			if (wheres.length() > 0) {
+				wheres = wheres + " AND " + tmpWhere;
+			} else {
+				wheres = tmpWhere;
+			}
+		}
+
+		// 判断意外险状态和截至日期
+		if (!"".equals(qp.getACCIDENT_FLAG())) {
+			String tmpWhere = "";
+			// 如果选择了劳动合同标记，则联合合同状态和截至日期查询
+			if (!qp.isACCIDENT()) {
+				tmpWhere = " (EMP_ID IN (select emp_id from v_hrd_emp where not exists(select 1 from v_hrd_emp_contract where v_hrd_emp.emp_id = v_hrd_emp_contract.emp_id and accident_end > to_date('"
+						+ qp.getACCIDENT_END() + "','YYYY-MM-DD')))) ";
+			} else {// 如果选择有意外险
+				tmpWhere = " (EMP_ID IN (select emp_id from v_hrd_emp where exists(select 1 from v_hrd_emp_contract where v_hrd_emp.emp_id = v_hrd_emp_contract.emp_id and accident_end > to_date('"
+						+ qp.getACCIDENT_END() + "','YYYY-MM-DD')))) ";
+			}
+			if (wheres.length() > 0) {
+				wheres = wheres + " AND " + tmpWhere;
+			} else {
+				wheres = tmpWhere;
+			}
+		}
+
+		return wheres.trim().length() > 0 ? " WHERE " + wheres.toUpperCase()
+				: "";
 	}
 
 	/**

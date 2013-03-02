@@ -24,7 +24,7 @@
 
 		var empIds = new Array();
 		var i = 0;
-		$.each(showregemployee_grid.checkedRows, function(key, value) {
+		$.each(showlabouremployee_grid.checkedRows, function(key, value) {
 			//alert("key:" + key + "value:" + value);
 			empIds[i] = key;
 			i++;
@@ -49,28 +49,6 @@
 			});
 		}
 	}
-	
-	function doAdvanceQuery() {
-
-		$.pdialog.open('${BaseURL}labour/showAdvanceQuery', 'gjcx', "高级查询", {
-			width : 640,
-			height : 480,
-			max : false,
-			mask : true,
-			mixable : true,
-			minable : true,
-			resizable : true,
-			drawable : true,
-			fresh : true,
-			close : function() {
-				// 对话框关闭时执行刷新
-				showempreg_grid.reload();
-				showempreg_grid.checkedRows = {};
-				return true;
-			}
-		});
-
-	}
 	function test() {
 		return true;
 	}
@@ -78,12 +56,13 @@
 
 <div class="pageContent" id="showlabouremployee_head"
 	style="overflow-x: hidden; overflow-y: hidden">
-	<input id="regwhere" name="regwhere" type="hidden" value="${regwhere}" />
+	<input id="labourwhere" name="regwhere" type="hidden"
+		value="${labourwhere}" />
 	<div class="panelBar">
 		<ul class="toolBar">
 			<li><a class="edit" onclick="doEditLabour();" rel="zcbj"><span>劳动关系</span></a></li>
-			<li><a class="edit" href="${BaseURL}labour/showAdvanceQuery"
-				target="dialog" mask="true" title="查询框" width="640" height="480"
+			<li><a class="edit" href="${BaseURL}labour/showLabourQuery"
+				target="dialog" mask="true" title="查询框" width="640" height="420"
 				close="test"><span>高级检索</span></a></li>
 		</ul>
 	</div>

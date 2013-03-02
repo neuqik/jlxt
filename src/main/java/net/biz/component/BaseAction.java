@@ -108,14 +108,14 @@ public abstract class BaseAction {
 
 			Object obj = enum1.nextElement();
 
-			// 取得这个参数在Bean中的数据类开
+			// 取得这个参数在Bean中的数据类型
 			Class cls;
 			try {
 				// TODO:用log替代
-//				System.out.println("现在映射:" + obj.toString());
+				// System.out.println("现在映射:" + obj.toString());
 				cls = PropertyUtils.getPropertyType(bean, obj.toString());
 				// 把相应的数据转换成对应的数据类型
-				Object reqVal = request.getParameter(obj.toString());
+				Object reqVal = request.getParameterMap().get(obj.toString());
 				// 如果bean的属性多，则忽略
 				if (reqVal == null)
 					reqVal = "";
@@ -123,6 +123,7 @@ public abstract class BaseAction {
 					Object beanValue = ConvertUtils.convert(reqVal, cls);
 					// 添冲Bean值
 					PropertyUtils.setProperty(bean, obj.toString(), beanValue);
+
 				} else {
 					// TODO:用log替代
 					System.out.println("现在忽略:" + reqVal);

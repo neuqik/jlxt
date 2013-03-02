@@ -1,5 +1,6 @@
 package net.biz.hr.web;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +17,10 @@ import net.biz.hr.vo.HRD_EMP;
 import net.biz.hr.vo.HRD_EMP_CONTRACT;
 import net.biz.hr.vo.HRD_EMP_EDU;
 import net.biz.hr.vo.HRD_EMP_REG;
+import net.biz.hr.vo.LabourQueryParam;
 import net.biz.hr.vo.RegQueryParam;
 import net.biz.util.BeanUtil;
+import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -39,9 +42,9 @@ public class LabourAction extends BaseAction {
 		return "forward:hr/labour/view/showLabour.jsp";
 	}
 
-
 	/**
 	 * 维护劳动关系打开界面
+	 * 
 	 * @param model
 	 * @return
 	 */
@@ -458,6 +461,56 @@ public class LabourAction extends BaseAction {
 			model.put("regwhere", where);
 			model.put("qp", qp);
 			return "forward:hr/reg/view/showRegEmployee.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/*************************************************************************************************/
+	/**
+	 * 显示劳动关系维护高级查询窗口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/showLabourQuery")
+	@POST
+	@GET
+	public String toShowLabourQuery(Map<String, Object> model) {
+		try {
+			// 生成codelist
+			String code1 = "DEPT_ID|INSUSTATUS";
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			model.put("currentDate", DateUtils.format(new Date()));
+			return "forward:hr/labour/view/labourQuery.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
+	}
+
+	/**
+	 * 根据输入查询信息
+	 * 
+	 * @return
+	 */
+	@Path("/queryLabourByInput")
+	@GET
+	@POST
+	public String toQueryLabourByInput(Map<String, Object> model) {
+		try {
+			// 获取查询条件，保存到bean中
+			LabourQueryParam qp = (LabourQueryParam) parseRequest(new LabourQueryParam());
+			// 拼SQL条件，生成SQL语句，供界面检查
+			String where = myhelper.getConditionByLabourQueryParam(qp);
+			model.put("labourwhere", where);
+			model.put("qp", qp);
+			return "forward:hr/labour/view/showEmpLabour.jsp";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
