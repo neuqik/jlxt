@@ -77,7 +77,8 @@ public class HRServiceHelper {
 
 		String wheres = where.toString().replaceAll("[,]", "AND");
 		wheres = wheres.substring(1, wheres.length() - 1);
-		return " WHERE " + wheres;
+		return wheres.trim().length() > 0 ? " WHERE " + wheres.toUpperCase()
+				: "";
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class HRServiceHelper {
 			} else {// 如果选择有意外险
 				tmpWhere = " (EMP_ID IN (select emp_id from v_hrd_emp where exists(select 1 from v_hrd_emp_contract where v_hrd_emp.emp_id = v_hrd_emp_contract.emp_id and accident_end > to_date('"
 						+ qp.getACCIDENT_END() + "','YYYY-MM-DD')))) ";
-			} 
+			}
 			if (wheres.length() > 0) {
 				wheres = wheres + " AND " + tmpWhere;
 			} else {

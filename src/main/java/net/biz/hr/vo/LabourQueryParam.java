@@ -150,11 +150,15 @@ public class LabourQueryParam {
 	 * @return
 	 */
 	public boolean isMEDICA() {
-		if ("2".equals(getINSU_FLAGE()[0])) {
-			return true;
+		if (getINSU_FLAGE().length == 1) {
+			if ("2".equals(getINSU_FLAGE()[0])) {
+				return true;
+			}
 		}
-		if ("2".equals(getINSU_FLAGE()[1])) {
-			return true;
+		if (getINSU_FLAGE().length == 2) {
+			if ("2".equals(getINSU_FLAGE()[1])) {
+				return true;
+			}
 		}
 		return false;
 	}
