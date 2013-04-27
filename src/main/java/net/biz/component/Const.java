@@ -1,6 +1,7 @@
 package net.biz.component;
 
 public class Const {
+	//
 	// JDBC查询时，返回appinfo的总行数
 	public static final String ROW_COUNT = "row_count";
 	// requestinfo中放置SQL语句的key
