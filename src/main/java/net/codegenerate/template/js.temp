@@ -1,0 +1,63 @@
+var c = $("#myContent").height();
+var header = $("#@@path.web.rest@@_head").height();
+var sql = "@@data.sql@@";
+// 定义数据类型
+var dsOption = {
+	fields : @@data.fileds@@,
+	uniqueField : '@@data.uniqueField@@',
+	recordType : 'json'
+};
+// 定义列选项
+var colsOption = @@data.colsoption@@;
+
+var gridOption = {
+	id : "@@path.web.rest@@_grid",
+	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
+	width : "100%", // "100%", // 700,
+	height : c - header, // "100%", // 330,
+	container : "gridbox_@@path.web.rest@@",
+	toolbarPosition : 'bottom',
+	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',
+	pageSizeList : [ 15, 25, 40, 60, 100, 200 ],
+	pageSize : 15,
+	dataset : dsOption,
+	columns : colsOption,
+	recountAfterSave : true,
+	showGridMenu : true,
+	allowFreeze : true,
+	allowGroup : true,
+	allowHide : true,
+	showIndexColumn : true,
+	SigmaGridPath : '../grid/',// 图形路径，需要补充
+	exportURL : MyURL + 'common/doExport?sql=' + sql,// 导出URL
+	exportFileName : 'emp_info',
+	remotePaging : true, // 服务器分页
+	remoteFilter : true, // 发送请求到LoadURL中，并且填写filterInfo
+	remoteSort : true, // 发送排序请求到LoadURL中，并且填写SortInfo
+	submitUpdatedFields : true, // 只提交变动的数据
+	autoLoad : true, // 窗口打开时是否自动加载URL
+	parameters : {
+		a : 123,
+		b : 222,
+		c : [ 8, 9 ]
+	},
+	onMouseOver : function(value, record, cell, row, colNo, rowNo, columnObj,
+			grid) {
+		if (columnObj && columnObj.toolTip) {
+			grid.showCellToolTip(cell, columnObj.toolTipWidth);
+		} else {
+			grid.hideCellToolTip();
+		}
+	},
+	onMouseOut : function(value, record, cell, row, colNo, rowNo, columnObj,
+			grid) {
+		grid.hideCellToolTip();
+	},
+	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
+			columnObj, grid) {
+			// TODO:双击行事件
+	}
+};
+
+var @@path.web.rest@@_grid = new Sigma.Grid(gridOption);
+@@path.web.rest@@_grid.render();

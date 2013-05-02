@@ -333,6 +333,33 @@ public class JDBCOracleUtil {
 
 		return localTotalCount;
 	}
+	/**
+	 * 查询行数
+	 * @param sql
+	 * @param totalCount
+	 * @param conn
+	 * @return
+	 * @throws SQLException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
+	public static int executeTotalCount(String sql, int totalCount, Connection conn)
+			throws SQLException, InstantiationException,
+			IllegalAccessException, ClassNotFoundException {
+		String localSql = "";
+		int localTotalCount = 0;
+		if (totalCount < 0) {
+			localSql = "SELECT COUNT(1) ROWCOUNT FROM (" + sql + ")";
+			List<Map<String, Object>> countMap = executeQuery(localSql,conn);
+			localTotalCount = Integer.parseInt(String.valueOf(countMap.get(0)
+					.get("ROWCOUNT")));
+		} else {
+			localTotalCount = totalCount;
+		}
+
+		return localTotalCount;
+	}
 
 	/**
 	 * 查询结果，不使用prepare的方式 从0开始 如果是null，设置为空字符

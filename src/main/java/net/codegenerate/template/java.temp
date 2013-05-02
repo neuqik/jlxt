@@ -1,0 +1,47 @@
+package @@path.package@@.web;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
+import net.biz.component.BaseAction;
+import net.biz.component.Const;
+import net.biz.component.appinfo.AppInfo;
+import net.biz.component.appinfo.RequestInfo;
+import net.biz.framework.codelist.CodeList;
+import net.biz.grid.gt.model.FilterInfo;
+import net.biz.grid.gt.model.SortInfo;
+import net.biz.grid.gt.server.GridServerHandler;
+import net.biz.util.BeanUtil;
+import net.biz.util.JDBCOracleUtil;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.eweb4j.config.ConfigConstant;
+import org.eweb4j.mvc.MVC;
+import org.eweb4j.mvc.upload.UploadFile;
+import org.eweb4j.util.FileUtil;
+
+@Path("/@@path.web@@")
+public class @@name.action@@ extends BaseAction {
+
+	/**
+	 * ´ò¿ªÒ³Ãæ
+	 */
+	@Path("/@@path.web.rest@@")
+	@GET
+	@POST
+	public String to@@path.web.rest.init@@() {
+		return "forward:@@path.web@@/view/@@path.web.rest@@.jsp";
+	}
+}
