@@ -48,7 +48,7 @@ public class GenerateJava {
 		File file = new File(
 				"D:/eclipse/workspace/building/src/main/webapp/WEB-INF/classes/net/codegenerate/template/java.temp");
 
-		String javaTemp = FileUtils.readFileToString(file, "GBK");
+		String javaTemp = FileUtils.readFileToString(file, "UTF-8");
 		// 替换内容
 		Iterator<String> it = Generator.getParam().keySet().iterator();
 		while (it.hasNext()) {
