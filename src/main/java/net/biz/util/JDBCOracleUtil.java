@@ -19,6 +19,8 @@ import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleTypes;
 
 public class JDBCOracleUtil {
+	// 日志记录标志
+	private static boolean LOG_ENABLE = false;
 
 	/**
 	 * 获取spring配置的connection @ lef2371@gmail.com 201212修改原来的连接方式
@@ -333,8 +335,10 @@ public class JDBCOracleUtil {
 
 		return localTotalCount;
 	}
+
 	/**
 	 * 查询行数
+	 * 
 	 * @param sql
 	 * @param totalCount
 	 * @param conn
@@ -344,14 +348,14 @@ public class JDBCOracleUtil {
 	 * @throws IllegalAccessException
 	 * @throws ClassNotFoundException
 	 */
-	public static int executeTotalCount(String sql, int totalCount, Connection conn)
-			throws SQLException, InstantiationException,
+	public static int executeTotalCount(String sql, int totalCount,
+			Connection conn) throws SQLException, InstantiationException,
 			IllegalAccessException, ClassNotFoundException {
 		String localSql = "";
 		int localTotalCount = 0;
 		if (totalCount < 0) {
 			localSql = "SELECT COUNT(1) ROWCOUNT FROM (" + sql + ")";
-			List<Map<String, Object>> countMap = executeQuery(localSql,conn);
+			List<Map<String, Object>> countMap = executeQuery(localSql, conn);
 			localTotalCount = Integer.parseInt(String.valueOf(countMap.get(0)
 					.get("ROWCOUNT")));
 		} else {
@@ -620,9 +624,19 @@ public class JDBCOracleUtil {
 
 		try {
 			conn = getConnection();
-			st = conn.prepareStatement(sql);
+			if (LOG_ENABLE) {
+				st = new LoggableStatement(conn, sql);
+			} else {
+				st = conn.prepareStatement(sql);
+			}
 			for (int i = 0; i < params.length; i++) {
+				System.out.println("正在set："+i);
 				st.setObject(i + 1, params[i]);
+
+			}
+			if (LOG_ENABLE) {
+				System.out.println("执行查询："
+						+ ((LoggableStatement) st).getQueryString());
 			}
 			st.execute();
 			conn.commit();

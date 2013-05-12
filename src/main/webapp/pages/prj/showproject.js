@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showproject_head").height();
-var sql = "SELECT BUILDINGCOUNT, CONTRACTAREA, CONTRACTNO, ID, FUN_GETLOC(LOCATION1) LOCATION1, FUN_GETLOC(LOCATION2) LOCATION2, FUN_GETLOC(LOCATION3) LOCATION3, FUN_GETLOC(LOCATION4) LOCATION4, MEMO, PRJNO, FUN_GETCODEDESC('PRJ_ARCHIVE',PRJ_ARCHIVE) PRJ_ARCHIVE, TO_CHAR(PRJ_ARCHIVETIME,'YYYY-MM-DD') PRJ_ARCHIVETIME, PRJ_AREA, TO_CHAR(PRJ_ENDTIME,'YYYY-MM-DD') PRJ_ENDTIME, PRJ_INVEST, FUN_GETCODEDESC('PRJ_LEVEL',PRJ_LEVEL) PRJ_LEVEL, PRJ_MAP, PRJ_NAME, PRJ_PIC, PRJ_PROGRESS, PRJ_REGION, TO_CHAR(PRJ_STARTTIME,'YYYY-MM-DD') PRJ_STARTTIME, PRJ_TIME, FUN_GETCODEDESC('PRJ_TYPE',PRJ_TYPE) PRJ_TYPE, FUN_GETCODEDESC('QUALITY_TARGET',QUALITY_TARGET) QUALITY_TARGET, FUN_GETCODEDESC('VALID',VALID) VALID, WEEKMEETING, TO_CHAR(WEEKMEETINGTIME,'YYYY-MM-DD') WEEKMEETINGTIME FROM V_PRJ_INFO";
+var sql = "SELECT BUILDINGCOUNT, CONTRACTAREA, CONTRACTNO, ID, FUN_GETLOC(LOCATION1) LOCATION1, FUN_GETLOC(LOCATION2) LOCATION2, FUN_GETLOC(LOCATION3) LOCATION3, FUN_GETLOC(LOCATION4) LOCATION4, MEMO, PRJNO, FUN_GETCODEDESC('PRJ_ARCHIVE',PRJ_ARCHIVE) PRJ_ARCHIVE, TO_CHAR(PRJ_ARCHIVETIME,'YYYY-MM-DD') PRJ_ARCHIVETIME, PRJ_AREA, TO_CHAR(PRJ_ENDTIME,'YYYY-MM-DD') PRJ_ENDTIME, PRJ_INVEST, FUN_GETCODEDESC('PRJ_LEVEL',PRJ_LEVEL) PRJ_LEVEL, PRJ_MAP, PRJ_NAME, PRJ_PIC, PRJ_PROGRESS, PRJ_REGION, TO_CHAR(PRJ_STARTTIME,'YYYY-MM-DD') PRJ_STARTTIME, PRJ_TIME, FUN_GETCODEDESC('PRJ_TYPE',PRJ_TYPE) PRJ_TYPE, FUN_GETCODEDESC('QUALITY_TARGET',QUALITY_TARGET) QUALITY_TARGET, FUN_GETCODEDESC('VALID',VALID) VALID, FUN_GETCODEDESC('WEEKMEETING',WEEKMEETING) WEEKMEETING, FUN_GETCODEDESC('WEEKMEETINGTIME',WEEKMEETINGTIME) WEEKMEETINGTIME FROM V_PRJ_INFO";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
@@ -73,17 +73,20 @@ var colsOption = [ {
 	width : 100,
 	editable : false,
 	header : "",
-	hidden : true
+	hidden : true,
+	frozen : true
 }, {
 	id : "PRJNO",
 	width : 100,
 	editable : false,
-	header : "项目编号"
+	header : "项目编号",
+	frozen : true
 }, {
 	id : "PRJ_NAME",
 	width : 100,
 	editable : false,
-	header : "项目名称"
+	header : "项目名称",
+	frozen : true
 }, {
 	id : "CONTRACTNO",
 	width : 100,
@@ -123,7 +126,14 @@ var colsOption = [ {
 	id : "PRJ_PROGRESS",
 	width : 100,
 	editable : false,
-	header : "项目进展情况"
+	header : "项目进展情况",
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
 }, {
 	id : "PRJ_INVEST",
 	width : 100,
@@ -153,17 +163,38 @@ var colsOption = [ {
 	id : "LOCATION1",
 	width : 100,
 	editable : false,
-	header : "项目地址(省)"
+	header : "项目地址(省)",
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
 }, {
 	id : "LOCATION2",
 	width : 100,
 	editable : false,
-	header : "项目地址(市)"
+	header : "项目地址(市)",
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
 }, {
 	id : "LOCATION3",
 	width : 100,
 	editable : false,
-	header : "项目地址(县/区)"
+	header : "项目地址(县/区)",
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
 }, {
 	id : "LOCATION4",
 	width : 100,
@@ -193,7 +224,14 @@ var colsOption = [ {
 	id : "PRJ_REGION",
 	width : 100,
 	editable : false,
-	header : "施工区域"
+	header : "施工区域",
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
 }, {
 	id : "PRJ_TIME",
 	width : 100,
@@ -203,7 +241,14 @@ var colsOption = [ {
 	id : "MEMO",
 	width : 100,
 	editable : false,
-	header : "备注"
+	header : "备注",
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
 }, {
 	id : "VALID",
 	width : 100,
@@ -258,6 +303,11 @@ var gridOption = {
 	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
 			columnObj, grid) {
 		// TODO:双击行事件
+		navTab.openTab("xgxm", MyURL + "prj/editproject?PRJ_ID=" + record.ID, {
+			title : "维护项目"+record.PRJNO+","+record.PRJ_NAME,
+			fresh : false,
+			data : {}
+		});
 	}
 };
 

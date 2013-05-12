@@ -22,20 +22,20 @@ public class Client {
 			Generator.getParam().put("path.web.jsp", "resources.prj.view");
 			Generator.getParam().put("path.web.js", "pages.prj");
 			// path.web.rest
-			Generator.getParam().put("path.web.rest", "showproject");
+			Generator.getParam().put("path.web.rest", "editunit");
 			// path.web.rest.init首字母大写
-			Generator.getParam().put("path.web.rest.init", "ShowProject");
+			Generator.getParam().put("path.web.rest.init", "EditUnit");
 			// ActionClassName
 			Generator.getParam().put("name.action", "PRJAction");
 			// ---------------js-----------------
 			// data.table 要查询的表
-			Generator.getParam().put("data.table", "PRJ_INFO");
+			Generator.getParam().put("data.table", "PRJ_UNIT");
 			// data.sql SQL语句，自动转换成大写，先生成SQL
 			List<String> originalCols = GenerateSQL.generateCode();
 			// ${data.fileds}，数据列的内容
 			GenerateJS.generateFields(originalCols);
 			// data.uniqueField 唯一列的名字，大小写敏感
-			Generator.getParam().put("data.uniqueField", "PRJ_ID");
+			Generator.getParam().put("data.uniqueField", "ID");
 			// data.colsoption 列显示的内容
 			GenerateJS.generateCols(originalCols);
 			// /////////////////////准备参数完成//////////////////////////

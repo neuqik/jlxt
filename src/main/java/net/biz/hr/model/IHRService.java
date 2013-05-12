@@ -7,11 +7,10 @@ import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
 import net.biz.grid.gt.model.FilterInfo;
 import net.biz.grid.gt.model.SortInfo;
+import net.biz.hr.vo.HRD_EMP;
 import net.biz.hr.vo.HRD_EMP_EDU;
 import net.biz.hr.vo.HRD_EMP_REG;
 import net.biz.hr.vo.HRD_EMP_TRANSFER;
-import net.biz.hr.vo.HRD_EMP;
-import net.biz.hr.vo.RegQueryParam;
 
 public interface IHRService {
 	/**
