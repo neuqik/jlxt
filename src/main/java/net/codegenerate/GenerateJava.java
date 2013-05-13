@@ -120,12 +120,12 @@ public class GenerateJava {
 	public static void main(String[] args) {
 		try {
 			// 1.生成VO的代码
-//			GenerateJava
-//					.generateVO("PRJ_UNIT",
-//							"D:\\eclipse\\workspace\\building\\src\\main\\java\\net\\biz\\project\\vo\\");
+			// GenerateJava
+			// .generateVO("PRJ_UNIT",
+			// "D:\\eclipse\\workspace\\building\\src\\main\\java\\net\\biz\\project\\vo\\");
 			// 2.生成service中保存新对象的代码
-			 GenerateJava.generateINSERTMethod("PRJ_UNIT", "prjInfo");
-			// GenerateJava.generateUPDATEMethod("PRJ_UNIT_RELATE", "row");
+			// GenerateJava.generateINSERTMethod("PRJ_UNIT", "prjInfo");
+			GenerateJava.generateUPDATEMethod("PRJ_UNIT", "prjInfo");
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

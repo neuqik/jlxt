@@ -55,4 +55,12 @@ public interface IPRJService {
 	 */
 	public void saveNewUnit(PRJ_UNIT prjInfo) throws Exception;
 
+	/**
+	 * 删除参建单位信息
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
+	public void delUnit(String id) throws Exception;
+
 }

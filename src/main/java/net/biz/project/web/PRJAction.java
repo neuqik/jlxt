@@ -245,10 +245,10 @@ public class PRJAction extends BaseAction {
 	 * 
 	 * @return
 	 */
-	@Path("/editunit")
+	@Path("/editunitall")
 	@GET
 	@POST
-	public String toEditUnit(Map<String, String> model) {
+	public String toEditUnitAll(Map<String, String> model) {
 		String prjId = getParam("PRJ_ID");
 		model.put("PRJ_ID", prjId);
 		return "forward:prj/view/editunitall.jsp";
@@ -281,6 +281,41 @@ public class PRJAction extends BaseAction {
 	}
 
 	/**
+	 * 编辑参建单位信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/editunit")
+	@GET
+	@POST
+	public String toEditUnit(Map<String, Object> model) {
+		String prjId = getParam("PRJ_ID");
+		String Id = getParam("ID");
+		String sql = "select id,prj_id,unit_name,group_name,unit_type,quali_level,unit_address,contractor,title,contract_tel,memo,valid from v_prj_unit WHERE ID="
+				+ Id;
+		model.put("PRJ_ID", prjId);
+
+		String code1 = "UNIT_TYPE|QUALI_LEVEL";
+		Map a = CodeList.getCodeMap();
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql
+					.toUpperCase());
+			PRJ_UNIT prj = new PRJ_UNIT();
+			BeanUtils.populate(prj, result.get(0));
+			model.put("prj", prj);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return "forward:prj/view/addunit.jsp";
+	}
+
+	/**
 	 * 保存新建的参建单位信息
 	 * 
 	 * @param model
@@ -295,11 +330,45 @@ public class PRJAction extends BaseAction {
 			PRJ_UNIT prjInfo = (PRJ_UNIT) parseRequest(req, new PRJ_UNIT());
 			myservice.saveNewUnit(prjInfo);
 			model.put("PRJ_ID", prjInfo.getPRJ_ID());
-			return successJSONReload("添加参建单位成功", "dialog", "prj/addunit",
-					"zjcjdw");
+			return successJSON("添加参建单位成功", "dialog", "prj/editunit", "zjcjdw");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
+	}
+
+	/**
+	 * 删除参建单位信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/delunit")
+	@GET
+	@POST
+	public String toDelUnit(Map<String, String> model) {
+		try {
+			String Id = getParam("ID");
+			String prjId = getParam("PRJ_ID");
+			myservice.delUnit(Id);
+			model.put("PRJ_ID", prjId);
+			return successJSON("删除参建单位成功", "dialog", "prj/editunitall",
+					"sccjdw");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 编辑组织角色
+	 * 
+	 * @return
+	 */
+	@Path("/editorg")
+	@GET
+	@POST
+	public String toEditOrg(Map<String, String> model) {
+		return "forward:prj/view/editorg.jsp";
 	}
 }

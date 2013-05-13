@@ -1,30 +1,24 @@
 var c = $("#myContent").height();
-var header = $("#editunitall_head").height();
-var sql = "SELECT CONTRACTOR, CONTRACT_TEL, GROUP_NAME, ID, MEMO, PRJ_ID, FUN_GETCODEDESC('QUALI_LEVEL',QUALI_LEVEL) QUALI_LEVEL, TITLE, UNIT_ADDRESS, UNIT_NAME, FUN_GETCODEDESC('UNIT_TYPE',UNIT_TYPE) UNIT_TYPE, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_UNIT";
+var header = $("#editorg_head").height();
+var sql = "SELECT (SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=A.EMP_ID) EMP_ID, TO_CHAR(ENTERTIME,'YYYY-MM-DD') ENTERTIME, ID, TO_CHAR(LEAVETIME,'YYYY-MM-DD') LEAVETIME, MEMO, PRJ_ID, FUN_GETCODEDESC('PRJ_ROLE',PRJ_ROLE) PRJ_ROLE, RESPONSBILITY, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_ORG A";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
-		name : "CONTRACTOR"
+		name : "EMP_ID"
 	}, {
-		name : "CONTRACT_TEL"
-	}, {
-		name : "GROUP_NAME"
+		name : "ENTERTIME"
 	}, {
 		name : "ID"
+	}, {
+		name : "LEAVETIME"
 	}, {
 		name : "MEMO"
 	}, {
 		name : "PRJ_ID"
 	}, {
-		name : "QUALI_LEVEL"
+		name : "PRJ_ROLE"
 	}, {
-		name : "TITLE"
-	}, {
-		name : "UNIT_ADDRESS"
-	}, {
-		name : "UNIT_NAME"
-	}, {
-		name : "UNIT_TYPE"
+		name : "RESPONSBILITY"
 	}, {
 		name : "VALID"
 	} ],
@@ -37,51 +31,25 @@ var colsOption = [ {
 	isCheckColumn : true,
 	frozen : true
 }, {
-	id : "UNIT_NAME",
+	id : "PRJ_ROLE",
 	width : 150,
 	editable : false,
-	header : "参建单位名称",
-	toolTip : true,
-	toolTipWidth : 300
+	header : "项目中角色"
 }, {
-	id : "GROUP_NAME",
+	id : "EMP_ID",
 	width : 150,
 	editable : false,
-	header : "参建集团名称",
-	toolTip : true,
-	toolTipWidth : 300
+	header : "员工姓名"
 }, {
-	id : "QUALI_LEVEL",
-	width : 100,
+	id : "RESPONSBILITY",
+	width : 200,
 	editable : false,
-	header : "资质等级"
+	header : "项目责任"
 }, {
-	id : "UNIT_TYPE",
-	width : 100,
-	editable : false,
-	header : "项目角色"
-}, {
-	id : "CONTRACTOR",
-	width : 100,
-	editable : false,
-	header : "联系人"
-}, {
-	id : "TITLE",
-	width : 100,
-	editable : false,
-	header : "职务"
-}, {
-	id : "CONTRACT_TEL",
-	width : 100,
-	editable : false,
-	header : "电话"
-}, {
-	id : "UNIT_ADDRESS",
+	id : "ENTERTIME",
 	width : 150,
 	editable : false,
-	header : "单位地址",
-	toolTip : true,
-	toolTipWidth : 300
+	header : "进场时间"
 }, {
 	id : "ID",
 	width : 100,
@@ -89,12 +57,15 @@ var colsOption = [ {
 	header : "",
 	hidden : true
 }, {
-	id : "MEMO",
-	width : 200,
+	id : "LEAVETIME",
+	width : 150,
 	editable : false,
-	header : "备注",
-	toolTip : true,
-	toolTipWidth : 300
+	header : "离场时间"
+}, {
+	id : "MEMO",
+	width : 300,
+	editable : false,
+	header : "备注"
 }, {
 	id : "PRJ_ID",
 	width : 100,
@@ -110,11 +81,11 @@ var colsOption = [ {
 } ];
 
 var gridOption = {
-	id : "editunitall_grid",
+	id : "editorg_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
 	width : "100%", // "100%", // 700,
 	height : c - header - 40, // "100%", // 330,
-	container : "gridbox_editunitall",
+	container : "gridbox_editorg",
 	toolbarPosition : 'bottom',
 	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',
 	pageSizeList : [ 15, 25, 40, 60, 100, 200 ],
@@ -154,26 +125,9 @@ var gridOption = {
 	},
 	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
 			columnObj, grid) {
-		$.pdialog.open(MyURL + 'prj/editunit?PRJ_ID=' + prjId + '&ID='
-				+ record.ID, 'xgcjdw', "修改参建单位信息", {
-			width : 640,
-			height : 480,
-			max : false,
-			mask : true,
-			mixable : true,
-			minable : true,
-			resizable : true,
-			drawable : true,
-			fresh : true,
-			close : function() {
-				// 对话框关闭时执行刷新
-				editunitall_grid.reload();
-				editunitall_grid.checkedRows = {};
-				return true;
-			}
-		});
+		// TODO:双击行事件
 	}
 };
 
-var editunitall_grid = new Sigma.Grid(gridOption);
-editunitall_grid.render();
+var editorg_grid = new Sigma.Grid(gridOption);
+editorg_grid.render();

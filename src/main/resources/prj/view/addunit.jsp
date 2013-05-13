@@ -12,7 +12,7 @@
 					value="${PRJ_ID}" maxlength="22" />
 				<p>
 					<label>参建单位名称：</label><input type="text" size="30" name="UNIT_NAME"
-						value="${prj.UNIT_NAME}" maxlength="200" class="required" />
+						value="${prj.UNIT_NAME}" maxlength="200" class="required"  <c:if test="${prj.ID!=null}"> readonly="readonly"</c:if> />
 				</p>
 				<p>
 					<label>参建集团名称：</label><input type="text" size="30"
@@ -60,7 +60,7 @@
 					<!--<li><a class="buttonActive" href="javascript:;"><span>保存</span></a></li>-->
 					<li><div class="buttonActive">
 							<div class="buttonContent">
-								<button type="submit" class="close">保存</button>
+								<button type="submit">保存</button>
 							</div>
 						</div></li>
 					<li>

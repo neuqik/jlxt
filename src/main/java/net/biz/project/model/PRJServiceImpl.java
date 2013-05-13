@@ -241,10 +241,30 @@ public class PRJServiceImpl implements IPRJService {
 	 * 保存新参建单位信息
 	 */
 	public void saveNewUnit(PRJ_UNIT prjInfo) throws Exception {
+		String sql = "";
+		// 如果ID不为空，则说明是更新
+		if (!"".equals(prjInfo.getID())) {
+			sql = "UPDATE V_PRJ_UNIT SET PRJ_ID=?,UNIT_NAME=?,GROUP_NAME=?,UNIT_TYPE=?,QUALI_LEVEL=?,UNIT_ADDRESS=?,CONTRACTOR=?,TITLE=?,CONTRACT_TEL=?,MEMO=? WHERE ID="
+					+ prjInfo.getID();
+
+			List<Object> params = new ArrayList<Object>();
+			params.add(prjInfo.getPRJ_ID());
+			params.add(prjInfo.getUNIT_NAME());
+			params.add(prjInfo.getGROUP_NAME());
+			params.add(prjInfo.getUNIT_TYPE());
+			params.add(prjInfo.getQUALI_LEVEL());
+			params.add(prjInfo.getUNIT_ADDRESS());
+			params.add(prjInfo.getCONTRACTOR());
+			params.add(prjInfo.getTITLE());
+			params.add(prjInfo.getCONTRACT_TEL());
+			params.add(prjInfo.getMEMO());
+			JDBCOracleUtil.ExecuteDML(sql, params);
+			return;
+		}
 		// 1.检查参建单位名称和项目编号是否有重复，如果重复则报错
 		String prjId = prjInfo.getPRJ_ID();
 		String name = prjInfo.getUNIT_NAME();
-		String sql = "select 1 from v_prj_unit where prj_id=" + prjId
+		sql = "select 1 from v_prj_unit where prj_id=" + prjId
 				+ " and unit_name = '" + name + "'";
 		int rowcount = JDBCOracleUtil.executeTotalCount(sql.toUpperCase(), -1);
 		if (rowcount >= 1) {
@@ -267,5 +287,15 @@ public class PRJServiceImpl implements IPRJService {
 		params.add(11, prjInfo.getVALID());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 
+	}
+
+	/**
+	 * 删除参建单位信息
+	 */
+	public void delUnit(String id) throws Exception {
+		String sql = "UPDATE V_PRJ_UNIT SET VALID='0' WHERE ID=?";
+		List<Object> params = new ArrayList<Object>();
+		params.add(id);
+		JDBCOracleUtil.ExecuteDML(sql, params);
 	}
 }

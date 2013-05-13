@@ -14,7 +14,7 @@
 						class="j-ajax" rel="bmfgs"><span>部门/分公司</span></a></li>
 					<li><a href="${BaseURL}prj/editorg?PRJ_ID=${PRJ_ID}"
 						class="j-ajax" rel="zzxx"><span>组织信息</span></a></li>
-					<li><a href="${BaseURL}prj/editunit?PRJ_ID=${PRJ_ID}"
+					<li><a href="${BaseURL}prj/editunitall?PRJ_ID=${PRJ_ID}"
 						class="j-ajax" rel="cjdw"><span>参建单位</span></a></li>
 
 				</ul>
