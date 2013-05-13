@@ -6,9 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.biz.hr.vo.HRD_EMP_JOB;
+import net.biz.framework.exception.AppException;
 import net.biz.project.vo.PRJ_BUILDING;
 import net.biz.project.vo.PRJ_INFO;
+import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
 import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
@@ -24,7 +25,7 @@ public class PRJServiceImpl implements IPRJService {
 	public String saveNewProject(PRJ_INFO prjInfo) throws Exception {
 		// 项目编号
 		String prjNo = genNewPRJNO(prjInfo);
-		String sql = "INSERT INTO PRJ_INFO(BUILDINGCOUNT,CONTRACTAREA,PRJ_LEVEL,PRJ_TYPE,PRJ_INVEST,WEEKMEETING,PRJ_MAP,PRJ_REGION,PRJ_ARCHIVE,WEEKMEETINGTIME,PRJ_ARCHIVETIME,LOCATION4,ID,PRJNO,CONTRACTNO,PRJ_NAME,PRJ_AREA,QUALITY_TARGET,PRJ_STARTTIME,PRJ_ENDTIME,PRJ_TIME,PRJ_PIC,PRJ_PROGRESS,LOCATION1,MEMO,VALID,LOCATION2,LOCATION3) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO V_PRJ_INFO(BUILDINGCOUNT,CONTRACTAREA,PRJ_LEVEL,PRJ_TYPE,PRJ_INVEST,WEEKMEETING,PRJ_MAP,PRJ_REGION,PRJ_ARCHIVE,WEEKMEETINGTIME,PRJ_ARCHIVETIME,LOCATION4,ID,PRJNO,CONTRACTNO,PRJ_NAME,PRJ_AREA,QUALITY_TARGET,PRJ_STARTTIME,PRJ_ENDTIME,PRJ_TIME,PRJ_PIC,PRJ_PROGRESS,LOCATION1,MEMO,VALID,LOCATION2,LOCATION3) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		List<Object> params = new ArrayList<Object>();
 		params.add(0, prjInfo.getBUILDINGCOUNT());
@@ -80,7 +81,7 @@ public class PRJServiceImpl implements IPRJService {
 	 * 保存编辑的项目
 	 */
 	public String saveEditProject(PRJ_INFO prjInfo) throws Exception {
-		String sql = "UPDATE PRJ_INFO SET BUILDINGCOUNT=?,CONTRACTAREA=?,PRJ_LEVEL=?,PRJ_TYPE=?,PRJ_INVEST=?,WEEKMEETING=?,PRJ_MAP=?,PRJ_REGION=?,PRJ_ARCHIVE=?,WEEKMEETINGTIME=?,PRJ_ARCHIVETIME=?,LOCATION4=?,PRJNO=?,CONTRACTNO=?,PRJ_NAME=?,PRJ_AREA=?,QUALITY_TARGET=?,PRJ_STARTTIME=?,PRJ_ENDTIME=?,PRJ_TIME=?,PRJ_PIC=?,PRJ_PROGRESS=?,LOCATION1=?,MEMO=?,LOCATION2=?,LOCATION3=? WHERE ID="
+		String sql = "UPDATE V_PRJ_INFO SET BUILDINGCOUNT=?,CONTRACTAREA=?,PRJ_LEVEL=?,PRJ_TYPE=?,PRJ_INVEST=?,WEEKMEETING=?,PRJ_MAP=?,PRJ_REGION=?,PRJ_ARCHIVE=?,WEEKMEETINGTIME=?,PRJ_ARCHIVETIME=?,LOCATION4=?,PRJNO=?,CONTRACTNO=?,PRJ_NAME=?,PRJ_AREA=?,QUALITY_TARGET=?,PRJ_STARTTIME=?,PRJ_ENDTIME=?,PRJ_TIME=?,PRJ_PIC=?,PRJ_PROGRESS=?,LOCATION1=?,MEMO=?,LOCATION2=?,LOCATION3=? WHERE ID="
 				+ prjInfo.getID();
 
 		List<Object> params = new ArrayList<Object>();
@@ -118,7 +119,7 @@ public class PRJServiceImpl implements IPRJService {
 	public void saveBuilding(List<Object> inserts, List<Object> updates,
 			List<Object> deletes, String prjId) throws Exception {
 		// 1.执行插入
-		String sql = "INSERT INTO PRJ_BUILDING(LICENSE_DATE,SECURITY_LEVEL,CONSTRUCT_TYPE,ACT_TIME,PROGRESS,BUILDER_LICENSE,BUILDING_TYPE,IMAGE_PROGRESS,MEMO,VALID,ACT_BEGIN,ACT_END,ID,PRJ_ID,BUILDING_ID,UNDERFLOOR,ABOVEFLOOR,HEIGHT,BUILDING_AREA) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO V_PRJ_BUILDING(LICENSE_DATE,SECURITY_LEVEL,CONSTRUCT_TYPE,ACT_TIME,PROGRESS,BUILDER_LICENSE,BUILDING_TYPE,IMAGE_PROGRESS,MEMO,VALID,ACT_BEGIN,ACT_END,ID,PRJ_ID,BUILDING_ID,UNDERFLOOR,ABOVEFLOOR,HEIGHT,BUILDING_AREA) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Iterator<Object> it = inserts.iterator();
 		while (it.hasNext()) {
 			PRJ_BUILDING row = (PRJ_BUILDING) it.next();
@@ -152,7 +153,7 @@ public class PRJServiceImpl implements IPRJService {
 
 			PRJ_BUILDING row = (PRJ_BUILDING) it1.next();
 			String id = row.getID();
-			sql = "UPDATE PRJ_BUILDING SET LICENSE_DATE=?,SECURITY_LEVEL=?,CONSTRUCT_TYPE=?,ACT_TIME=?,PROGRESS=?,BUILDER_LICENSE=?,BUILDING_TYPE=?,IMAGE_PROGRESS=?,MEMO=?,ACT_BEGIN=?,ACT_END=?,BUILDING_ID=?,UNDERFLOOR=?,ABOVEFLOOR=?,HEIGHT=?,BUILDING_AREA=? WHERE PRJ_ID = "
+			sql = "UPDATE V_PRJ_BUILDING SET LICENSE_DATE=?,SECURITY_LEVEL=?,CONSTRUCT_TYPE=?,ACT_TIME=?,PROGRESS=?,BUILDER_LICENSE=?,BUILDING_TYPE=?,IMAGE_PROGRESS=?,MEMO=?,ACT_BEGIN=?,ACT_END=?,BUILDING_ID=?,UNDERFLOOR=?,ABOVEFLOOR=?,HEIGHT=?,BUILDING_AREA=? WHERE PRJ_ID = "
 					+ prjId;
 
 			List<Object> params = new ArrayList<Object>();
@@ -182,7 +183,7 @@ public class PRJServiceImpl implements IPRJService {
 			PRJ_BUILDING row = (PRJ_BUILDING) it11.next();
 			List<Object> params = new ArrayList<Object>();
 			params.add(row.getID());
-			String sql1 = "update prj_building set valid='0' where id=?";
+			String sql1 = "update v_prj_building set valid='0' where id=?";
 			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
 		}
 
@@ -194,7 +195,7 @@ public class PRJServiceImpl implements IPRJService {
 	public void saveRelate(List<Object> inserts, List<Object> updates,
 			List<Object> deletes, String prjId) throws Exception {
 		// 1.执行插入
-		String sql = "INSERT INTO PRJ_UNIT_RELATE(ID,PRJ_ID,DEPT_ID,MEMO,VALID) VALUES(?,?,?,?,?)";
+		String sql = "INSERT INTO V_PRJ_UNIT_RELATE(ID,PRJ_ID,DEPT_ID,MEMO,VALID) VALUES(?,?,?,?,?)";
 		Iterator<Object> it = inserts.iterator();
 		while (it.hasNext()) {
 			PRJ_UNIT_RELATE row = (PRJ_UNIT_RELATE) it.next();
@@ -214,7 +215,7 @@ public class PRJServiceImpl implements IPRJService {
 
 			PRJ_UNIT_RELATE row = (PRJ_UNIT_RELATE) it1.next();
 			String id = row.getID();
-			sql = "UPDATE PRJ_UNIT_RELATE SET DEPT_ID=?,MEMO=? WHERE PRJ_ID="
+			sql = "UPDATE V_PRJ_UNIT_RELATE SET DEPT_ID=?,MEMO=? WHERE PRJ_ID="
 					+ prjId;
 
 			List<Object> params = new ArrayList<Object>();
@@ -230,9 +231,41 @@ public class PRJServiceImpl implements IPRJService {
 			PRJ_UNIT_RELATE row = (PRJ_UNIT_RELATE) it11.next();
 			List<Object> params = new ArrayList<Object>();
 			params.add(row.getID());
-			String sql1 = "delete from  prj_unit_relate where id=?";
+			String sql1 = "delete from  v_prj_unit_relate where id=?";
 			JDBCOracleUtil.ExecuteDML(sql1.toUpperCase(), params);
 		}
+
+	}
+
+	/**
+	 * 保存新参建单位信息
+	 */
+	public void saveNewUnit(PRJ_UNIT prjInfo) throws Exception {
+		// 1.检查参建单位名称和项目编号是否有重复，如果重复则报错
+		String prjId = prjInfo.getPRJ_ID();
+		String name = prjInfo.getUNIT_NAME();
+		String sql = "select 1 from v_prj_unit where prj_id=" + prjId
+				+ " and unit_name = '" + name + "'";
+		int rowcount = JDBCOracleUtil.executeTotalCount(sql.toUpperCase(), -1);
+		if (rowcount >= 1) {
+			throw new AppException("单位:" + name + "在同一个项目中不能重复。");
+		}
+		sql = "INSERT INTO PRJ_UNIT(ID,PRJ_ID,UNIT_NAME,GROUP_NAME,UNIT_TYPE,QUALI_LEVEL,UNIT_ADDRESS,CONTRACTOR,TITLE,CONTRACT_TEL,MEMO,VALID) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+
+		List<Object> params = new ArrayList<Object>();
+		params.add(0, JDBCOracleUtil.getID());
+		params.add(1, prjInfo.getPRJ_ID());
+		params.add(2, prjInfo.getUNIT_NAME());
+		params.add(3, prjInfo.getGROUP_NAME());
+		params.add(4, prjInfo.getUNIT_TYPE());
+		params.add(5, prjInfo.getQUALI_LEVEL());
+		params.add(6, prjInfo.getUNIT_ADDRESS());
+		params.add(7, prjInfo.getCONTRACTOR());
+		params.add(8, prjInfo.getTITLE());
+		params.add(9, prjInfo.getCONTRACT_TEL());
+		params.add(10, prjInfo.getMEMO());
+		params.add(11, prjInfo.getVALID());
+		JDBCOracleUtil.ExecuteDML(sql, params);
 
 	}
 }

@@ -120,12 +120,12 @@ public class GenerateJava {
 	public static void main(String[] args) {
 		try {
 			// 1.生成VO的代码
-			// GenerateJava
-			// .generateVO("PRJ_UNIT_RELATE",
-			// "D:\\eclipse\\workspace\\building\\src\\main\\java\\net\\biz\\project\\vo\\");
+//			GenerateJava
+//					.generateVO("PRJ_UNIT",
+//							"D:\\eclipse\\workspace\\building\\src\\main\\java\\net\\biz\\project\\vo\\");
 			// 2.生成service中保存新对象的代码
-			GenerateJava.generateINSERTMethod("PRJ_UNIT_RELATE", "row");
-			GenerateJava.generateUPDATEMethod("PRJ_UNIT_RELATE", "row");
+			 GenerateJava.generateINSERTMethod("PRJ_UNIT", "prjInfo");
+			// GenerateJava.generateUPDATEMethod("PRJ_UNIT_RELATE", "row");
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -185,7 +185,7 @@ public class GenerateJava {
 			}
 		}
 		System.out.println("------------------输出方法内容-----------------------");
-		String insert = "String sql = \"INSERT INTO " + tableName + "("
+		String insert = "String sql = \"INSERT INTO V_" + tableName + "("
 				+ cols.substring(1) + ") VALUES(" + asks.substring(1)
 				+ ")\";\n";
 		System.out.println(insert);
@@ -239,7 +239,7 @@ public class GenerateJava {
 			}
 		}
 		System.out.println("------------------输出方法内容-----------------------");
-		String update = "String sql = \"UPDATE " + tableName + " SET "
+		String update = "String sql = \"UPDATE V_" + tableName + " SET "
 				+ cols.substring(1) + ";\n";
 		System.out.println(update);
 		String content = "List<Object> params = new ArrayList<Object>();\n"

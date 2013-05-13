@@ -14,6 +14,7 @@ import net.biz.framework.codelist.CodeList;
 import net.biz.project.model.IPRJService;
 import net.biz.project.vo.PRJ_BUILDING;
 import net.biz.project.vo.PRJ_INFO;
+import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
 import net.biz.util.BeanUtil;
 import net.biz.util.JDBCOracleUtil;
@@ -250,19 +251,55 @@ public class PRJAction extends BaseAction {
 	public String toEditUnit(Map<String, String> model) {
 		String prjId = getParam("PRJ_ID");
 		model.put("PRJ_ID", prjId);
-		return "forward:prj/view/editunit.jsp";
+		return "forward:prj/view/editunitall.jsp";
 	}
+
 	/**
 	 * 打开添加新的参建单位界面
+	 * 
 	 * @param model
 	 * @return
 	 */
 	@Path("/addunit")
 	@GET
 	@POST
-	public String toAddUnit(Map<String, String> model) {
+	public String toAddUnit(Map<String, Object> model) {
 		String prjId = getParam("PRJ_ID");
 		model.put("PRJ_ID", prjId);
-		return "forward:prj/view/editunit.jsp";
+		String code1 = "UNIT_TYPE|QUALI_LEVEL";
+		Map a = CodeList.getCodeMap();
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return "forward:prj/view/addunit.jsp";
+	}
+
+	/**
+	 * 保存新建的参建单位信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/savenewunit")
+	@GET
+	@POST
+	public String toSaveNewUnit(Map<String, String> model) {
+		try {
+			HttpServletRequest req = MVC.ctx().getRequest();
+			PRJ_UNIT prjInfo = (PRJ_UNIT) parseRequest(req, new PRJ_UNIT());
+			myservice.saveNewUnit(prjInfo);
+			model.put("PRJ_ID", prjInfo.getPRJ_ID());
+			return successJSONReload("添加参建单位成功", "dialog", "prj/addunit",
+					"zjcjdw");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
 	}
 }

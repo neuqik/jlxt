@@ -1,5 +1,5 @@
 var c = $("#myContent").height();
-var header = $("#editunit_head").height();
+var header = $("#editunitall_head").height();
 var sql = "SELECT CONTRACTOR, CONTRACT_TEL, GROUP_NAME, ID, MEMO, PRJ_ID, FUN_GETCODEDESC('QUALI_LEVEL',QUALI_LEVEL) QUALI_LEVEL, TITLE, UNIT_ADDRESS, UNIT_NAME, FUN_GETCODEDESC('UNIT_TYPE',UNIT_TYPE) UNIT_TYPE, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_UNIT";
 // 定义数据类型
 var dsOption = {
@@ -110,11 +110,11 @@ var colsOption = [ {
 } ];
 
 var gridOption = {
-	id : "editunit_grid",
+	id : "editunitall_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
 	width : "100%", // "100%", // 700,
 	height : c - header - 40, // "100%", // 330,
-	container : "gridbox_editunit",
+	container : "gridbox_editunitall",
 	toolbarPosition : 'bottom',
 	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',
 	pageSizeList : [ 15, 25, 40, 60, 100, 200 ],
@@ -158,5 +158,5 @@ var gridOption = {
 	}
 };
 
-var editunit_grid = new Sigma.Grid(gridOption);
-editunit_grid.render();
+var editunitall_grid = new Sigma.Grid(gridOption);
+editunitall_grid.render();

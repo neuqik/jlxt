@@ -3,6 +3,7 @@ package net.biz.project.model;
 import java.util.List;
 
 import net.biz.project.vo.PRJ_INFO;
+import net.biz.project.vo.PRJ_UNIT;
 
 public interface IPRJService {
 	/**
@@ -33,8 +34,10 @@ public interface IPRJService {
 	 */
 	public void saveBuilding(List<Object> insertList, List<Object> updateList,
 			List<Object> deleteList, String prjId) throws Exception;
+
 	/**
 	 * 保存分公司和项目的关系
+	 * 
 	 * @param insertList
 	 * @param updateList
 	 * @param deleteList
@@ -43,5 +46,13 @@ public interface IPRJService {
 	 */
 	public void saveRelate(List<Object> insertList, List<Object> updateList,
 			List<Object> deleteList, String prjId) throws Exception;
+
+	/**
+	 * 保存新的参建单位信息
+	 * 
+	 * @param prjInfo
+	 * @throws Exception
+	 */
+	public void saveNewUnit(PRJ_UNIT prjInfo) throws Exception;
 
 }

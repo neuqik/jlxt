@@ -5,22 +5,22 @@
 	<div class="pageContent">
 		<form method="post" action="${BaseURL}prj/savenewunit"
 			class="pageForm required-validate"
-			onsubmit="return validateCallback(this, navTabAjaxDone)">
+			onsubmit="return validateCallback(this, dialogAjaxDone)">
 			<div class="pageFormContent" layoutH="58">
 				<input type="hidden" size="30" name="ID" value="${prj.ID}"
 					maxlength="22" /> <input type="hidden" size="30" name="PRJ_ID"
 					value="${PRJ_ID}" maxlength="22" />
 				<p>
 					<label>参建单位名称：</label><input type="text" size="30" name="UNIT_NAME"
-						value="${prj.UNIT_NAME}" maxlength="200" />
+						value="${prj.UNIT_NAME}" maxlength="200" class="required" />
 				</p>
 				<p>
 					<label>参建集团名称：</label><input type="text" size="30"
 						name="GROUP_NAME" value="${prj.GROUP_NAME}" maxlength="200" />
 				</p>
 				<p>
-					<label>项目角色：</label> <select name="UNIT_TYPE" class="combox"><option
-							value="">请选择...</option>
+					<label>项目角色：</label> <select name="UNIT_TYPE"
+						class="combox required"><option value="">请选择...</option>
 						<c:forEach var="item" items="${UNIT_TYPE}">
 							<option value="${item.codeValue}"
 								<c:if test="${item.codeValue == prj.UNIT_TYPE}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
@@ -40,7 +40,7 @@
 				</p>
 				<p>
 					<label>联系人：</label><input type="text" size="30" name="CONTRACTOR"
-						value="${prj.CONTRACTOR}" maxlength="20" />
+						value="${prj.CONTRACTOR}" maxlength="20" class="required" />
 				</p>
 				<p>
 					<label>职务：</label><input type="text" size="30" name="TITLE"
