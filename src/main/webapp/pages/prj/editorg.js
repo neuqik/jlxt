@@ -1,10 +1,13 @@
 var c = $("#myContent").height();
 var header = $("#editorg_head").height();
-var sql = "SELECT (SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=A.EMP_ID) EMP_ID, TO_CHAR(ENTERTIME,'YYYY-MM-DD') ENTERTIME, ID, TO_CHAR(LEAVETIME,'YYYY-MM-DD') LEAVETIME, MEMO, PRJ_ID, FUN_GETCODEDESC('PRJ_ROLE',PRJ_ROLE) PRJ_ROLE, RESPONSBILITY, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_ORG A";
+var sql = "SELECT EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=A.EMP_ID) EMP_NAME, TO_CHAR(ENTERTIME,'YYYY-MM-DD') ENTERTIME, ID, TO_CHAR(LEAVETIME,'YYYY-MM-DD') LEAVETIME, MEMO, PRJ_ID, FUN_GETCODEDESC('PRJ_ROLE',PRJ_ROLE) PRJ_ROLE, RESPONSBILITY, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_ORG A WHERE PRJ_ID="
+		+ prjId;
 // 定义数据类型
 var dsOption = {
 	fields : [ {
 		name : "EMP_ID"
+	}, {
+		name : "EMP_NAME"
 	}, {
 		name : "ENTERTIME"
 	}, {
@@ -37,6 +40,11 @@ var colsOption = [ {
 	header : "项目中角色"
 }, {
 	id : "EMP_ID",
+	width : 100,
+	editable : false,
+	header : "员工编号"
+}, {
+	id : "EMP_NAME",
 	width : 150,
 	editable : false,
 	header : "员工姓名"
@@ -125,7 +133,24 @@ var gridOption = {
 	},
 	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
 			columnObj, grid) {
-		// TODO:双击行事件
+		$.pdialog.open(MyURL + 'prj/editprjorg?PRJ_ID=' + prjId + '&ID='
+				+ record.ID, 'xgjs', "修改角色", {
+			width : 640,
+			height : 480,
+			max : false,
+			mask : true,
+			mixable : true,
+			minable : true,
+			resizable : true,
+			drawable : true,
+			fresh : true,
+			close : function() {
+				// 对话框关闭时执行刷新
+				editorg_grid.reload();
+				editorg_grid.checkedRows = {};
+				return true;
+			}
+		});
 	}
 };
 

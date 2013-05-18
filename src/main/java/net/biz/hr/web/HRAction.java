@@ -204,10 +204,11 @@ public class HRAction extends BaseAction {
 	@GET
 	public String validIDCard(Map model) {
 		String idCard = getParam("IDCARD");
+		
 		try {
 			int rowcount = JDBCOracleUtil.executeTotalCount(
 					"SELECT 1 FROM HRD_EMP WHERE IDCARD='" + idCard + "'", -1);
-			if (rowcount != 0) {
+			if (rowcount !=0) {
 				return "out:false";
 			} else {
 				return "out:true";
@@ -223,7 +224,36 @@ public class HRAction extends BaseAction {
 		}
 		return "out:true";
 	}
-
+	/**
+	 * 用于更新的验证
+	 * @param model
+	 * @return
+	 */
+	@Path("/validIDCardUpdate")
+	@POST
+	@GET
+	public String validIDCardUpdate(Map model) {
+		String idCard = getParam("IDCARD");
+		
+		try {
+			int rowcount = JDBCOracleUtil.executeTotalCount(
+					"SELECT 1 FROM HRD_EMP WHERE IDCARD='" + idCard + "'", -1);
+			if (rowcount == 1) {
+				return "out:true";
+			} else {
+				return "out:false";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return "out:false";
+	}
 	/**
 	 * 添加新员工基本信息 codelist只能forward传递一次
 	 * 

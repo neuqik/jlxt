@@ -14,6 +14,7 @@ import net.biz.framework.codelist.CodeList;
 import net.biz.project.model.IPRJService;
 import net.biz.project.vo.PRJ_BUILDING;
 import net.biz.project.vo.PRJ_INFO;
+import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
 import net.biz.util.BeanUtil;
@@ -369,6 +370,116 @@ public class PRJAction extends BaseAction {
 	@GET
 	@POST
 	public String toEditOrg(Map<String, String> model) {
+		String prjId = getParam("PRJ_ID");
+		model.put("PRJ_ID", prjId);
 		return "forward:prj/view/editorg.jsp";
+	}
+
+	/**
+	 * 添加项目中的角色
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/addprjorg")
+	@GET
+	@POST
+	public String toAddPrjOrg(Map<String, Object> model) {
+		String prjId = getParam("PRJ_ID");
+		model.put("PRJ_ID", prjId);
+		String code1 = "PRJ_ROLE";
+		Map a = CodeList.getCodeMap();
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return "forward:prj/view/addprjorg.jsp";
+	}
+
+	/**
+	 * 保存人员项目角色
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveneworg")
+	@GET
+	@POST
+	public String toSaveNewOrg(Map<String, String> model) {
+		try {
+			HttpServletRequest req = MVC.ctx().getRequest();
+			PRJ_ORG prjInfo = (PRJ_ORG) parseRequest(req, new PRJ_ORG());
+			myservice.saveNewOrg(prjInfo);
+
+			return successJSONReload("保存项目角色成功", "dialog", "prj/editprjorg",
+					"xzjs");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 编辑角色信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/editprjorg")
+	@GET
+	@POST
+	public String toEditPrjOrg(Map<String, Object> model) {
+		String prjId = getParam("PRJ_ID");
+		String Id = getParam("ID");
+		String sql = "select id,emp_id,(select emp_name from hrd_emp where emp_id=a.emp_id) emp_name,prj_role,prj_id,entertime,leavetime,responsbility,memo,valid from v_prj_org a WHERE ID="
+				+ Id;
+		model.put("PRJ_ID", prjId);
+
+		String code1 = "PRJ_ROLE";
+		Map a = CodeList.getCodeMap();
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql
+					.toUpperCase());
+			PRJ_ORG prj = new PRJ_ORG();
+			BeanUtils.populate(prj, result.get(0));
+			model.put("prj", prj);
+			model.put("EMP_ID", prj.getEMP_ID());
+			model.put("EMP_NAME", prj.getEMP_NAME());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return "forward:prj/view/addprjorg.jsp";
+	}
+
+	/**
+	 * 删除项目角色信息
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/delprjorg")
+	@GET
+	@POST
+	public String toDelPrjOrg(Map<String, String> model) {
+		try {
+			String Id = getParam("ID");
+			String prjId = getParam("PRJ_ID");
+			myservice.delOrg(Id);
+			model.put("PRJ_ID", prjId);
+			return successJSON("删除角色成功", "dialog", "prj/editprjorg", "scjs");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
 	}
 }

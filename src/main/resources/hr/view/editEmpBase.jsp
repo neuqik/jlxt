@@ -74,7 +74,7 @@
 				<p>
 					<label>身份证号码：</label> <input name="IDCARD" class="required"
 						type="text" size="30" minlength="15" maxlength="18" alt="请输入身份证号码"
-						value="${emp.IDCARD}" remote="${BaseURL}hrs/validIDCard"
+						value="${emp.IDCARD}" remote="${BaseURL}hrs/validIDCardUpdate"
 						onChange="showBirthday(this.value);" />
 				</p>
 				<p>

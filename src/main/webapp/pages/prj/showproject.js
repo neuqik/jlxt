@@ -60,7 +60,7 @@ var dsOption = {
 	}, {
 		name : "WEEKMEETINGTIME"
 	} ],
-	uniqueField : 'PRJ_ID',
+	uniqueField : 'ID',
 	recordType : 'json'
 };
 // 定义列选项
@@ -304,7 +304,7 @@ var gridOption = {
 			columnObj, grid) {
 		// TODO:双击行事件
 		navTab.openTab("xgxm", MyURL + "prj/editproject?PRJ_ID=" + record.ID, {
-			title : "维护项目"+record.PRJNO+","+record.PRJ_NAME,
+			title : "维护项目",
 			fresh : false,
 			data : {}
 		});

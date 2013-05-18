@@ -3,6 +3,7 @@ package net.biz.project.model;
 import java.util.List;
 
 import net.biz.project.vo.PRJ_INFO;
+import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
 
 public interface IPRJService {
@@ -62,5 +63,22 @@ public interface IPRJService {
 	 * @throws Exception
 	 */
 	public void delUnit(String id) throws Exception;
+
+	/**
+	 * 保存新建的组织角色信息
+	 * 
+	 * @param prjInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public void saveNewOrg(PRJ_ORG prjInfo) throws Exception;
+
+	/**
+	 * 删除组织角色信息
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
+	public void delOrg(String id) throws Exception;
 
 }

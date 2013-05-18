@@ -6,9 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.biz.framework.codelist.CodeList;
 import net.biz.framework.exception.AppException;
 import net.biz.project.vo.PRJ_BUILDING;
 import net.biz.project.vo.PRJ_INFO;
+import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
 import net.biz.util.DateUtils;
@@ -294,6 +296,83 @@ public class PRJServiceImpl implements IPRJService {
 	 */
 	public void delUnit(String id) throws Exception {
 		String sql = "UPDATE V_PRJ_UNIT SET VALID='0' WHERE ID=?";
+		List<Object> params = new ArrayList<Object>();
+		params.add(id);
+		JDBCOracleUtil.ExecuteDML(sql, params);
+	}
+
+	/**
+	 * 保存新建的组织角色
+	 */
+	public void saveNewOrg(PRJ_ORG prjInfo) throws Exception {
+		String role = prjInfo.getPRJ_ROLE();
+		String sql = "";
+		// 0.如果ID不为空，则说明是更新
+		if (!"".equals(prjInfo.getID())) {
+
+			// 如果是总监或总代，则不能重复
+			if (role.equals(CodeList.getCodeValue("PRJ_ROLE", "总监"))
+					|| role.equals(CodeList.getCodeValue("PRJ_ROLE", "总代"))) {
+				// 如果是相同的人，则只需要校验要改的角色是否有重复的
+				// 要改的角色是否有非本人的，如果有非本人则不行
+				sql = "SELECT 1 FROM V_PRJ_ORG WHERE PRJ_ID="
+						+ prjInfo.getPRJ_ID() + " AND PRJ_ROLE='"
+						+ prjInfo.getPRJ_ROLE() + "' AND EMP_ID <> '"
+						+ prjInfo.getEMP_ID() + "'";
+				int rowcount = JDBCOracleUtil.executeTotalCount(sql, -1);
+				if (rowcount >= 1) {
+					throw new AppException("同一个项目中总监总代只能有一个");
+				}
+			}
+
+			sql = "UPDATE V_PRJ_ORG SET EMP_ID=?,PRJ_ROLE=?,ENTERTIME=?,LEAVETIME=?,RESPONSBILITY=?,MEMO=? WHERE ID="
+					+ prjInfo.getID();
+
+			List<Object> params = new ArrayList<Object>();
+			params.add(prjInfo.getEMP_ID());
+			params.add(prjInfo.getPRJ_ROLE());
+			params.add(prjInfo.getENTERTIMEForSqlDate());
+			params.add(prjInfo.getLEAVETIMEForSqlDate());
+			params.add(prjInfo.getRESPONSBILITY());
+			params.add(prjInfo.getMEMO());
+			JDBCOracleUtil.ExecuteDML(sql, params);
+			return;
+		}
+
+		// 1.判断组织角色是否重复，如果重复则报错
+
+		// 如果是总监或总代，则不能重复
+		if (role.equals(CodeList.getCodeValue("PRJ_ROLE", "总监"))
+				|| role.equals(CodeList.getCodeValue("PRJ_ROLE", "总代"))) {
+			sql = "SELECT 1 FROM V_PRJ_ORG WHERE PRJ_ID=" + prjInfo.getPRJ_ID()
+					+ " AND PRJ_ROLE='" + prjInfo.getPRJ_ROLE() + "'";
+			int rowcount = JDBCOracleUtil.executeTotalCount(sql, -1);
+			if (rowcount > 0) {
+				throw new AppException("同一个项目中总监总代只能有一个");
+			}
+		}
+		// 2.保存
+		sql = "INSERT INTO V_PRJ_ORG(ID,EMP_ID,PRJ_ROLE,PRJ_ID,ENTERTIME,LEAVETIME,RESPONSBILITY,MEMO,VALID) VALUES(?,?,?,?,?,?,?,?,?)";
+
+		List<Object> params = new ArrayList<Object>();
+		params.add(0, JDBCOracleUtil.getID());
+		params.add(1, prjInfo.getEMP_ID());
+		params.add(2, prjInfo.getPRJ_ROLE());
+		params.add(3, prjInfo.getPRJ_ID());
+		params.add(4, prjInfo.getENTERTIMEForSqlDate());
+		params.add(5, prjInfo.getLEAVETIMEForSqlDate());
+		params.add(6, prjInfo.getRESPONSBILITY());
+		params.add(7, prjInfo.getMEMO());
+		params.add(8, prjInfo.getVALID());
+		JDBCOracleUtil.ExecuteDML(sql, params);
+	}
+
+	/**
+	 * 删除组织角色信息
+	 */
+	public void delOrg(String id) throws Exception {
+
+		String sql = "UPDATE V_PRJ_ORG SET VALID='0' WHERE ID=?";
 		List<Object> params = new ArrayList<Object>();
 		params.add(id);
 		JDBCOracleUtil.ExecuteDML(sql, params);

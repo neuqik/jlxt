@@ -267,7 +267,7 @@ public class PRJ_INFO {
 		return MEMO;
 	}
 
-	private String VALID;
+	private String VALID = "1";
 
 	public void setVALID(String theVALID) {
 		VALID = theVALID;

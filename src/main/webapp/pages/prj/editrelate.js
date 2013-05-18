@@ -1,6 +1,7 @@
 var c = $("#myContent").height();
 var header = $("#editrelate_head").height();
-var sql = "SELECT DEPT_ID, ID, MEMO, PRJ_ID FROM V_PRJ_UNIT_RELATE";
+var sql = "SELECT DEPT_ID, ID, MEMO, PRJ_ID FROM V_PRJ_UNIT_RELATE WHERE PRJ_ID="
+		+ prjId;
 // 定义数据类型
 var dsOption = {
 	fields : [ {

@@ -121,11 +121,11 @@ public class GenerateJava {
 		try {
 			// 1.生成VO的代码
 			// GenerateJava
-			// .generateVO("PRJ_UNIT",
+			// .generateVO("PRJ_ORG",
 			// "D:\\eclipse\\workspace\\building\\src\\main\\java\\net\\biz\\project\\vo\\");
 			// 2.生成service中保存新对象的代码
-			// GenerateJava.generateINSERTMethod("PRJ_UNIT", "prjInfo");
-			GenerateJava.generateUPDATEMethod("PRJ_UNIT", "prjInfo");
+			// GenerateJava.generateINSERTMethod("PRJ_ORG", "prjInfo");
+			GenerateJava.generateUPDATEMethod("PRJ_ORG", "prjInfo");
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
