@@ -82,14 +82,17 @@ var colsOption = [ {
 	}
 }, {
 	id : "BUILDING_AREA",
-	width : 100,
+	width : 120,
 	editable : true,
-	header : "单栋建筑面积",
+	header : "单栋建筑面积(平方米)",
 	editor : {
 		type : "text",
 		validator : function(value, record, colObj, grid) {
 			// 如果输入了值
 			if (value.length > 0) {
+				if(isNaN(value)){
+					return "请输入数字";
+				}
 				return true;
 			} else {
 				return "请输入单栋建筑面积";

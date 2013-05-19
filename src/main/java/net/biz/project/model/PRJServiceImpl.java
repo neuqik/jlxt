@@ -13,6 +13,7 @@ import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
+import net.biz.project.vo.ProjectQueryParam;
 import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
 
@@ -27,37 +28,35 @@ public class PRJServiceImpl implements IPRJService {
 	public String saveNewProject(PRJ_INFO prjInfo) throws Exception {
 		// 项目编号
 		String prjNo = genNewPRJNO(prjInfo);
-		String sql = "INSERT INTO V_PRJ_INFO(BUILDINGCOUNT,CONTRACTAREA,PRJ_LEVEL,PRJ_TYPE,PRJ_INVEST,WEEKMEETING,PRJ_MAP,PRJ_REGION,PRJ_ARCHIVE,WEEKMEETINGTIME,PRJ_ARCHIVETIME,LOCATION4,ID,PRJNO,CONTRACTNO,PRJ_NAME,PRJ_AREA,QUALITY_TARGET,PRJ_STARTTIME,PRJ_ENDTIME,PRJ_TIME,PRJ_PIC,PRJ_PROGRESS,LOCATION1,MEMO,VALID,LOCATION2,LOCATION3) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO V_PRJ_INFO(CONTRACTAREA,PRJ_LEVEL,PRJ_TYPE,PRJ_INVEST,WEEKMEETING,PRJ_MAP,PRJ_REGION,PRJ_ARCHIVE,WEEKMEETINGTIME,PRJ_ARCHIVETIME,LOCATION4,ID,PRJNO,CONTRACTNO,PRJ_NAME,QUALITY_TARGET,PRJ_STARTTIME,PRJ_ENDTIME,PRJ_TIME,PRJ_PIC,PRJ_PROGRESS,LOCATION1,MEMO,VALID,LOCATION2,LOCATION3) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		List<Object> params = new ArrayList<Object>();
-		params.add(0, prjInfo.getBUILDINGCOUNT());
-		params.add(1, prjInfo.getCONTRACTAREA());
-		params.add(2, prjInfo.getPRJ_LEVEL());
-		params.add(3, prjInfo.getPRJ_TYPE());
-		params.add(4, prjInfo.getPRJ_INVEST());
-		params.add(5, prjInfo.getWEEKMEETING());
-		params.add(6, prjInfo.getPRJ_MAP());
-		params.add(7, prjInfo.getPRJ_REGION());
-		params.add(8, prjInfo.getPRJ_ARCHIVE());
-		params.add(9, prjInfo.getWEEKMEETINGTIME());
-		params.add(10, prjInfo.getPRJ_ARCHIVETIMEForSqlDate());
-		params.add(11, prjInfo.getLOCATION4());
-		params.add(12, JDBCOracleUtil.getID());
-		params.add(13, prjNo);
-		params.add(14, prjInfo.getCONTRACTNO());
-		params.add(15, prjInfo.getPRJ_NAME());
-		params.add(16, prjInfo.getPRJ_AREA());
-		params.add(17, prjInfo.getQUALITY_TARGET());
-		params.add(18, prjInfo.getPRJ_STARTTIMEForSqlDate());
-		params.add(19, prjInfo.getPRJ_ENDTIMEForSqlDate());
-		params.add(20, prjInfo.getPRJ_TIME());
-		params.add(21, prjInfo.getPRJ_PIC());
-		params.add(22, prjInfo.getPRJ_PROGRESS());
-		params.add(23, prjInfo.getLOCATION1());
-		params.add(24, prjInfo.getMEMO());
-		params.add(25, "1");
-		params.add(26, prjInfo.getLOCATION2());
-		params.add(27, prjInfo.getLOCATION3());
+		params.add(prjInfo.getCONTRACTAREA());
+		params.add(prjInfo.getPRJ_LEVEL());
+		params.add(prjInfo.getPRJ_TYPE());
+		params.add(prjInfo.getPRJ_INVEST());
+		params.add(prjInfo.getWEEKMEETING());
+		params.add(prjInfo.getPRJ_MAP());
+		params.add(prjInfo.getPRJ_REGION());
+		params.add(prjInfo.getPRJ_ARCHIVE());
+		params.add(prjInfo.getWEEKMEETINGTIME());
+		params.add(prjInfo.getPRJ_ARCHIVETIMEForSqlDate());
+		params.add(prjInfo.getLOCATION4());
+		params.add(JDBCOracleUtil.getID());
+		params.add(prjNo);
+		params.add(prjInfo.getCONTRACTNO());
+		params.add(prjInfo.getPRJ_NAME());
+		params.add(prjInfo.getQUALITY_TARGET());
+		params.add(prjInfo.getPRJ_STARTTIMEForSqlDate());
+		params.add(prjInfo.getPRJ_ENDTIMEForSqlDate());
+		params.add(prjInfo.getPRJ_TIME());
+		params.add(prjInfo.getPRJ_PIC());
+		params.add(prjInfo.getPRJ_PROGRESS());
+		params.add(prjInfo.getLOCATION1());
+		params.add(prjInfo.getMEMO().toUpperCase());
+		params.add(prjInfo.getVALID());
+		params.add(prjInfo.getLOCATION2());
+		params.add(prjInfo.getLOCATION3());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 		return prjNo;
 	}
@@ -83,36 +82,34 @@ public class PRJServiceImpl implements IPRJService {
 	 * 保存编辑的项目
 	 */
 	public String saveEditProject(PRJ_INFO prjInfo) throws Exception {
-		String sql = "UPDATE V_PRJ_INFO SET BUILDINGCOUNT=?,CONTRACTAREA=?,PRJ_LEVEL=?,PRJ_TYPE=?,PRJ_INVEST=?,WEEKMEETING=?,PRJ_MAP=?,PRJ_REGION=?,PRJ_ARCHIVE=?,WEEKMEETINGTIME=?,PRJ_ARCHIVETIME=?,LOCATION4=?,PRJNO=?,CONTRACTNO=?,PRJ_NAME=?,PRJ_AREA=?,QUALITY_TARGET=?,PRJ_STARTTIME=?,PRJ_ENDTIME=?,PRJ_TIME=?,PRJ_PIC=?,PRJ_PROGRESS=?,LOCATION1=?,MEMO=?,LOCATION2=?,LOCATION3=? WHERE ID="
+		String sql = "UPDATE V_PRJ_INFO SET CONTRACTAREA=?,PRJ_LEVEL=?,PRJ_TYPE=?,PRJ_INVEST=?,WEEKMEETING=?,PRJ_MAP=?,PRJ_REGION=?,PRJ_ARCHIVE=?,WEEKMEETINGTIME=?,PRJ_ARCHIVETIME=?,LOCATION4=?,PRJNO=?,CONTRACTNO=?,PRJ_NAME=?,QUALITY_TARGET=?,PRJ_STARTTIME=?,PRJ_ENDTIME=?,PRJ_TIME=?,PRJ_PIC=?,PRJ_PROGRESS=?,LOCATION1=?,MEMO=?,LOCATION2=?,LOCATION3=? WHERE ID="
 				+ prjInfo.getID();
 
 		List<Object> params = new ArrayList<Object>();
-		params.add(0, prjInfo.getBUILDINGCOUNT());
-		params.add(1, prjInfo.getCONTRACTAREA());
-		params.add(2, prjInfo.getPRJ_LEVEL());
-		params.add(3, prjInfo.getPRJ_TYPE());
-		params.add(4, prjInfo.getPRJ_INVEST());
-		params.add(5, prjInfo.getWEEKMEETING());
-		params.add(6, prjInfo.getPRJ_MAP());
-		params.add(7, prjInfo.getPRJ_REGION());
-		params.add(8, prjInfo.getPRJ_ARCHIVE());
-		params.add(9, prjInfo.getWEEKMEETINGTIME());
-		params.add(10, prjInfo.getPRJ_ARCHIVETIMEForSqlDate());
-		params.add(11, prjInfo.getLOCATION4());
-		params.add(12, prjInfo.getPRJNO());
-		params.add(13, prjInfo.getCONTRACTNO());
-		params.add(14, prjInfo.getPRJ_NAME());
-		params.add(15, prjInfo.getPRJ_AREA());
-		params.add(16, prjInfo.getQUALITY_TARGET());
-		params.add(17, prjInfo.getPRJ_STARTTIMEForSqlDate());
-		params.add(18, prjInfo.getPRJ_ENDTIMEForSqlDate());
-		params.add(19, prjInfo.getPRJ_TIME());
-		params.add(20, prjInfo.getPRJ_PIC());
-		params.add(21, prjInfo.getPRJ_PROGRESS());
-		params.add(22, prjInfo.getLOCATION1());
-		params.add(23, prjInfo.getMEMO());
-		params.add(24, prjInfo.getLOCATION2());
-		params.add(25, prjInfo.getLOCATION3());
+		params.add(prjInfo.getCONTRACTAREA());
+		params.add(prjInfo.getPRJ_LEVEL());
+		params.add(prjInfo.getPRJ_TYPE());
+		params.add(prjInfo.getPRJ_INVEST());
+		params.add(prjInfo.getWEEKMEETING());
+		params.add(prjInfo.getPRJ_MAP());
+		params.add(prjInfo.getPRJ_REGION());
+		params.add(prjInfo.getPRJ_ARCHIVE());
+		params.add(prjInfo.getWEEKMEETINGTIME());
+		params.add(prjInfo.getPRJ_ARCHIVETIMEForSqlDate());
+		params.add(prjInfo.getLOCATION4());
+		params.add(prjInfo.getPRJNO());
+		params.add(prjInfo.getCONTRACTNO());
+		params.add(prjInfo.getPRJ_NAME());
+		params.add(prjInfo.getQUALITY_TARGET());
+		params.add(prjInfo.getPRJ_STARTTIMEForSqlDate());
+		params.add(prjInfo.getPRJ_ENDTIMEForSqlDate());
+		params.add(prjInfo.getPRJ_TIME());
+		params.add(prjInfo.getPRJ_PIC());
+		params.add(prjInfo.getPRJ_PROGRESS());
+		params.add(prjInfo.getLOCATION1());
+		params.add(prjInfo.getMEMO().toUpperCase());
+		params.add(prjInfo.getLOCATION2());
+		params.add(prjInfo.getLOCATION3());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 		return prjInfo.getPRJNO();
 	}
@@ -126,25 +123,25 @@ public class PRJServiceImpl implements IPRJService {
 		while (it.hasNext()) {
 			PRJ_BUILDING row = (PRJ_BUILDING) it.next();
 			List<Object> params = new ArrayList<Object>();
-			params.add(0, row.getLICENSE_DATEForSqlDate());
-			params.add(1, row.getSECURITY_LEVEL());
-			params.add(2, row.getCONSTRUCT_TYPE());
-			params.add(3, row.getACT_TIME());
-			params.add(4, row.getPROGRESS());
-			params.add(5, row.getBUILDER_LICENSE());
-			params.add(6, row.getBUILDING_TYPE());
-			params.add(7, row.getIMAGE_PROGRESS());
-			params.add(8, row.getMEMO());
-			params.add(9, row.getVALID());
-			params.add(10, row.getACT_BEGINForSqlDate());
-			params.add(11, row.getACT_ENDForSqlDate());
-			params.add(12, JDBCOracleUtil.getID());
-			params.add(13, prjId);
-			params.add(14, row.getBUILDING_ID());
-			params.add(15, row.getUNDERFLOOR());
-			params.add(16, row.getABOVEFLOOR());
-			params.add(17, row.getHEIGHT());
-			params.add(18, row.getBUILDING_AREA());
+			params.add(row.getLICENSE_DATEForSqlDate());
+			params.add(row.getSECURITY_LEVEL());
+			params.add(row.getCONSTRUCT_TYPE());
+			params.add(row.getACT_TIME());
+			params.add(row.getPROGRESS());
+			params.add(row.getBUILDER_LICENSE());
+			params.add(row.getBUILDING_TYPE());
+			params.add(row.getIMAGE_PROGRESS());
+			params.add(row.getMEMO());
+			params.add(row.getVALID());
+			params.add(row.getACT_BEGINForSqlDate());
+			params.add(row.getACT_ENDForSqlDate());
+			params.add(JDBCOracleUtil.getID());
+			params.add(prjId);
+			params.add(row.getBUILDING_ID());
+			params.add(row.getUNDERFLOOR());
+			params.add(row.getABOVEFLOOR());
+			params.add(row.getHEIGHT());
+			params.add(row.getBUILDING_AREA());
 			JDBCOracleUtil.ExecuteDML(sql, params);
 		}
 
@@ -202,11 +199,11 @@ public class PRJServiceImpl implements IPRJService {
 		while (it.hasNext()) {
 			PRJ_UNIT_RELATE row = (PRJ_UNIT_RELATE) it.next();
 			List<Object> params = new ArrayList<Object>();
-			params.add(0, JDBCOracleUtil.getID());
-			params.add(1, prjId);
-			params.add(2, row.getDEPT_ID());
-			params.add(3, row.getMEMO());
-			params.add(4, row.getVALID());
+			params.add(JDBCOracleUtil.getID());
+			params.add(prjId);
+			params.add(row.getDEPT_ID());
+			params.add(row.getMEMO());
+			params.add(row.getVALID());
 			JDBCOracleUtil.ExecuteDML(sql, params);
 		}
 
@@ -275,18 +272,18 @@ public class PRJServiceImpl implements IPRJService {
 		sql = "INSERT INTO PRJ_UNIT(ID,PRJ_ID,UNIT_NAME,GROUP_NAME,UNIT_TYPE,QUALI_LEVEL,UNIT_ADDRESS,CONTRACTOR,TITLE,CONTRACT_TEL,MEMO,VALID) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		List<Object> params = new ArrayList<Object>();
-		params.add(0, JDBCOracleUtil.getID());
-		params.add(1, prjInfo.getPRJ_ID());
-		params.add(2, prjInfo.getUNIT_NAME());
-		params.add(3, prjInfo.getGROUP_NAME());
-		params.add(4, prjInfo.getUNIT_TYPE());
-		params.add(5, prjInfo.getQUALI_LEVEL());
-		params.add(6, prjInfo.getUNIT_ADDRESS());
-		params.add(7, prjInfo.getCONTRACTOR());
-		params.add(8, prjInfo.getTITLE());
-		params.add(9, prjInfo.getCONTRACT_TEL());
-		params.add(10, prjInfo.getMEMO());
-		params.add(11, prjInfo.getVALID());
+		params.add(JDBCOracleUtil.getID());
+		params.add(prjInfo.getPRJ_ID());
+		params.add(prjInfo.getUNIT_NAME());
+		params.add(prjInfo.getGROUP_NAME());
+		params.add(prjInfo.getUNIT_TYPE());
+		params.add(prjInfo.getQUALI_LEVEL());
+		params.add(prjInfo.getUNIT_ADDRESS());
+		params.add(prjInfo.getCONTRACTOR());
+		params.add(prjInfo.getTITLE());
+		params.add(prjInfo.getCONTRACT_TEL());
+		params.add(prjInfo.getMEMO());
+		params.add(prjInfo.getVALID());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 
 	}
@@ -355,15 +352,15 @@ public class PRJServiceImpl implements IPRJService {
 		sql = "INSERT INTO V_PRJ_ORG(ID,EMP_ID,PRJ_ROLE,PRJ_ID,ENTERTIME,LEAVETIME,RESPONSBILITY,MEMO,VALID) VALUES(?,?,?,?,?,?,?,?,?)";
 
 		List<Object> params = new ArrayList<Object>();
-		params.add(0, JDBCOracleUtil.getID());
-		params.add(1, prjInfo.getEMP_ID());
-		params.add(2, prjInfo.getPRJ_ROLE());
-		params.add(3, prjInfo.getPRJ_ID());
-		params.add(4, prjInfo.getENTERTIMEForSqlDate());
-		params.add(5, prjInfo.getLEAVETIMEForSqlDate());
-		params.add(6, prjInfo.getRESPONSBILITY());
-		params.add(7, prjInfo.getMEMO());
-		params.add(8, prjInfo.getVALID());
+		params.add(JDBCOracleUtil.getID());
+		params.add(prjInfo.getEMP_ID());
+		params.add(prjInfo.getPRJ_ROLE());
+		params.add(prjInfo.getPRJ_ID());
+		params.add(prjInfo.getENTERTIMEForSqlDate());
+		params.add(prjInfo.getLEAVETIMEForSqlDate());
+		params.add(prjInfo.getRESPONSBILITY());
+		params.add(prjInfo.getMEMO());
+		params.add(prjInfo.getVALID());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 	}
 
@@ -371,10 +368,146 @@ public class PRJServiceImpl implements IPRJService {
 	 * 删除组织角色信息
 	 */
 	public void delOrg(String id) throws Exception {
-
 		String sql = "UPDATE V_PRJ_ORG SET VALID='0' WHERE ID=?";
 		List<Object> params = new ArrayList<Object>();
 		params.add(id);
 		JDBCOracleUtil.ExecuteDML(sql, params);
+	}
+
+	/**
+	 * 删除项目信息
+	 */
+	public void delProject(String id) throws Exception {
+		String sql = "UPDATE V_PRJ_INFO SET VALID='0' WHERE ID=?";
+		List<Object> params = new ArrayList<Object>();
+		params.add(id);
+		JDBCOracleUtil.ExecuteDML(sql, params);
+	}
+
+	/**
+	 * 根据项目查询条件获取SQL
+	 */
+	public String getConditionByProjectQueryParam(ProjectQueryParam qp)
+			throws Exception {
+		if (qp.isEmpty())
+			return "";
+		// 非空
+		List<String> where = new ArrayList<String>();
+
+		// 如果录入了合同编号
+		if (!"".equals(qp.getCONTRACTNO())) {
+			where.add(" (CONTRACTNO LIKE '" + qp.getCONTRACTNO() + "$') ");
+		}
+
+		// 如果录入了部门
+		if (!"".equals(qp.getDEPT_ID())) {
+			where.add(" (ID IN (SELECT PRJ_ID FROM V_PRJ_UNIT_RELATE WHERE DEPT_ID = '"
+					+ qp.getDEPT_ID() + "')) ");
+		}
+
+		// 如果录入了姓名
+		if (!"".equals(qp.getEMP_NAME())) {
+			where.add(" (ID IN (SELECT PRJ_ID FROM V_PRJ_ORG WHERE EMP_ID IN (SELECT EMP_ID FROM V_HRD_EMP WHERE EMP_NAME LIKE '$"
+					+ qp.getEMP_NAME() + "$'))) ");
+		}
+		// 如果录入省
+		if (!"".equals(qp.getLOCATION1())) {
+			where.add(" (LOCATION1 = '" + qp.getLOCATION1() + "') ");
+		}
+		// 如果录入市
+		if (!"".equals(qp.getLOCATION2())) {
+			where.add(" (LOCATION2 = '" + qp.getLOCATION2() + "') ");
+		}
+		// 如果录入区
+		if (!"".equals(qp.getLOCATION3())) {
+			where.add(" (LOCATION3 = '" + qp.getLOCATION3() + "') ");
+		}
+		// 如果录入地址
+		if (!"".equals(qp.getLOCATION4())) {
+			where.add(" (LOCATION4 LIKE '" + qp.getLOCATION4() + "$') ");
+		}
+		// 如果录入项目进度
+		if (!"".equals(qp.getPRJ_PROGRESS())) {
+			where.add(" (PRJ_PROGRESS LIKE '$" + qp.getPRJ_PROGRESS() + "$') ");
+		}
+		// 如果录入备注
+		if (!"".equals(qp.getMEMO())) {
+			where.add(" (MEMO LIKE '$" + qp.getMEMO() + "$') ");
+		}
+		// 如果录入项目等级
+		if (!"".equals(qp.getPRJ_LEVEL())) {
+			where.add(" (PRJ_LEVEL = '" + qp.getPRJ_LEVEL() + "') ");
+		}
+		// 如果录入项目名称
+		if (!"".equals(qp.getPRJ_NAME())) {
+			where.add(" (PRJ_NAME LIKE '$" + qp.getPRJ_NAME() + "$') ");
+		}
+		// 如果录入项目角色
+		if (!"".equals(qp.getPRJ_ROLE())) {
+			where.add(" (ID IN (SELECT PRJ_ID FROM V_PRJ_ORG WHERE PRJ_ROLE = '"
+					+ qp.getPRJ_ROLE() + "')) ");
+		}
+		// 如果录入项目类型
+		if (!"".equals(qp.getPRJ_TYPE())) {
+			where.add(" (PRJ_TYPE = '" + qp.getPRJ_TYPE() + "') ");
+		}
+		// 如果录入项目编号
+		if (!"".equals(qp.getPRJNO())) {
+			where.add(" (PRJNO LIKE '" + qp.getPRJNO() + "$') ");
+		}
+		// 如果录入资质等级
+		if (!"".equals(qp.getQUALI_LEVEL())) {
+			where.add(" (ID IN (SELECT PRJ_ID FROM V_PRJ_UNIT WHERE QUALI_LEVEL = '"
+					+ qp.getQUALI_LEVEL() + "')) ");
+		}
+		// 录入参建单位名称
+		if (!"".equals(qp.getUNIT_NAME())) {
+			where.add(" (ID IN (SELECT PRJ_ID FROM V_PRJ_UNIT WHERE UNIT_NAME LIKE '"
+					+ qp.getUNIT_NAME() + "$')) ");
+		}
+		// 录入参建单位类型
+		if (!"".equals(qp.getUNIT_TYPE())) {
+			where.add(" (ID IN (SELECT PRJ_ID FROM V_PRJ_UNIT WHERE UNIT_TYPE = '"
+					+ qp.getUNIT_TYPE() + "')) ");
+		}
+		// 录入周会星期
+		if (!"".equals(qp.getWEEKMEETING())) {
+			where.add(" ( WEEKMEETING = '" + qp.getWEEKMEETING() + "') ");
+		}
+		// 录入周会时间
+		if (!"".equals(qp.getWEEKMEETINGTIME())) {
+			where.add(" ( WEEKMEETINGTIME = '" + qp.getWEEKMEETINGTIME()
+					+ "') ");
+		}
+		// 录入项目开始截至时间
+		if (!"".equals(qp.getPRJ_STARTTIME())) {
+			where.add(" ( PRJ_STARTTIME <= TO_DATE('" + qp.getPRJ_STARTTIME()
+					+ "','YYYY-MM-DD') AND (PRJ_ENDTIME >=TO_DATE('"
+					+ qp.getPRJ_STARTTIME()
+					+ "','YYYY-MM-DD') OR PRJ_ENDTIME IS NULL)) ");
+		}
+		String wheres = where.toString().replaceAll("[,]", "AND");
+		wheres = wheres.replaceAll("'AND'YYYY-MM-DD'", "','YYYY-MM-DD'");
+		wheres = wheres.substring(1, wheres.length() - 1);
+
+		return wheres.trim().length() > 0 ? " WHERE " + wheres.toUpperCase()
+				: "";
+	}
+
+	/**
+	 * 保存地图
+	 */
+	public String saveMap(String pRJNO, String pRJMAP) throws Exception {
+		String prjName = String.valueOf(JDBCOracleUtil
+				.executeQuery(
+						"SELECT PRJ_NAME FROM V_PRJ_INFO WHERE PRJNO='" + pRJNO
+								+ "'").get(0).get("PRJ_NAME"));
+
+		List<Object> params = new ArrayList<Object>();
+		params.add(pRJMAP);
+		params.add(pRJNO);
+		String sql = "UPDATE V_PRJ_INFO SET PRJ_MAP=? WHERE PRJNO=?";
+		JDBCOracleUtil.ExecuteDML(sql, params);
+		return prjName;
 	}
 }

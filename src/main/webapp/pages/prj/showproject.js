@@ -1,6 +1,11 @@
 var c = $("#myContent").height();
 var header = $("#showproject_head").height();
 var sql = "SELECT BUILDINGCOUNT, CONTRACTAREA, CONTRACTNO, ID, FUN_GETLOC(LOCATION1) LOCATION1, FUN_GETLOC(LOCATION2) LOCATION2, FUN_GETLOC(LOCATION3) LOCATION3, FUN_GETLOC(LOCATION4) LOCATION4, MEMO, PRJNO, FUN_GETCODEDESC('PRJ_ARCHIVE',PRJ_ARCHIVE) PRJ_ARCHIVE, TO_CHAR(PRJ_ARCHIVETIME,'YYYY-MM-DD') PRJ_ARCHIVETIME, PRJ_AREA, TO_CHAR(PRJ_ENDTIME,'YYYY-MM-DD') PRJ_ENDTIME, PRJ_INVEST, FUN_GETCODEDESC('PRJ_LEVEL',PRJ_LEVEL) PRJ_LEVEL, PRJ_MAP, PRJ_NAME, PRJ_PIC, PRJ_PROGRESS, PRJ_REGION, TO_CHAR(PRJ_STARTTIME,'YYYY-MM-DD') PRJ_STARTTIME, PRJ_TIME, FUN_GETCODEDESC('PRJ_TYPE',PRJ_TYPE) PRJ_TYPE, FUN_GETCODEDESC('QUALITY_TARGET',QUALITY_TARGET) QUALITY_TARGET, FUN_GETCODEDESC('VALID',VALID) VALID, FUN_GETCODEDESC('WEEKMEETING',WEEKMEETING) WEEKMEETING, FUN_GETCODEDESC('WEEKMEETINGTIME',WEEKMEETINGTIME) WEEKMEETINGTIME FROM V_PRJ_INFO";
+// 高级查询
+var projectwhere = $("#projectwhere").val();
+if (projectwhere.length > 0) {
+	sql = sql + projectwhere;
+}
 // 定义数据类型
 var dsOption = {
 	fields : [ {
@@ -63,6 +68,12 @@ var dsOption = {
 	uniqueField : 'ID',
 	recordType : 'json'
 };
+function my_renderer(value, record, columnObj, grid, colNo, rowNo) {
+	var href = "<a  target=\"_blank\" href=\"" + MyURL
+			+ "pages/prj/baidumap.jsp?PRJ_MAP=" + value + "&PRJNO="
+			+ record.PRJNO + "\" >" + value + "</a>";
+	return href;
+}
 // 定义列选项
 var colsOption = [ {
 	id : "chk",
@@ -78,7 +89,7 @@ var colsOption = [ {
 }, {
 	id : "PRJNO",
 	width : 100,
-	editable : false,
+	editable : true,
 	header : "项目编号",
 	frozen : true
 }, {
@@ -86,7 +97,9 @@ var colsOption = [ {
 	width : 100,
 	editable : false,
 	header : "项目名称",
-	frozen : true
+	frozen : true,
+	toolTip : true,
+	toolTipWidth : 350
 }, {
 	id : "CONTRACTNO",
 	width : 100,
@@ -128,7 +141,7 @@ var colsOption = [ {
 	editable : false,
 	header : "项目进展情况",
 	toolTip : true,
-	toolTipWidth : 150,
+	toolTipWidth : 350,
 	editor : {
 		type : "textarea",
 		width : "300px",
@@ -199,7 +212,9 @@ var colsOption = [ {
 	id : "LOCATION4",
 	width : 100,
 	editable : false,
-	header : "项目地址(街道)"
+	header : "项目地址(街道)",
+	toolTip : true,
+	toolTipWidth : 350
 }, {
 	id : "PRJ_ARCHIVE",
 	width : 100,
@@ -212,9 +227,12 @@ var colsOption = [ {
 	header : "档案归档时间"
 }, {
 	id : "PRJ_MAP",
-	width : 100,
+	width : 150,
 	editable : false,
-	header : "项目地图"
+	header : "项目地图",
+	renderer : my_renderer,
+	toolTip : true,
+	toolTipWidth : 350
 }, {
 	id : "PRJ_PIC",
 	width : 100,

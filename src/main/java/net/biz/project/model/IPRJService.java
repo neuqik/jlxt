@@ -5,6 +5,7 @@ import java.util.List;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
+import net.biz.project.vo.ProjectQueryParam;
 
 public interface IPRJService {
 	/**
@@ -80,5 +81,33 @@ public interface IPRJService {
 	 * @throws Exception
 	 */
 	public void delOrg(String id) throws Exception;
+
+	/**
+	 * 删除项目
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
+	public void delProject(String id) throws Exception;
+
+	/**
+	 * 根据项目查询参数获取条件
+	 * 
+	 * @param qp
+	 * @return
+	 * @throws Exception
+	 */
+	public String getConditionByProjectQueryParam(ProjectQueryParam qp)
+			throws Exception;
+
+	/**
+	 * 保存地图点
+	 * 
+	 * @param pRJNO
+	 * @param pRJMAP
+	 * @return 项目名称
+	 * @throws Exception
+	 */
+	public String saveMap(String pRJNO, String pRJMAP) throws Exception;
 
 }

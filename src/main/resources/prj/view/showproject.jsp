@@ -15,7 +15,7 @@
 			empIdsForPrj[i] = key;
 			i++;
 		});
-		console.log(empIdsForPrj);
+		//console.log(empIdsForPrj);
 		if (empIdsForPrj.length != 1) {
 			return -1;
 		} else {
@@ -62,7 +62,7 @@
 	function doDelPrj() {
 		var id1 = doCheckIsOnlyRowForPrj();
 		if (id1 < 0) {
-			alertMsg.error("请选择一条信息删除！");
+			alertMsg.error("请选择一条信息删除，删除前请确认该项目可删除！");
 		} else {
 			// 如果只有一条
 			alertMsg.confirm("是否确定删除该信息？", {
@@ -79,18 +79,24 @@
 			});
 		}
 	}
+	function test() {
+		return true;
+	}
 </script>
 
 <div class="pageContent" id="showproject_head"
 	style="overflow-x: hidden; overflow-y: hidden">
+	<input id="projectwhere" name="regwhere" type="hidden"
+		value="${projectwhere}" />
 	<div class="panelBar">
 		<ul class="toolBar">
 			<li><a class="add" onclick="doAddPrj();" rel="xzxm"><span>新增项目</span></a></li>
 			<li><a class="edit" onclick="doEditPrj();" rel="whxm"><span>维护项目</span></a></li>
 			<li><a class="delete" onclick="doDelPrj();" rel="scxm"><span>删除项目</span></a></li>
-			<li><a class="edit" onclick="" rel="xmwg"><span>项目竣工</span></a></li>
 			<li class="line">line</li>
-			<li><a class="icon" href="javascript:;"><span>高级查询</span></a></li>
+			<li><a class="edit" href="${BaseURL}prj/queryproject"
+				target="dialog" mask="true" title="查询框" width="840" height="480"
+				close="test"><span>高级查询</span></a></li>
 		</ul>
 	</div>
 	<div>

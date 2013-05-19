@@ -1,5 +1,6 @@
 package net.biz.project.web;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +12,16 @@ import javax.ws.rs.Path;
 
 import net.biz.component.BaseAction;
 import net.biz.framework.codelist.CodeList;
+import net.biz.hr.vo.LabourQueryParam;
 import net.biz.project.model.IPRJService;
 import net.biz.project.vo.PRJ_BUILDING;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
+import net.biz.project.vo.ProjectQueryParam;
 import net.biz.util.BeanUtil;
+import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -148,6 +152,28 @@ public class PRJAction extends BaseAction {
 			model.put("PRJNO", prjNo);
 			return successJSON("修改项目成功，项目编号：" + prjNo, "dialog",
 					"prj/editprojectinfo", "xmxm");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 删除项目
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/delproject")
+	@GET
+	@POST
+	public String toDelProject(Map<String, String> model) {
+		try {
+			String Id = getParam("ID");
+			String prjId = getParam("PRJ_ID");
+			myservice.delProject(Id);
+			model.put("PRJ_ID", prjId);
+			return successJSON("删除项目成功", "dialog", "prj/showproject", "scxm");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
@@ -477,6 +503,87 @@ public class PRJAction extends BaseAction {
 			myservice.delOrg(Id);
 			model.put("PRJ_ID", prjId);
 			return successJSON("删除角色成功", "dialog", "prj/editprjorg", "scjs");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	// //////////////////////////////////////////高级查询////////////////////////////////////////
+	/**
+	 * 高级查询项目
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/queryproject")
+	@POST
+	@GET
+	public String toQueryProject(Map<String, Object> model) {
+		try {
+			// 生成codelist
+			String code1 = "DEPT_ID|PRJ_LEVEL|PRJ_TYPE|WEEKMEETING|WEEKMEETINGTIME|LOCATION1|UNIT_TYPE|QUALI_LEVEL|PRJ_ROLE";
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			model.put("currentDate", DateUtils.format(new Date()));
+			return "forward:prj/view/queryproject.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 根据输入查询信息
+	 * 
+	 * @return
+	 */
+	@Path("/queryprojectbyinput")
+	@GET
+	@POST
+	public String toQueryProjectByInput(Map<String, Object> model) {
+		try {
+			// 获取查询条件，保存到bean中
+			ProjectQueryParam qp = (ProjectQueryParam) parseRequest(new ProjectQueryParam());
+			// 拼SQL条件，生成SQL语句，供界面检查
+			String where = myservice.getConditionByProjectQueryParam(qp);
+			model.put("projectwhere", where);
+			model.put("prj", qp);
+			return "forward:prj/view/showproject.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 打开地图定位
+	 */
+	@Path("/showmap")
+	@GET
+	@POST
+	public String toShowMap() {
+		return "forwardtopage:prj/mapclick.jsp";
+	}
+
+	/**
+	 * 保存新项目
+	 * 
+	 * @return
+	 */
+	@Path("/savemap")
+	@GET
+	@POST
+	public String toSaveMap(Map<String, String> model) {
+		try {
+			String PRJNO = getParam("PRJNO");
+			String PRJMAP = getParam("PRJ_MAP");
+			String prjName = myservice.saveMap(PRJNO, PRJMAP);
+			model.put("PRJNO", PRJNO);
+			return successJSON("修改项目地图成功。项目编号：" + PRJNO + "项目名称："
+					+ prjName, "dialog", "prj/showmap", "dtdw");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();

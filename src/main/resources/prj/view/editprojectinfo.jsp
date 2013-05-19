@@ -51,8 +51,9 @@
 						value="${prj.PRJ_INVEST}" maxlength="20" />
 				</p>
 				<p>
-					<label>项目面积(平方米)：</label><input type="text" size="30"
-						name="PRJ_AREA" value="${prj.PRJ_AREA}" maxlength="20" />
+					<label>项目面积(计算)：</label><input type="text" size="30"
+						name="PRJ_AREA" value="${prj.PRJ_AREA}" maxlength="20"
+						readonly="readonly" />
 				</p>
 				<p>
 					<label>项目开工时间：</label> <input type="text" name="PRJ_STARTTIME"

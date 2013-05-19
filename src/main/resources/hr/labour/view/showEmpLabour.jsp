@@ -63,7 +63,7 @@
 			<li><a class="edit" onclick="doEditLabour();" rel="zcbj"><span>劳动关系</span></a></li>
 			<li><a class="edit" href="${BaseURL}labour/showLabourQuery"
 				target="dialog" mask="true" title="查询框" width="640" height="420"
-				close="test"><span>高级检索</span></a></li>
+				close="test"><span>高级查询</span></a></li>
 		</ul>
 	</div>
 	<div>
