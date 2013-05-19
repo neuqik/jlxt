@@ -1,9 +1,9 @@
 --------------------------------------------
 -- Export file for user JLXT              --
--- Created by kuqi on 2013/5/18, 16:51:06 --
+-- Created by kuqi on 2013/5/19, 16:58:07 --
 --------------------------------------------
 
-spool user_objects_jxlt_20130512.log
+spool user_objects_jxlt.log
 
 prompt
 prompt Creating table HRD_EMP
@@ -1275,7 +1275,7 @@ prompt
 create sequence SEQ_ID
 minvalue 1001
 maxvalue 999999999999999999
-start with 1176
+start with 1181
 increment by 1
 cache 5;
 
@@ -1399,8 +1399,8 @@ prompt
 prompt Creating view V_PRJ_INFO
 prompt ========================
 prompt
-create or replace view v_prj_info as
-select "ID","PRJNO","CONTRACTNO","PRJ_NAME","PRJ_AREA","QUALITY_TARGET","PRJ_STARTTIME","PRJ_ENDTIME","PRJ_TIME","PRJ_PIC","PRJ_PROGRESS","MEMO","VALID","LOCATION1","LOCATION2","LOCATION3","LOCATION4","BUILDINGCOUNT","CONTRACTAREA","PRJ_LEVEL","PRJ_TYPE","PRJ_INVEST","WEEKMEETING","PRJ_MAP","PRJ_REGION","PRJ_ARCHIVE","WEEKMEETINGTIME","PRJ_ARCHIVETIME" from prj_info where valid='1';
+CREATE OR REPLACE VIEW V_PRJ_INFO AS
+select "ID","PRJNO","CONTRACTNO","PRJ_NAME",(SELECT NVL(SUM(BUILDING_AREA),0) FROM V_PRJ_BUILDING WHERE PRJ_ID = PRJ_INFO.ID) "PRJ_AREA","QUALITY_TARGET","PRJ_STARTTIME","PRJ_ENDTIME","PRJ_TIME","PRJ_PIC","PRJ_PROGRESS","MEMO","VALID","LOCATION1","LOCATION2","LOCATION3","LOCATION4",(SELECT COUNT (1) FROM V_PRJ_BUILDING WHERE PRJ_ID = PRJ_INFO.ID) "BUILDINGCOUNT","CONTRACTAREA","PRJ_LEVEL","PRJ_TYPE","PRJ_INVEST","WEEKMEETING","PRJ_MAP","PRJ_REGION","PRJ_ARCHIVE","WEEKMEETINGTIME","PRJ_ARCHIVETIME" from prj_info where valid='1';
 
 prompt
 prompt Creating view V_PRJ_ORG
