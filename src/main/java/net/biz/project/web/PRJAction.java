@@ -589,4 +589,15 @@ public class PRJAction extends BaseAction {
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
 	}
+	
+	/**
+	 * 项目评分检查
+	 * @return
+	 */
+	@Path("/projectcheck")
+	@GET
+	@POST
+	public String toProjectCheck() {
+		return "forward:prj/view/projectcheck.jsp";
+	}
 }
