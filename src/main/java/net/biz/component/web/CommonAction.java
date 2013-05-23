@@ -1,7 +1,6 @@
 package net.biz.component.web;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,7 @@ import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
 import net.biz.component.model.CommonService;
 import net.biz.component.vo.EMPLOOKUP;
-import net.biz.grid.gt.server.GridServerHandler;
+import net.biz.component.vo.PROJECTLOOKUP;
 import net.biz.util.BeanUtil;
 import net.biz.util.JDBCOracleUtil;
 
@@ -25,9 +24,7 @@ import org.eweb4j.mvc.MVC;
 import org.eweb4j.mvc.view.DataAssemUtil;
 import org.eweb4j.mvc.view.DivPageComp;
 import org.eweb4j.mvc.view.ListPage;
-import org.eweb4j.mvc.view.PageMod;
 import org.eweb4j.mvc.view.SearchForm;
-import org.eweb4j.solidbase.user.model.UserActivityLogCons;
 
 @Path("/common")
 public class CommonAction extends BaseAction {
@@ -282,6 +279,186 @@ public class CommonAction extends BaseAction {
 		}
 
 		return "forward:component/view/EmpLookup.jsp";
+	}
+
+	/**
+	 * 打开项目查询窗口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/doProjectLookup")
+	@GET
+	@POST
+	public String doProjectLookup(Map<String, Object> model) {
+		// 声明分页查询
+		int pageNum = 1;
+		int numPerPage = 20;
+
+		long allCount = 0;
+		List<PROJECTLOOKUP> pojos = new ArrayList<PROJECTLOOKUP>();
+		DivPageComp dpc = null;
+		ListPage listPage = null;
+		SearchForm searchForm = new SearchForm(
+				"common/doProjectLookupPageQuery", "");
+
+		String sql = "SELECT ID PRJ_ID,PRJNO,PRJ_NAME,FUN_GETCODEDESC('PRJ_LEVEL',PRJ_LEVEL) PRJ_LEVEL,FUN_GETCODEDESC('PRJ_TYPE',PRJ_TYPE) PRJ_TYPE,FUN_GETLOC(LOCATION1) LOCATION1,FUN_GETLOC(LOCATION2) LOCATION2,FUN_GETLOC(LOCATION3) LOCATION3,LOCATION4,MEMO FROM V_PRJ_INFO"
+				.toUpperCase();
+
+		// 1.查询界面的下拉列表框
+		String code1 = "PRJ_LEVEL|PRJ_TYPE";
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			// 2.进行分页查询构成页面
+			// pageMod = service.getListPage(pageNum, numPerPage);
+			RequestInfo request = wrapRequest(sql);
+			request.setPageSize(numPerPage);
+			request.setRowCount(-1);
+			request.setStartRow(1);
+			request.setSQL(sql);
+
+			AppInfo app = _service.queryListByPage(request);
+			allCount = app.getLongRowCount();
+
+			List<Map<String, Object>> result = app.getResultData();
+			Iterator<Map<String, Object>> it = result.iterator();
+			while (it.hasNext()) {
+				PROJECTLOOKUP prj = new PROJECTLOOKUP();
+				Map<String, Object> row = (Map<String, Object>) it.next();
+				BeanUtils.populate(prj, row);
+				pojos.add(prj);
+			}
+			dpc = new DivPageComp(pageNum, numPerPage, allCount, 10);
+
+			listPage = new ListPage("", searchForm, pojos, dpc);
+			listPage = DataAssemUtil.assemHead(listPage, pojos, null);
+
+			model.put("listPage", listPage);
+			model.put("random", Math.random());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
+		return "forward:component/view/ProjectLookup.jsp";
+	}
+
+	/**
+	 * 执行查找带回
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/doProjectLookupPageQuery")
+	@GET
+	@POST
+	public String doProjectLookupPageQuery(Map<String, Object> model) {
+
+		String prjNo = getParam("PRJNO");
+		String prjName = getParam("PRJ_NAME");
+		String prjLevel = getParam("PRJ_LEVEL");
+		String prjType = getParam("PRJ_TYPE");
+		String where = "";
+		if (!"".equalsIgnoreCase(prjNo)) {
+			where += " AND PRJ_NO LIKE '" + prjNo + "%' ";
+		}
+		if (!"".equalsIgnoreCase(prjName)) {
+			where += " AND PRJ_NAME LIKE '" + prjName + "%' ";
+		}
+		if (!"".equalsIgnoreCase(prjLevel)) {
+			where += " AND PRJ_LEVEL = '" + prjLevel + "' ";
+		}
+		if (!"".equalsIgnoreCase(prjType)) {
+			where += " AND PRJ_TYPE = '" + prjType + "'";
+		}
+		if (where.length() > 0) {
+			where = " WHERE " + where;
+			where = where.replaceFirst("AND", "");
+		}
+
+		// 声明分页查询
+		String pn = getParam("pageNum");
+		String size = getParam("numPerPage");
+
+		int pageNum = Integer.parseInt(pn == null ? "1" : pn);
+		int numPerPage = Integer.parseInt(size == null ? "20" : size);
+
+		long allCount = 0;
+		List<PROJECTLOOKUP> pojos = new ArrayList<PROJECTLOOKUP>();
+		DivPageComp dpc = null;
+		ListPage listPage = null;
+		SearchForm searchForm = new SearchForm(
+				"common/doProjectLookupPageQuery", "");
+		String sql = ("SELECT ID PRJ_ID,PRJNO,PRJ_NAME,FUN_GETCODEDESC('PRJ_LEVEL',PRJ_LEVEL) PRJ_LEVEL,FUN_GETCODEDESC('PRJ_TYPE',PRJ_TYPE) PRJ_TYPE,FUN_GETLOC(LOCATION1) LOCATION1,FUN_GETLOC(LOCATION2) LOCATION2,FUN_GETLOC(LOCATION3) LOCATION3,LOCATION4,MEMO FROM V_PRJ_INFO" + where)
+				.toUpperCase();
+
+		// 1.查询界面的下拉列表框
+		String code1 = "PRJ_LEVEL|PRJ_TYPE";
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			// 2.进行分页查询构成页面
+			// pageMod = service.getListPage(pageNum, numPerPage);
+			RequestInfo request = wrapRequest(sql);
+			request.setPageSize(numPerPage);
+			request.setRowCount(-1);
+			request.setStartRow((pageNum - 1) * numPerPage + 1);
+			request.setSQL(sql);
+
+			AppInfo app = _service.queryListByPage(request);
+			allCount = app.getLongRowCount();
+
+			List<Map<String, Object>> result = app.getResultData();
+			Iterator<Map<String, Object>> it = result.iterator();
+			while (it.hasNext()) {
+				PROJECTLOOKUP prj = new PROJECTLOOKUP();
+				Map<String, Object> row = (Map<String, Object>) it.next();
+				BeanUtils.populate(prj, row);
+				pojos.add(prj);
+			}
+			dpc = new DivPageComp(pageNum, numPerPage, allCount, 10);
+
+			listPage = new ListPage("", searchForm, pojos, dpc);
+			listPage = DataAssemUtil.assemHead(listPage, pojos, null);
+
+			model.put("listPage", listPage);
+			model.put("random", Math.random());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
+		return "forward:component/view/ProjectLookup.jsp";
+	}
+
+	/**
+	 * 获取检查扣分细项
+	 * 
+	 * @return
+	 */
+	@Path("/doGetCheckItem")
+	@GET
+	@POST
+	public String doGetCheckItem() {
+		try {
+			// 获取选中的省
+			String value = getParam("item");
+			// 查询下属的市
+			List<Map<String, Object>> result = JDBCOracleUtil
+					.executeQuery("select 'CHECKITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent CODE_DESC from t_checklist_prj where UPPER_CODE='"
+							+ value + "' order by check_code".toUpperCase());
+
+			return "out:" + BeanUtil.cascadeComboxList2JSArray(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }

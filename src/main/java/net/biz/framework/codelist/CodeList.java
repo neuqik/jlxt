@@ -62,6 +62,7 @@ public class CodeList {
 			}
 		}
 		initLocation();
+		initItem();
 	}
 
 	/**
@@ -77,6 +78,54 @@ public class CodeList {
 		// 初始化对象
 		List<Code> codes = new ArrayList<Code>();
 		String sql = "select 'LOCATION1' CODE_TYPE,region_code CODE_VALUE,location CODE_DESC from t_loc where member='0' order by region_code"
+				.toUpperCase();
+		List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql,
+				JDBCOracleUtil.getConnection());
+		String lastCodeType = "";
+		Iterator<Map<String, Object>> it = result.iterator();
+		while (it.hasNext()) {
+			Map<String, Object> row = (Map<String, Object>) it.next();
+
+			Code code = new Code();
+			String codeType = (String) row.get("CODE_TYPE");
+			String codeValue = (String) row.get("CODE_VALUE");
+			String codeDesc = (String) row.get("CODE_DESC");
+			if ("".equals(lastCodeType)) {
+				lastCodeType = codeType;
+			}
+			code.setCodeType(codeType);
+			code.setCodeValue(codeValue);
+			code.setCodeDesc(codeDesc);
+			// 如果还是在这个里面，则添加到list中
+			if (lastCodeType.equals(codeType)) {
+				codes.add(code);
+				if (!it.hasNext()) {
+					System.out.println("装载代码:" + lastCodeType);
+					codeMap.put(lastCodeType, codes);
+				}
+			} else {
+				System.out.println("装载代码:" + lastCodeType);
+				codeMap.put(lastCodeType, codes);
+				codes = new ArrayList<Code>();
+				codes.add(code);
+				lastCodeType = codeType;
+			}
+		}
+	}
+
+	/**
+	 * 初始化检查扣分大项
+	 * 
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 */
+	private void initItem() throws SQLException, InstantiationException,
+			IllegalAccessException, ClassNotFoundException {
+		// 初始化对象
+		List<Code> codes = new ArrayList<Code>();
+		String sql = "select 'ITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent CODE_DESC from t_checklist_prj where member='0' order by check_code"
 				.toUpperCase();
 		List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql,
 				JDBCOracleUtil.getConnection());

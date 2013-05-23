@@ -187,7 +187,7 @@ public class GenerateJSP {
 	}
 	public static void main(String[] args) {
 		try {
-			String result = GenerateJSP.generateFormFlagByTable("PRJ_ORG", "prj");
+			String result = GenerateJSP.generateFormFlagByTable("PRJ_CHECK", "prj");
 			System.out.println(result);
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block

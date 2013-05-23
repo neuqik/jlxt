@@ -582,16 +582,17 @@ public class PRJAction extends BaseAction {
 			String PRJMAP = getParam("PRJ_MAP");
 			String prjName = myservice.saveMap(PRJNO, PRJMAP);
 			model.put("PRJNO", PRJNO);
-			return successJSON("修改项目地图成功。项目编号：" + PRJNO + "项目名称："
-					+ prjName, "dialog", "prj/showmap", "dtdw");
+			return successJSON("修改项目地图成功。项目编号：" + PRJNO + "项目名称：" + prjName,
+					"dialog", "prj/showmap", "dtdw");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
 	}
-	
+
 	/**
 	 * 项目评分检查
+	 * 
 	 * @return
 	 */
 	@Path("/projectcheck")
@@ -599,5 +600,56 @@ public class PRJAction extends BaseAction {
 	@POST
 	public String toProjectCheck() {
 		return "forward:prj/view/projectcheck.jsp";
+	}
+
+	/**
+	 * 增加评分
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/addscore")
+	@GET
+	@POST
+	public String toAddScore(Map<String, List> model) {
+		String code1 = "ITEM|";
+		Map a = CodeList.getCodeMap();
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return "forward:prj/view/addscore.jsp";
+	}
+
+	/**
+	 * 保存新评分结果
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/savenewscore")
+	@GET
+	@POST
+	public String toSaveNewScore(Map<String, String> model) {
+		try {
+			HttpServletRequest req = MVC.ctx().getRequest();
+			// 1.获取项目编号，检查项目编号是否已经结束，根据竣工日期
+			// 1.1.检查扣分是否是数字
+			// 1.2.检查时间是否处于项目的有效期范围内
+			// 1.3.检查项目中是否有工程信息
+			// 2.检查项目是否设置了总监，如果没有设置总监，提示去增加总监
+			// 3.复制当前项目的基本信息到表中的冗余字段
+			// model.put("PRJNO", prjNo);
+			return successJSONReload("添加项目成功，请继续补充项目其他信息，项目编号：" ,
+					"dialog", "prj/addproject", "xzxm");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
 	}
 }
