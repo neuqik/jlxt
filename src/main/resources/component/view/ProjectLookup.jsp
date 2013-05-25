@@ -66,7 +66,7 @@
 			<c:forEach var="pojo" items="${listPage.pojos}">
 				<tr>
 					<td align="center"><a class="btnSelect"
-						href="javascript:$.bringBack({PRJ_ID:'${pojo.PRJ_ID}',PRJNO:'${pojo.PRJNO}',PRJ_NAME:'${pojo.PRJ_NAME}'})"
+						href="javascript:$.bringBack({PRJNO:'${pojo.PRJNO}',PRJ_ID:${pojo.PRJ_ID},PRJ_NAME:'${pojo.PRJ_NAME}'})"
 						title="查找带回">选择</a></td>
 					<td align="left">${pojo.PRJNO}</td>
 					<td>${pojo.PRJ_NAME}</td>

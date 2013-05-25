@@ -637,7 +637,12 @@ public class PRJAction extends BaseAction {
 	@POST
 	public String toSaveNewScore(Map<String, String> model) {
 		try {
-			HttpServletRequest req = MVC.ctx().getRequest();
+			String prjNo = getParam("PRJNO");
+			String prjCheckDate = getParam("CHECKDATE");
+			String checkItem = getParam("CHECKITEM");
+			String actScore = getParam("ACT_SCORE");
+			String prjProgress = getParam("PRJ_PROGRESS");
+			String memo = getParam("MEMO");
 			// 1.获取项目编号，检查项目编号是否已经结束，根据竣工日期
 			// 1.1.检查扣分是否是数字
 			// 1.2.检查时间是否处于项目的有效期范围内
@@ -645,8 +650,31 @@ public class PRJAction extends BaseAction {
 			// 2.检查项目是否设置了总监，如果没有设置总监，提示去增加总监
 			// 3.复制当前项目的基本信息到表中的冗余字段
 			// model.put("PRJNO", prjNo);
-			return successJSONReload("添加项目成功，请继续补充项目其他信息，项目编号：" ,
-					"dialog", "prj/addproject", "xzxm");
+			return successJSONReload("添加项目成功，请继续补充项目其他信息，项目编号：", "dialog",
+					"prj/addproject", "xzxm");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 得到项目对应的建设单位下拉列表
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/constructunit")
+	@GET
+	@POST
+	public String toConstructUnit(Map<String, String> model) {
+		try {
+			String prjId = getParam("PRJ_ID");
+			// 查询建设单位
+			List<Map<String, Object>> result = JDBCOracleUtil
+					.executeQuery("SELECT 'JSDW_ID' CODE_TYPE, TO_CHAR(ID) CODE_VALUE,UNIT_NAME CODE_DESC FROM V_PRJ_UNIT WHERE PRJ_ID="
+							+ prjId + " AND UNIT_TYPE='01' ORDER BY UNIT_NAME ");
+			return "out:" + BeanUtil.cascadeComboxList2JSArray(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();

@@ -1,6 +1,6 @@
 --------------------------------------------
 -- Export file for user JLXT              --
--- Created by kuqi on 2013/5/19, 16:58:07 --
+-- Created by kuqi on 2013/5/23, 22:28:17 --
 --------------------------------------------
 
 spool user_objects_jxlt.log
@@ -799,61 +799,78 @@ prompt ========================
 prompt
 create table PRJ_CHECK
 (
-  id              NUMBER(20) not null,
-  prj_id          NUMBER(20) not null,
-  checkitem       VARCHAR2(3),
-  detailitem      VARCHAR2(3),
-  checkdate       DATE,
-  deserve_score   NUMBER(10,2),
-  act_score       NUMBER(10,2),
-  act_pct         NUMBER(5,2),
-  standard        VARCHAR2(3),
-  deduction       VARCHAR2(500),
-  check_emp_id    VARCHAR2(20),
-  problem         VARCHAR2(500),
-  resolved        VARCHAR2(100),
-  resolved_result VARCHAR2(500),
-  memo            VARCHAR2(500),
-  valid           VARCHAR2(3) not null,
-  check_type      VARCHAR2(3) not null,
-  building_id     VARCHAR2(20)
+  id             NUMBER(20) not null,
+  prj_id         NUMBER(20) not null,
+  checkitem      VARCHAR2(20),
+  checkdate      DATE,
+  act_score      NUMBER(10,2),
+  dept_id1       VARCHAR2(20),
+  dept_id2       VARCHAR2(20),
+  dept_id3       VARCHAR2(20),
+  dept_id4       VARCHAR2(20),
+  dept_id5       VARCHAR2(20),
+  dept_id6       VARCHAR2(20),
+  dept_id7       VARCHAR2(20),
+  dept_id8       VARCHAR2(20),
+  dept_id9       VARCHAR2(20),
+  dept_id10      VARCHAR2(20),
+  jsdw_id        NUMBER(20),
+  sgdw_id        NUMBER(20),
+  prj_progress   VARCHAR2(1000),
+  construct_type VARCHAR2(3),
+  emp_id         VARCHAR2(20),
+  begindate      DATE,
+  enddate        DATE,
+  memo           VARCHAR2(500),
+  valid          VARCHAR2(3) not null
 )
 ;
 comment on table PRJ_CHECK
-  is '项目安全质量检查';
+  is '项目安全监理检查评分';
 comment on column PRJ_CHECK.prj_id
   is '项目ID';
 comment on column PRJ_CHECK.checkitem
   is '检查项目';
-comment on column PRJ_CHECK.detailitem
-  is '子项目名称';
 comment on column PRJ_CHECK.checkdate
   is '检查时间';
-comment on column PRJ_CHECK.deserve_score
-  is '应得分';
 comment on column PRJ_CHECK.act_score
-  is '实得分';
-comment on column PRJ_CHECK.act_pct
-  is '得分率';
-comment on column PRJ_CHECK.standard
-  is '评分标准';
-comment on column PRJ_CHECK.deduction
-  is '扣分原因';
-comment on column PRJ_CHECK.check_emp_id
-  is '检查员工编号';
-comment on column PRJ_CHECK.problem
-  is '存在问题';
-comment on column PRJ_CHECK.resolved
-  is '整改时间';
-comment on column PRJ_CHECK.resolved_result
-  is '整改结果';
+  is '扣分';
+comment on column PRJ_CHECK.dept_id1
+  is '分公司1';
+comment on column PRJ_CHECK.dept_id2
+  is '分公司2';
+comment on column PRJ_CHECK.dept_id3
+  is '分公司3';
+comment on column PRJ_CHECK.dept_id4
+  is '分公司4';
+comment on column PRJ_CHECK.dept_id5
+  is '分公司5';
+comment on column PRJ_CHECK.dept_id6
+  is '分公司6';
+comment on column PRJ_CHECK.dept_id7
+  is '分公司7';
+comment on column PRJ_CHECK.dept_id8
+  is '分公司8';
+comment on column PRJ_CHECK.dept_id9
+  is '分公司9';
+comment on column PRJ_CHECK.dept_id10
+  is '分公司10';
+comment on column PRJ_CHECK.jsdw_id
+  is '建设单位ID';
+comment on column PRJ_CHECK.sgdw_id
+  is '施工单位ID';
+comment on column PRJ_CHECK.prj_progress
+  is '项目进展情况';
+comment on column PRJ_CHECK.construct_type
+  is '结构类型';
+comment on column PRJ_CHECK.emp_id
+  is '项目总监员工编号';
+comment on column PRJ_CHECK.begindate
+  is '开工时间';
+comment on column PRJ_CHECK.enddate
+  is '竣工日期';
 comment on column PRJ_CHECK.memo
   is '备注';
-comment on column PRJ_CHECK.check_type
-  is '检查类型,1-安全,2-质量';
-comment on column PRJ_CHECK.building_id
-  is '建筑编号';
-create unique index IDX_PRJ_CHECK on PRJ_CHECK (PRJ_ID, CHECKDATE, DETAILITEM, CHECK_TYPE);
 alter table PRJ_CHECK
   add constraint PK_PRJ_CHECK primary key (ID);
 
@@ -1164,6 +1181,21 @@ comment on table TMP_EMP_IMP
   is '用于导入数据的临时员工表';
 
 prompt
+prompt Creating table T_CHECKLIST_PRJ
+prompt ==============================
+prompt
+create table T_CHECKLIST_PRJ
+(
+  id           NUMBER(16),
+  check_code   VARCHAR2(20) not null,
+  upper_code   VARCHAR2(20),
+  member       VARCHAR2(3) not null,
+  memo         VARCHAR2(500),
+  checkcontent VARCHAR2(500)
+)
+;
+
+prompt
 prompt Creating table T_CODELIST
 prompt =========================
 prompt
@@ -1396,11 +1428,25 @@ create or replace view v_prj_building as
 select "ID","PRJ_ID","BUILDING_ID","UNDERFLOOR","ABOVEFLOOR","HEIGHT","BUILDING_AREA","ACT_BEGIN","ACT_END","ACT_TIME","PROGRESS","IMAGE_PROGRESS","MEMO","VALID","BUILDING_TYPE","BUILDER_LICENSE","LICENSE_DATE","SECURITY_LEVEL","CONSTRUCT_TYPE" from prj_building where valid='1';
 
 prompt
+prompt Creating view V_PRJ_CHECK
+prompt =========================
+prompt
+create or replace view v_prj_check as
+select "ID","PRJ_ID","CHECKITEM","CHECKDATE","ACT_SCORE","DEPT_ID1","DEPT_ID2","DEPT_ID3","DEPT_ID4","DEPT_ID5","DEPT_ID6","DEPT_ID7","DEPT_ID8","DEPT_ID9","DEPT_ID10","JSDW_ID","SGDW_ID","PRJ_PROGRESS","CONSTRUCT_TYPE","EMP_ID","BEGINDATE","ENDDATE","MEMO","VALID" from prj_check where valid='1';
+
+prompt
 prompt Creating view V_PRJ_INFO
 prompt ========================
 prompt
 CREATE OR REPLACE VIEW V_PRJ_INFO AS
 select "ID","PRJNO","CONTRACTNO","PRJ_NAME",(SELECT NVL(SUM(BUILDING_AREA),0) FROM V_PRJ_BUILDING WHERE PRJ_ID = PRJ_INFO.ID) "PRJ_AREA","QUALITY_TARGET","PRJ_STARTTIME","PRJ_ENDTIME","PRJ_TIME","PRJ_PIC","PRJ_PROGRESS","MEMO","VALID","LOCATION1","LOCATION2","LOCATION3","LOCATION4",(SELECT COUNT (1) FROM V_PRJ_BUILDING WHERE PRJ_ID = PRJ_INFO.ID) "BUILDINGCOUNT","CONTRACTAREA","PRJ_LEVEL","PRJ_TYPE","PRJ_INVEST","WEEKMEETING","PRJ_MAP","PRJ_REGION","PRJ_ARCHIVE","WEEKMEETINGTIME","PRJ_ARCHIVETIME" from prj_info where valid='1';
+
+prompt
+prompt Creating view V_PRJ_CHECK_SUM
+prompt =============================
+prompt
+CREATE OR REPLACE VIEW V_PRJ_CHECK_SUM AS
+select (SELECT PRJNO FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJNO,(SELECT PRJ_NAME FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJ_NAME,COUNT(CHECKITEM) CHECKITEM, SUM(ACT_SCORE) ACT_SCORE,CHECKDATE, PRJ_ID from prj_check a where valid='1'group by prj_id,checkdate;
 
 prompt
 prompt Creating view V_PRJ_ORG

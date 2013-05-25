@@ -1,5 +1,5 @@
 ﻿prompt PL/SQL Developer import file
-prompt Created on 2013年5月19日 by kuqi
+prompt Created on 2013年5月23日 by kuqi
 set feedback off
 set define off
 prompt Creating HRD_EMP...
@@ -742,61 +742,78 @@ alter table PRJ_BUILDING
 prompt Creating PRJ_CHECK...
 create table PRJ_CHECK
 (
-  id              NUMBER(20) not null,
-  prj_id          NUMBER(20) not null,
-  checkitem       VARCHAR2(3),
-  detailitem      VARCHAR2(3),
-  checkdate       DATE,
-  deserve_score   NUMBER(10,2),
-  act_score       NUMBER(10,2),
-  act_pct         NUMBER(5,2),
-  standard        VARCHAR2(3),
-  deduction       VARCHAR2(500),
-  check_emp_id    VARCHAR2(20),
-  problem         VARCHAR2(500),
-  resolved        VARCHAR2(100),
-  resolved_result VARCHAR2(500),
-  memo            VARCHAR2(500),
-  valid           VARCHAR2(3) not null,
-  check_type      VARCHAR2(3) not null,
-  building_id     VARCHAR2(20)
+  id             NUMBER(20) not null,
+  prj_id         NUMBER(20) not null,
+  checkitem      VARCHAR2(20),
+  checkdate      DATE,
+  act_score      NUMBER(10,2),
+  dept_id1       VARCHAR2(20),
+  dept_id2       VARCHAR2(20),
+  dept_id3       VARCHAR2(20),
+  dept_id4       VARCHAR2(20),
+  dept_id5       VARCHAR2(20),
+  dept_id6       VARCHAR2(20),
+  dept_id7       VARCHAR2(20),
+  dept_id8       VARCHAR2(20),
+  dept_id9       VARCHAR2(20),
+  dept_id10      VARCHAR2(20),
+  jsdw_id        NUMBER(20),
+  sgdw_id        NUMBER(20),
+  prj_progress   VARCHAR2(1000),
+  construct_type VARCHAR2(3),
+  emp_id         VARCHAR2(20),
+  begindate      DATE,
+  enddate        DATE,
+  memo           VARCHAR2(500),
+  valid          VARCHAR2(3) not null
 )
 ;
 comment on table PRJ_CHECK
-  is '项目安全质量检查';
+  is '项目安全监理检查评分';
 comment on column PRJ_CHECK.prj_id
   is '项目ID';
 comment on column PRJ_CHECK.checkitem
   is '检查项目';
-comment on column PRJ_CHECK.detailitem
-  is '子项目名称';
 comment on column PRJ_CHECK.checkdate
   is '检查时间';
-comment on column PRJ_CHECK.deserve_score
-  is '应得分';
 comment on column PRJ_CHECK.act_score
-  is '实得分';
-comment on column PRJ_CHECK.act_pct
-  is '得分率';
-comment on column PRJ_CHECK.standard
-  is '评分标准';
-comment on column PRJ_CHECK.deduction
-  is '扣分原因';
-comment on column PRJ_CHECK.check_emp_id
-  is '检查员工编号';
-comment on column PRJ_CHECK.problem
-  is '存在问题';
-comment on column PRJ_CHECK.resolved
-  is '整改时间';
-comment on column PRJ_CHECK.resolved_result
-  is '整改结果';
+  is '扣分';
+comment on column PRJ_CHECK.dept_id1
+  is '分公司1';
+comment on column PRJ_CHECK.dept_id2
+  is '分公司2';
+comment on column PRJ_CHECK.dept_id3
+  is '分公司3';
+comment on column PRJ_CHECK.dept_id4
+  is '分公司4';
+comment on column PRJ_CHECK.dept_id5
+  is '分公司5';
+comment on column PRJ_CHECK.dept_id6
+  is '分公司6';
+comment on column PRJ_CHECK.dept_id7
+  is '分公司7';
+comment on column PRJ_CHECK.dept_id8
+  is '分公司8';
+comment on column PRJ_CHECK.dept_id9
+  is '分公司9';
+comment on column PRJ_CHECK.dept_id10
+  is '分公司10';
+comment on column PRJ_CHECK.jsdw_id
+  is '建设单位ID';
+comment on column PRJ_CHECK.sgdw_id
+  is '施工单位ID';
+comment on column PRJ_CHECK.prj_progress
+  is '项目进展情况';
+comment on column PRJ_CHECK.construct_type
+  is '结构类型';
+comment on column PRJ_CHECK.emp_id
+  is '项目总监员工编号';
+comment on column PRJ_CHECK.begindate
+  is '开工时间';
+comment on column PRJ_CHECK.enddate
+  is '竣工日期';
 comment on column PRJ_CHECK.memo
   is '备注';
-comment on column PRJ_CHECK.check_type
-  is '检查类型,1-安全,2-质量';
-comment on column PRJ_CHECK.building_id
-  is '建筑编号';
-create unique index IDX_PRJ_CHECK on PRJ_CHECK (PRJ_ID, CHECKDATE, DETAILITEM, CHECK_TYPE);
 alter table PRJ_CHECK
   add constraint PK_PRJ_CHECK primary key (ID);
 
@@ -1087,6 +1104,18 @@ create table TMP_EMP_IMP
 ;
 comment on table TMP_EMP_IMP
   is '用于导入数据的临时员工表';
+
+prompt Creating T_CHECKLIST_PRJ...
+create table T_CHECKLIST_PRJ
+(
+  id           NUMBER(16),
+  check_code   VARCHAR2(20) not null,
+  upper_code   VARCHAR2(20),
+  member       VARCHAR2(3) not null,
+  memo         VARCHAR2(500),
+  checkcontent VARCHAR2(500)
+)
+;
 
 prompt Creating T_CODELIST...
 create table T_CODELIST
@@ -1627,7 +1656,7 @@ values (1171, 'P2013-002', 'HT120ASDFL', '铁西体育场', '123213', '2', to_da
 insert into PRJ_INFO (id, prjno, contractno, prj_name, prj_area, quality_target, prj_starttime, prj_endtime, prj_time, prj_pic, prj_progress, memo, valid, location1, location2, location3, location4, buildingcount, contractarea, prj_level, prj_type, prj_invest, weekmeeting, prj_map, prj_region, prj_archive, weekmeetingtime, prj_archivetime)
 values (1136, 'P2013-001', 'HT123123', '奥体中心', '123123', '2', to_date('05-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, null, '正在进行外墙施工', null, '1', '210000000000', '210100000000', '210101000000', 'wu ', null, '12312', '2', '01', '123213', '01', '123.377024,41.793158', null, null, '38', null);
 insert into PRJ_INFO (id, prjno, contractno, prj_name, prj_area, quality_target, prj_starttime, prj_endtime, prj_time, prj_pic, prj_progress, memo, valid, location1, location2, location3, location4, buildingcount, contractarea, prj_level, prj_type, prj_invest, weekmeeting, prj_map, prj_region, prj_archive, weekmeetingtime, prj_archivetime)
-values (1135, '1036', 'HT13202193', '2013暖房工程—青年宫保安寺', '12312', '2', to_date('09-05-2013', 'dd-mm-yyyy'), to_date('07-05-2013', 'dd-mm-yyyy'), null, null, null, '无备注', '1', '210000000000', '210100000000', '210104000000', '哪个接到', null, '123A', '2', '03', 'ASDFASF', '02', '123.397076, 41.756516', 'ASDF', '0', '17', null);
+values (1135, '1036', 'HT13202193', '2013暖房工程—青年宫保安寺', '12312', '2', to_date('09-05-2013', 'dd-mm-yyyy'), to_date('07-05-2013', 'dd-mm-yyyy'), null, null, '刚开始地基', '无备注', '1', '210000000000', '210100000000', '210104000000', '哪个接到', null, '123A', '2', '03', 'ASDFASF', '02', '123.411016,41.761096', 'ASDF', '0', '17', null);
 commit;
 prompt 3 records loaded
 prompt Loading PRJ_MAJORCHECK...
@@ -1752,6 +1781,91 @@ insert into TMP_EMP_IMP (col1, col2, col3, col4, col5, col6, col7, col8, col9, c
 values ('33', '王加权', '29', '男', '210381198306041914', '已婚', '群众', '汉', '15904071196', '无', '13840474732（爱人）', '于洪区黄海路36—3', '沈阳市皇姑区嫩江街4号', '沈阳', '2004-5-27', '8', '大专', '辽宁经济职业技术学院', '2004/7/10', '工程项目管理', '土建', '总代', '工程师', '工程管理', '2010.11.29', '00245517', '辽宁省人力资源和社会保障厅', '评定', null, null, null, '000492', 'A01144', 'SY00252', '201101335', '2444', null, null, null, '是', null, null, '在职', null, null);
 commit;
 prompt 33 records loaded
+prompt Loading T_CHECKLIST_PRJ...
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (1, '1000', '1000', '0', null, '监理单位安全管理');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (2, '1001', '1000', '1', null, '未建立监理安全生产责任制扣2分；无针对性扣1分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (3, '1002', '1000', '1', null, '未建立安全监理管理机构扣2分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (4, '1003', '1000', '1', null, '未制定安全监理规划扣4分；无针对性扣2分；编审批程序不符合规定扣2分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (5, '1004', '1000', '1', null, '未制定安全监理实施细则扣4分；无针对本现场危险性较大的分部分项工程内容编制的扣2分；编审批程序不符合规定扣2分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (6, '1005', '1000', '1', null, '未制定监理安全事故应急救预案扣4分；编审批程序不符合规定扣2分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (7, '2000', '2000', '0', null, '审查施工单位安全资料');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (8, '2001', '2000', '1', null, '未按规定审查施工单位资质和安全生产许可证，各扣2分；资质证书及安全生产许可证超过有效期未发现，扣1分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (9, '2002', '2000', '1', null, '未见脚手架钢管、扣件检测报告扣2分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (10, '2003', '2000', '1', null, '未见施工单位与建设单位、总包单位和分包单位安全生产协议书，各扣1分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (11, '2004', '2000', '1', null, '未按规定审查特种作业人员的特种作业操作证，扣2分；特种作业操作证已过有效期限未发现，每发现一项扣0.5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (12, '2005', '2000', '1', null, '未审查安全帽、安全带、安全网的合格证及厂家生产许可证每发现一项扣0.5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (13, '2006', '2000', '1', null, '开工前、停工后未履行开工、复工、停工报告各扣2分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (14, '2007', '2000', '1', null, '无分包单位资格报审表扣2分，分包单位资料不全每发现一项0.5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (15, '2008', '2000', '1', null, '未审查施工单位专项施工安全设施验收单扣5分、每缺一项扣1分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (16, '2009', '2000', '1', null, '未审查施工单位三级安全教育情况，扣2分；审查不全面扣1分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (17, '2010', '2000', '1', null, '未按规定审核安全防护、文明施工措施费用使用计划，扣1分；未检查安全防护、文明施工措施费用使用情况，扣0.5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (18, '2011', '2000', '1', null, '未按规定审查项目经理和专职安全生产管理人员资格证书，各扣2分，B、C证超过有效期未发现，每项扣0.5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (19, '3000', '3000', '0', null, '危险性较大的分部分项工程专项施工方案');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (20, '3001', '3000', '1', null, '未审查地下管线安全保护措施扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (21, '3002', '3000', '1', null, '未审查基坑支护、土方开挖、降水施工方案扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (22, '3003', '3000', '1', null, '未审查临电施工组织设计扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (23, '3004', '3000', '1', null, '未审查脚手架安、拆方案扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (24, '3005', '3000', '1', null, '未审查模板工程安全施工方案扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (25, '3006', '3000', '1', null, '未审查垂直运输设备安、拆施工方案扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (26, '3007', '3000', '1', null, '未审查起重吊装方案扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (27, '3008', '3000', '1', null, '未审查高处作业安全施工方案扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (28, '3009', '3000', '1', null, '未审查冬、雨季安全施工措施扣2分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (29, '3010', '3000', '1', null, '未审查施工现场应急救援预案，扣2分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (30, '3011', '3000', '1', null, '未见安全防火措施的扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (31, '3012', '3000', '1', null, '施工组织设计或专项施工方案不符合工程建设强制性标准之处未发现，每处扣1分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (32, '3013', '3000', '1', null, '未按规定审查核验与危险性较大工程有关的安全管理资料（如塔机、施工电梯、门式架、基坑监测），每项扣2分；未经检测合格且无通知单和暂停令及向甲方报告的每台扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (33, '3014', '3000', '1', null, '专项施工方案编审批程序不符合规定每处扣1分；应经专家组论证审查的未见论证审查报告或专家组人员组成和人数不符合有关规定未发现，扣5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (34, '4000', '4000', '0', null, '现场安全管理');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (35, '4001', '4000', '1', null, '监理日记未记载安全监理情况扣2分；不全面没缺一项扣0.5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (36, '4002', '4000', '1', null, '监理月报未记载安全监理情况扣2分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (37, '4003', '4000', '1', null, '未按规定要求进行巡查，每周无安全检查记录或每周未召开监理例会扣4分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (38, '4004', '4000', '1', null, '监理通知单无回复，未能形成闭合管理的每次扣1分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (39, '4005', '4000', '1', null, '危险性较大的分部分项工程施工前未按规定审查施工单位安全技术交底，扣2分；审查不全面每发现一项扣0.5分');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (40, '4006', '4000', '1', null, '对下列情况未及时下达安全隐患通知单的每项扣5分;1、现场存在比较严重的安全隐患；2、对危险性较大的分部分项工程无方案施工的或未经监理审查认可施工单位擅自施工的；3、对危险性较大的分部分项工程不按已审批的专项施工方案施工的或对已审批的专项施工方案作重大改动未重新履行编审批程序的');
+insert into T_CHECKLIST_PRJ (id, check_code, upper_code, member, memo, checkcontent)
+values (41, '4007', '4000', '1', null, '危险性较大的分部分项工程施工前未对各专业监理工程师进行安全监理交底的扣5分；');
+commit;
+prompt 41 records loaded
 prompt Loading T_CODELIST...
 insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
 values (231, 'PROFTYPE', '10', '职称类别', '教授级高级工程师', '1', null);
@@ -2453,8 +2567,32 @@ insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, va
 values (1055, 'WEEKMEETINGTIME', '47', '周例会时间', '23:00', '1', null);
 insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
 values (1056, 'WEEKMEETINGTIME', '48', '周例会时间', '23:30', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1057, 'REGTYPE', '04', '注册类别', '注册安全监理工程师', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1058, 'REGTYPE', '05', '注册类别', '注册勘察工程师', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1059, 'REGMAJOR', '106', '注册专业', '冶炼工程', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1060, 'REGMAJOR', '107', '注册专业', '矿山工程', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1061, 'REGMAJOR', '108', '注册专业', '化工石油工程', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1062, 'REGMAJOR', '109', '注册专业', '水利水电工程', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1063, 'REGMAJOR', '110', '注册专业', '电力工程', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1064, 'REGMAJOR', '111', '注册专业', '农林工程', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1065, 'REGMAJOR', '112', '注册专业', '铁路工程', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1066, 'REGMAJOR', '113', '注册专业', '港口与航道工程', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1067, 'REGMAJOR', '114', '注册专业', '航天航空工程', '1', null);
+insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
+values (1068, 'REGMAJOR', '115', '注册专业', '供配电', '1', null);
 commit;
-prompt 347 records loaded
+prompt 359 records loaded
 prompt Loading T_LOC...
 insert into T_LOC (id, region_code, upper_code, location, member, memo)
 values (2, '370113000000', '370100000000', '山东省济南市长清区', '2', null);

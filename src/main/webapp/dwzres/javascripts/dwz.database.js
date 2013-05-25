@@ -26,7 +26,7 @@ var _GLOBAL_OPEN_TYPE = "navTab";
 
 	$.extend({
 		bringBackSuggest : function(args) {
-			//wonder modify 
+			// wonder modify
 			for ( var key in args) {
 				var _o = document.getElementById(key);
 				if (_o != null)
@@ -49,8 +49,8 @@ var _GLOBAL_OPEN_TYPE = "navTab";
 							if (name == inputName) {
 								$input.val(args[key]);
 								$.cascadeSuggestAndBringBack($input, args);// add
-																			// by
-																			// cfuture.weiwei
+								// by
+								// cfuture.weiwei
 								break;
 							}
 						}
@@ -129,6 +129,15 @@ var _GLOBAL_OPEN_TYPE = "navTab";
 		},
 		bringBack : function(args) {
 			$.bringBackSuggest(args);
+			// wonder add 增加，对于返回json的第一个设置全选焦点，可以在全选焦点失去时调用函数做更多的事
+			for ( var key in args) {
+				var _o = document.getElementById(key);
+				if (_o != null) {
+					_o.select();
+				}
+				break;
+			}
+
 			$.pdialog.closeCurrent();
 		}
 	});
