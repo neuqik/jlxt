@@ -1,6 +1,6 @@
 --------------------------------------------
 -- Export file for user JLXT              --
--- Created by kuqi on 2013/5/23, 22:28:17 --
+-- Created by kuqi on 2013/5/25, 23:23:04 --
 --------------------------------------------
 
 spool user_objects_jxlt.log
@@ -804,16 +804,7 @@ create table PRJ_CHECK
   checkitem      VARCHAR2(20),
   checkdate      DATE,
   act_score      NUMBER(10,2),
-  dept_id1       VARCHAR2(20),
-  dept_id2       VARCHAR2(20),
-  dept_id3       VARCHAR2(20),
-  dept_id4       VARCHAR2(20),
-  dept_id5       VARCHAR2(20),
-  dept_id6       VARCHAR2(20),
-  dept_id7       VARCHAR2(20),
-  dept_id8       VARCHAR2(20),
-  dept_id9       VARCHAR2(20),
-  dept_id10      VARCHAR2(20),
+  dept_id        VARCHAR2(20),
   jsdw_id        NUMBER(20),
   sgdw_id        NUMBER(20),
   prj_progress   VARCHAR2(1000),
@@ -822,7 +813,8 @@ create table PRJ_CHECK
   begindate      DATE,
   enddate        DATE,
   memo           VARCHAR2(500),
-  valid          VARCHAR2(3) not null
+  valid          VARCHAR2(3) not null,
+  checkgroup_no  VARCHAR2(20)
 )
 ;
 comment on table PRJ_CHECK
@@ -835,26 +827,8 @@ comment on column PRJ_CHECK.checkdate
   is '检查时间';
 comment on column PRJ_CHECK.act_score
   is '扣分';
-comment on column PRJ_CHECK.dept_id1
-  is '分公司1';
-comment on column PRJ_CHECK.dept_id2
-  is '分公司2';
-comment on column PRJ_CHECK.dept_id3
-  is '分公司3';
-comment on column PRJ_CHECK.dept_id4
-  is '分公司4';
-comment on column PRJ_CHECK.dept_id5
-  is '分公司5';
-comment on column PRJ_CHECK.dept_id6
-  is '分公司6';
-comment on column PRJ_CHECK.dept_id7
-  is '分公司7';
-comment on column PRJ_CHECK.dept_id8
-  is '分公司8';
-comment on column PRJ_CHECK.dept_id9
-  is '分公司9';
-comment on column PRJ_CHECK.dept_id10
-  is '分公司10';
+comment on column PRJ_CHECK.dept_id
+  is '分公司';
 comment on column PRJ_CHECK.jsdw_id
   is '建设单位ID';
 comment on column PRJ_CHECK.sgdw_id
@@ -871,6 +845,8 @@ comment on column PRJ_CHECK.enddate
   is '竣工日期';
 comment on column PRJ_CHECK.memo
   is '备注';
+comment on column PRJ_CHECK.checkgroup_no
+  is '评分单编号';
 alter table PRJ_CHECK
   add constraint PK_PRJ_CHECK primary key (ID);
 
@@ -886,7 +862,7 @@ create table PRJ_INFO
   prj_name        VARCHAR2(200),
   prj_area        VARCHAR2(20),
   quality_target  VARCHAR2(3),
-  prj_starttime   DATE,
+  prj_starttime   DATE not null,
   prj_endtime     DATE,
   prj_time        VARCHAR2(20),
   prj_pic         VARCHAR2(200),
@@ -1307,7 +1283,7 @@ prompt
 create sequence SEQ_ID
 minvalue 1001
 maxvalue 999999999999999999
-start with 1181
+start with 1196
 increment by 1
 cache 5;
 
@@ -1432,7 +1408,7 @@ prompt Creating view V_PRJ_CHECK
 prompt =========================
 prompt
 create or replace view v_prj_check as
-select "ID","PRJ_ID","CHECKITEM","CHECKDATE","ACT_SCORE","DEPT_ID1","DEPT_ID2","DEPT_ID3","DEPT_ID4","DEPT_ID5","DEPT_ID6","DEPT_ID7","DEPT_ID8","DEPT_ID9","DEPT_ID10","JSDW_ID","SGDW_ID","PRJ_PROGRESS","CONSTRUCT_TYPE","EMP_ID","BEGINDATE","ENDDATE","MEMO","VALID" from prj_check where valid='1';
+select "ID","PRJ_ID","CHECKITEM","CHECKDATE","ACT_SCORE","DEPT_ID","JSDW_ID","SGDW_ID","PRJ_PROGRESS","CONSTRUCT_TYPE","EMP_ID","BEGINDATE","ENDDATE","MEMO","VALID","CHECKGROUP_NO" from prj_check where valid='1';
 
 prompt
 prompt Creating view V_PRJ_INFO
@@ -1446,7 +1422,7 @@ prompt Creating view V_PRJ_CHECK_SUM
 prompt =============================
 prompt
 CREATE OR REPLACE VIEW V_PRJ_CHECK_SUM AS
-select (SELECT PRJNO FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJNO,(SELECT PRJ_NAME FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJ_NAME,COUNT(CHECKITEM) CHECKITEM, SUM(ACT_SCORE) ACT_SCORE,CHECKDATE, PRJ_ID from prj_check a where valid='1'group by prj_id,checkdate;
+select (SELECT PRJNO FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJNO,(SELECT PRJ_NAME FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJ_NAME,COUNT(CHECKITEM) CHECKITEM, COUNT(DISTINCT DEPT_ID) DEPT_COUNT,SUM(ACT_SCORE) ACT_SCORE,CHECKDATE, PRJ_ID, CHECKGROUP_NO from prj_check a where valid='1'group by prj_id,checkdate,checkgroup_no order by checkgroup_no desc;
 
 prompt
 prompt Creating view V_PRJ_ORG
@@ -1478,6 +1454,28 @@ prompt
 CREATE OR REPLACE PACKAGE pkg_dataimp IS
 
 END pkg_dataimp;
+/
+
+prompt
+prompt Creating package PKG_PRJCHECK
+prompt =============================
+prompt
+CREATE OR REPLACE PACKAGE pkg_prjcheck IS
+  -- 保存检查点信息
+  PROCEDURE prc_savepoint(prm_prjid          IN VARCHAR2,
+                          prm_checkgroup     IN VARCHAR2, -- 检查单编号
+                          prm_checkdate      IN VARCHAR2,
+                          prm_checkitem      IN VARCHAR2,
+                          prm_act_score      IN VARCHAR2,
+                          prm_jsdw_id        IN VARCHAR2, -- 建设单位
+                          prm_sgdw_id        IN VARCHAR2, -- 施工单位
+                          prm_construct_type IN VARCHAR2, -- 结构形式
+                          prm_prj_progress   IN VARCHAR2,
+                          prm_memo           IN VARCHAR2,
+                          prm_appcode        OUT VARCHAR2,
+                          prm_errmsg         OUT VARCHAR2,
+                          prm_checkgroup_out OUT VARCHAR2);
+END pkg_prjcheck;
 /
 
 prompt
@@ -1650,6 +1648,199 @@ CREATE OR REPLACE PACKAGE BODY pkg_dataimp IS
     END LOOP;
   END;
 END pkg_dataimp;
+/
+
+prompt
+prompt Creating package body PKG_PRJCHECK
+prompt ==================================
+prompt
+CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
+  -- 保存检查点信息
+  PROCEDURE prc_savepoint(prm_prjid          IN VARCHAR2,
+                          prm_checkgroup     IN VARCHAR2, -- 检查单编号
+                          prm_checkdate      IN VARCHAR2,
+                          prm_checkitem      IN VARCHAR2,
+                          prm_act_score      IN VARCHAR2,
+                          prm_jsdw_id        IN VARCHAR2, -- 建设单位
+                          prm_sgdw_id        IN VARCHAR2, -- 施工单位
+                          prm_construct_type IN VARCHAR2, -- 结构形式
+                          prm_prj_progress   IN VARCHAR2,
+                          prm_memo           IN VARCHAR2,
+                          prm_appcode        OUT VARCHAR2,
+                          prm_errmsg         OUT VARCHAR2,
+                          prm_checkgroup_out OUT VARCHAR2) IS
+    d_enddate   DATE;
+    d_startdate DATE;
+    n_prjid     NUMBER(20);
+    n_score     NUMBER(10, 2);
+    d_checkdate DATE;
+    n_count     NUMBER(10) := 0;
+    v_emp_id    VARCHAR2(20);
+    v_prjno     VARCHAR2(20);
+  BEGIN
+    prm_appcode := '1';
+    -- 1.获取项目编号，检查项目编号是否已经结束，根据竣工日期
+    BEGIN
+      SELECT id,
+             nvl(prj_endtime, to_date('2099-01-01', 'yyyy-mm-dd')),
+             prj_starttime,
+             prjno
+        INTO n_prjid, d_enddate, d_startdate, v_prjno
+        FROM v_prj_info
+       WHERE id = to_number(prm_prjid);
+    EXCEPTION
+      WHEN no_data_found THEN
+        prm_appcode := '-1';
+        prm_errmsg  := '没有找到编号为' || v_prjno || '的信息';
+        RETURN;
+      WHEN too_many_rows THEN
+        prm_appcode := '-1';
+        prm_errmsg  := '编号为' || v_prjno || '的信息存在多条';
+        RETURN;
+      WHEN OTHERS THEN
+        prm_appcode := '-1';
+        prm_errmsg  := SQLERRM;
+        RETURN;
+    END;
+    -- 1.1.检查扣分是否是数字
+    BEGIN
+      SELECT to_number(prm_act_score), to_date(prm_checkdate, 'yyyy-mm-dd')
+        INTO n_score, d_checkdate
+        FROM dual;
+    EXCEPTION
+      WHEN OTHERS THEN
+        prm_appcode := '-1';
+        prm_errmsg  := '输入的扣分不是数字:' || prm_act_score || '或检查时间不是日期类型:' ||
+                       prm_checkdate || SQLERRM;
+        RETURN;
+    END;
+    -- 1.2.检查时间是否处于项目的有效期范围内
+    IF d_checkdate > d_enddate THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '检查日期晚于竣工日期';
+      RETURN;
+    END IF;
+    IF d_checkdate < d_startdate THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '检查日期早于开工日期' || to_char(d_startdate, 'YYYY-MM-DD');
+      RETURN;
+    END IF;
+    -- 1.3.检查项目中是否有工程信息
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_building
+     WHERE prj_id = n_prjid;
+    IF n_count <= 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '编号' || v_prjno || '中没有录入有效工程';
+      RETURN;
+    END IF;
+    n_count := 0;
+    -- 2.检查项目是否设置了总监，如果没有设置总监，提示去增加总监
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_org
+     WHERE prj_id = n_prjid
+       AND prj_role =
+           fun_getcodevalue(codetype => 'PRJ_ROLE', codedesc => '总监');
+    IF n_count < 1 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '编号' || v_prjno || '中没有有效的总监';
+      RETURN;
+    END IF;
+    IF n_count > 1 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '编号' || v_prjno || '中设置了多个有效的总监';
+      RETURN;
+    END IF;
+    SELECT emp_id
+      INTO v_emp_id
+      FROM v_prj_org
+     WHERE prj_id = n_prjid
+       AND prj_role =
+           fun_getcodevalue(codetype => 'PRJ_ROLE', codedesc => '总监');
+    n_count := 0;
+    -- 3.检查项目是否录入了施工单位和参建单位，如果咩有录入，提示增加
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_unit
+     WHERE prj_id = n_prjid
+       AND unit_type =
+           fun_getcodevalue(codetype => 'UNIT_TYPE', codedesc => '建设单位');
+    IF n_count < 1 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '编号' || v_prjno || '中没有有效的建设单位';
+      RETURN;
+    END IF;
+    -- 目前暂时只有一个建设单位
+    IF n_count > 1 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '编号' || v_prjno || '中设置了多个有效的建设单位';
+      RETURN;
+    END IF;
+    -- 检查是否有录入了分公司信息
+    n_count := 0;
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_unit_relate
+     WHERE prj_id = n_prjid;
+    IF n_count < 1 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '编号' || v_prjno || '中没有有效的分公司信息';
+      RETURN;
+    END IF;
+    -- 3.复制当前项目的基本信息到表中的冗余字段
+    -- 3.1.处理多个单位的情况
+    -- 如果没有检查表编码，则认为是第一个，然后返回编码
+    IF prm_checkgroup IS NULL OR prm_checkdate = '' THEN
+      SELECT to_char(SYSDATE, 'YYYYMMDDHH24MISS')
+        INTO prm_checkgroup_out
+        FROM dual;
+    ELSE
+      prm_checkgroup_out := prm_checkgroup;
+    END IF;
+    FOR c IN (SELECT dept_id FROM v_prj_unit_relate WHERE prj_id = n_prjid) LOOP
+      INSERT INTO v_prj_check
+        (id,
+         prj_id,
+         checkitem,
+         checkdate,
+         act_score,
+         dept_id,
+         jsdw_id,
+         sgdw_id,
+         prj_progress,
+         construct_type,
+         emp_id,
+         begindate,
+         enddate,
+         memo,
+         valid,
+         checkgroup_no)
+      VALUES
+        (seq_id.nextval,
+         n_prjid,
+         prm_checkitem,
+         d_checkdate,
+         n_score,
+         c.dept_id,
+         to_number(prm_jsdw_id),
+         to_number(prm_sgdw_id),
+         prm_prj_progress,
+         prm_construct_type,
+         v_emp_id,
+         d_startdate,
+         d_enddate,
+         prm_memo,
+         '1',
+         prm_checkgroup_out);
+    END LOOP;
+  EXCEPTION
+    WHEN OTHERS THEN
+      prm_appcode := '-1';
+      prm_errmsg  := SQLERRM;
+  END;
+END pkg_prjcheck;
 /
 
 
