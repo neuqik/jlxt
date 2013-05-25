@@ -11,7 +11,7 @@
 	function doAddScore() {
 		// 如果只有一条
 		navTab.openTab("xzpf", MyURL + "prj/addscore", {
-			title : "添加评分",
+			title : "添加新检查单",
 			fresh : false,
 			data : {},
 			close : function() {
@@ -28,8 +28,9 @@
 	style="overflow-x: hidden; overflow-y: hidden">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="add" onclick="doAddScore();" rel="xzpf"><span>添加评分</span></a></li>
-			<li><a class="edit" onclick="doEditEmpBase();" rel="ckpfmx"><span>查看评分明细</span></a></li>
+			<li><a class="add" onclick="doAddScore();" rel="xzpf"><span>添加新检查单</span></a></li>
+			<li><a class="edit" onclick="doEditEmpBase();" rel="ckpfmx"><span>查看检查单</span></a></li>
+			<li><a class="delete" onclick="doEditEmpBase();" rel="ckpfmx"><span>删除检查单</span></a></li>
 		</ul>
 	</div>
 	<div>

@@ -2,6 +2,7 @@ package net.biz.project.model;
 
 import java.util.List;
 
+import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
@@ -109,5 +110,12 @@ public interface IPRJService {
 	 * @throws Exception
 	 */
 	public String saveMap(String pRJNO, String pRJMAP) throws Exception;
+	/**
+	 * 保存新的评分记录
+	 * @param prjInfo
+	 * @return 返回检查表编号
+	 * @throws Exception
+	 */
+	public String saveNewScore(PRJ_CHECK prjInfo) throws Exception;
 
 }

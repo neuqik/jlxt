@@ -1,5 +1,6 @@
 package net.biz.project.model;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -9,6 +10,7 @@ import java.util.Map;
 import net.biz.framework.codelist.CodeList;
 import net.biz.framework.exception.AppException;
 import net.biz.project.vo.PRJ_BUILDING;
+import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
@@ -509,5 +511,46 @@ public class PRJServiceImpl implements IPRJService {
 		String sql = "UPDATE V_PRJ_INFO SET PRJ_MAP=? WHERE PRJNO=?";
 		JDBCOracleUtil.ExecuteDML(sql, params);
 		return prjName;
+	}
+
+	/**
+	 * 保存新的评分记录
+	 */
+	public String saveNewScore(PRJ_CHECK prjInfo) throws Exception {
+		Connection conn = null;
+		try {
+			conn = JDBCOracleUtil.getConnection();
+			List<String> inList = new ArrayList<String>();
+			List<String> outList = new ArrayList<String>();
+			inList.add(prjInfo.getPRJ_ID());
+			inList.add(prjInfo.getCHECKGROUP_NO());
+			inList.add(prjInfo.getCHECKDATE());
+			inList.add(prjInfo.getCHECKITEM());
+			inList.add(prjInfo.getACT_SCORE());
+			inList.add(prjInfo.getJSDW_ID());
+			inList.add(prjInfo.getSGDW_ID());
+			inList.add(prjInfo.getCONSTRUCT_TYPE());
+			inList.add(prjInfo.getPRJ_PROGRESS());
+			inList.add(prjInfo.getMEMO());
+			// 输出参数
+			outList.add("");
+			outList.add("");
+			outList.add("");
+			List<String> resultList = JDBCOracleUtil.callProc(inList, outList,
+					"pkg_prjcheck.prc_savepoint", conn);
+			// 如果保存成功
+			if ("1".equals(resultList.get(0))) {
+				conn.commit();
+				return resultList.get(2);
+			} else {
+				conn.rollback();
+				throw new AppException("保存失败，" + resultList.get(1));
+			}
+
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
 	}
 }

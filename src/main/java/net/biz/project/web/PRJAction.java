@@ -12,9 +12,9 @@ import javax.ws.rs.Path;
 
 import net.biz.component.BaseAction;
 import net.biz.framework.codelist.CodeList;
-import net.biz.hr.vo.LabourQueryParam;
 import net.biz.project.model.IPRJService;
 import net.biz.project.vo.PRJ_BUILDING;
+import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
@@ -635,23 +635,15 @@ public class PRJAction extends BaseAction {
 	@Path("/savenewscore")
 	@GET
 	@POST
-	public String toSaveNewScore(Map<String, String> model) {
+	public String toSaveNewScore(Map<String, Object> model) {
 		try {
-			String prjNo = getParam("PRJNO");
-			String prjCheckDate = getParam("CHECKDATE");
-			String checkItem = getParam("CHECKITEM");
-			String actScore = getParam("ACT_SCORE");
-			String prjProgress = getParam("PRJ_PROGRESS");
-			String memo = getParam("MEMO");
-			// 1.获取项目编号，检查项目编号是否已经结束，根据竣工日期
-			// 1.1.检查扣分是否是数字
-			// 1.2.检查时间是否处于项目的有效期范围内
-			// 1.3.检查项目中是否有工程信息
-			// 2.检查项目是否设置了总监，如果没有设置总监，提示去增加总监
-			// 3.复制当前项目的基本信息到表中的冗余字段
-			// model.put("PRJNO", prjNo);
-			return successJSONReload("添加项目成功，请继续补充项目其他信息，项目编号：", "dialog",
-					"prj/addproject", "xzxm");
+			HttpServletRequest req = MVC.ctx().getRequest();
+			PRJ_CHECK prjInfo = (PRJ_CHECK) parseRequest(req, new PRJ_CHECK());
+			String checkgroup = myservice.saveNewScore(prjInfo);
+			PRJ_CHECK newPrj = new PRJ_CHECK();
+			newPrj.setCHECKGROUP_NO(checkgroup);
+			model.put("prj", newPrj);
+			return successJSON("添加评分成功", "dialog", "prj/addscore", "tjpf");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();

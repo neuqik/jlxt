@@ -8,27 +8,9 @@
 		<div class="searchBar">
 			<table>
 				<tr>
-					<th><label>项目编号：</label></th>
-					<td><input name="PRJNO" value="${PRJNO}" type="text" /></td>
-					<th><label>项目名称：</label></th>
-					<td><input name="PRJ_NAME"
-						value="${listPage.searchForm.keyword}" type="text" /></td>
-				</tr>
-				<tr>
-					<th><label>项目等级：</label></th>
-					<td><select name="PRJ_LEVEL" class="combox"><option
-								value="">请选择...</option>
-							<c:forEach var="item" items="${PRJ_LEVEL}">
-								<option value="${item.codeValue}">${item.codeDesc}</option>
-							</c:forEach>
-					</select></td>
-					<th><label>项目类型：</label></th>
-					<td><select name="PRJ_TYPE" class="combox"><option
-								value="">请选择...</option>
-							<c:forEach var="item" items="${PRJ_TYPE}">
-								<option value="${item.codeValue}">${item.codeDesc}</option>
-							</c:forEach>
-					</select></td>
+					<th><label>项目ID：</label></th>
+					<td><input name="PRJ_ID" value="${PRJ_ID}" type="text"
+						readonly="readonly" /></td>
 				</tr>
 			</table>
 			<div class="subBar">
@@ -53,28 +35,20 @@
 		<thead>
 			<tr>
 				<th width="40" align="center">选定</th>
-				<th width="90" align="center">项目编号</th>
-				<th width="400" align="left">项目名称</th>
-				<th width="40" align="center">项目等级</th>
-				<th width="90" align="center">项目类型</th>
-				<th width="220" align="left">项目地址(县区)</th>
-				<th width="220" align="left">项目地址(街道)</th>
-				<th width="220" align="left">备注</th>
+				<th width="100" align="left">项目编号</th>
+				<th width="100" align="left">结构类型代码</th>
+				<th width="250" align="left">结构类型名称</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach var="pojo" items="${listPage.pojos}">
 				<tr>
 					<td align="center"><a class="btnSelect"
-						href="javascript:$.bringBack({PRJNO:'${pojo.PRJNO}',PRJ_ID:${pojo.PRJ_ID},PRJ_NAME:'${pojo.PRJ_NAME}'})"
+						href="javascript:$.bringBack({CONSTRUCT_TYPE:${pojo.CONSTRUCT_TYPE},CONSTRUCT_TYPE_NAME:'${pojo.CONSTRUCT_TYPE_NAME}'})"
 						title="查找带回">选择</a></td>
 					<td>${pojo.PRJNO}</td>
-					<td>${pojo.PRJ_NAME}</td>
-					<td>${pojo.PRJ_LEVEL}</td>
-					<td>${pojo.PRJ_TYPE}</td>
-					<td>${pojo.LOCATION3}</td>
-					<td>${pojo.LOCATION4}</td>
-					<td>${pojo.MEMO}</td>
+					<td>${pojo.CONSTRUCT_TYPE}</td>
+					<td>${pojo.CONSTRUCT_TYPE_NAME}</td>
 				</tr>
 			</c:forEach>
 		</tbody>

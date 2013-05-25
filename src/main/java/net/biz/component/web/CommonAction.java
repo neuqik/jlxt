@@ -14,7 +14,9 @@ import net.biz.component.Const;
 import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
 import net.biz.component.model.CommonService;
+import net.biz.component.vo.CJDWLOOKUP;
 import net.biz.component.vo.EMPLOOKUP;
+import net.biz.component.vo.JGLXLOOKUP;
 import net.biz.component.vo.PROJECTLOOKUP;
 import net.biz.util.BeanUtil;
 import net.biz.util.JDBCOracleUtil;
@@ -282,6 +284,499 @@ public class CommonAction extends BaseAction {
 	}
 
 	/**
+	 * 打开建设单位查询窗口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/doJSDWLookup")
+	@GET
+	@POST
+	public String doJSDWLookup(Map<String, Object> model) {
+		String prjId = "".equals(getParam("PRJ_ID")) ? "0" : getParam("PRJ_ID");
+		String prjNo = getParam("PRJNO");
+		// 声明分页查询
+		int pageNum = 1;
+		int numPerPage = 20;
+
+		long allCount = 0;
+		List<CJDWLOOKUP> pojos = new ArrayList<CJDWLOOKUP>();
+		DivPageComp dpc = null;
+		ListPage listPage = null;
+		SearchForm searchForm = new SearchForm("common/doJSDWLookupPageQuery",
+				"");
+
+		String sql = "SELECT ID ,UNIT_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,GROUP_NAME,FUN_GETCODEDESC('UNIT_TYPE',UNIT_TYPE) UNIT_TYPE,FUN_GETCODEDESC('QUALI_LEVEL',QUALI_LEVEL) QUALI_LEVEL,CONTRACTOR,MEMO FROM V_PRJ_UNIT WHERE PRJ_ID="
+				+ prjId;
+
+		// 1.查询界面的下拉列表框
+		String code1 = "UNIT_TYPE|QUALI_LEVEL";
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			// 2.进行分页查询构成页面
+			// pageMod = service.getListPage(pageNum, numPerPage);
+			RequestInfo request = wrapRequest(sql);
+			request.setPageSize(numPerPage);
+			request.setRowCount(-1);
+			request.setStartRow(1);
+			request.setSQL(sql);
+
+			AppInfo app = _service.queryListByPage(request);
+			allCount = app.getLongRowCount();
+
+			List<Map<String, Object>> result = app.getResultData();
+			Iterator<Map<String, Object>> it = result.iterator();
+			while (it.hasNext()) {
+				CJDWLOOKUP prj = new CJDWLOOKUP();
+				Map<String, Object> row = (Map<String, Object>) it.next();
+				BeanUtils.populate(prj, row);
+				pojos.add(prj);
+			}
+			dpc = new DivPageComp(pageNum, numPerPage, allCount, 10);
+
+			listPage = new ListPage("", searchForm, pojos, dpc);
+			listPage = DataAssemUtil.assemHead(listPage, pojos, null);
+
+			model.put("listPage", listPage);
+			model.put("random", Math.random());
+			model.put("PRJ_ID", prjId);
+			model.put("PRJ_NO", prjNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
+		return "forward:component/view/JSDWLookup.jsp";
+	}
+
+	/**
+	 * 执行施工单位查找带回
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/doSGDWLookupPageQuery")
+	@GET
+	@POST
+	public String doSGDWLookupPageQuery(Map<String, Object> model) {
+
+		String prjId = getParam("PRJ_ID");
+		String unitType = getParam("UNIT_TYPE");
+		String unitName = getParam("UNIT_NAME");
+		String quaLevel = getParam("QUALI_LEVEL");
+		String memo = getParam("MEMO");
+
+		String where = "";
+		if (!"".equalsIgnoreCase(prjId)) {
+			where += " AND PRJ_ID = " + prjId + " ";
+		}
+		if (!"".equalsIgnoreCase(unitName)) {
+			where += " AND UNIT_NAME LIKE '" + unitName + "%' ";
+		}
+		if (!"".equalsIgnoreCase(quaLevel)) {
+			where += " AND QUALI_LEVEL = '" + quaLevel + "' ";
+		}
+		if (!"".equalsIgnoreCase(unitType)) {
+			where += " AND UNIT_TYPE = '" + unitType + "'";
+		}
+		if (!"".equalsIgnoreCase(memo)) {
+			where += " AND MEMO LIKE '%" + memo + "%'";
+		}
+		if (where.length() > 0) {
+			where = " WHERE " + where;
+			where = where.replaceFirst("AND", "");
+		}
+
+		// 声明分页查询
+		String pn = getParam("pageNum");
+		String size = getParam("numPerPage");
+
+		int pageNum = Integer.parseInt(pn == null ? "1" : pn);
+		int numPerPage = Integer.parseInt(size == null ? "20" : size);
+
+		long allCount = 0;
+		List<CJDWLOOKUP> pojos = new ArrayList<CJDWLOOKUP>();
+		DivPageComp dpc = null;
+		ListPage listPage = null;
+		SearchForm searchForm = new SearchForm("common/doSGDWLookupPageQuery",
+				"");
+		String sql = "SELECT ID ,UNIT_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,GROUP_NAME,FUN_GETCODEDESC('UNIT_TYPE',UNIT_TYPE) UNIT_TYPE,FUN_GETCODEDESC('QUALI_LEVEL',QUALI_LEVEL) QUALI_LEVEL,CONTRACTOR,MEMO FROM V_PRJ_UNIT "
+				+ where;
+
+		// 1.查询界面的下拉列表框
+		String code1 = "UNIT_TYPE|QUALI_LEVEL";
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			// 2.进行分页查询构成页面
+			// pageMod = service.getListPage(pageNum, numPerPage);
+			RequestInfo request = wrapRequest(sql);
+			request.setPageSize(numPerPage);
+			request.setRowCount(-1);
+			request.setStartRow((pageNum - 1) * numPerPage + 1);
+			request.setSQL(sql);
+
+			AppInfo app = _service.queryListByPage(request);
+			allCount = app.getLongRowCount();
+
+			List<Map<String, Object>> result = app.getResultData();
+			Iterator<Map<String, Object>> it = result.iterator();
+			while (it.hasNext()) {
+				CJDWLOOKUP prj = new CJDWLOOKUP();
+				Map<String, Object> row = (Map<String, Object>) it.next();
+				BeanUtils.populate(prj, row);
+				pojos.add(prj);
+			}
+			dpc = new DivPageComp(pageNum, numPerPage, allCount, 10);
+
+			listPage = new ListPage("", searchForm, pojos, dpc);
+			listPage = DataAssemUtil.assemHead(listPage, pojos, null);
+
+			model.put("listPage", listPage);
+			model.put("random", Math.random());
+			model.put("PRJ_ID", prjId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
+		return "forward:component/view/SGDWLookup.jsp";
+	}
+
+	/**
+	 * 打开结构类型查询窗口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/doJGLXLookup")
+	@GET
+	@POST
+	public String doJGLXLookup(Map<String, Object> model) {
+		String prjId = "".equals(getParam("PRJ_ID")) ? "0" : getParam("PRJ_ID");
+		// 声明分页查询
+		int pageNum = 1;
+		int numPerPage = 20;
+
+		long allCount = 0;
+		List<JGLXLOOKUP> pojos = new ArrayList<JGLXLOOKUP>();
+		DivPageComp dpc = null;
+		ListPage listPage = null;
+		SearchForm searchForm = new SearchForm("common/doJGLXLookupPageQuery",
+				"");
+
+		String sql = "SELECT DISTINCT (SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,CONSTRUCT_TYPE,FUN_GETCODEDESC('CONSTRUCT_TYPE',CONSTRUCT_TYPE) CONSTRUCT_TYPE_NAME FROM V_PRJ_BUILDING WHERE PRJ_ID="
+				+ prjId;
+
+		try {
+			// 2.进行分页查询构成页面
+			// pageMod = service.getListPage(pageNum, numPerPage);
+			RequestInfo request = wrapRequest(sql);
+			request.setPageSize(numPerPage);
+			request.setRowCount(-1);
+			request.setStartRow(1);
+			request.setSQL(sql);
+
+			AppInfo app = _service.queryListByPage(request);
+			allCount = app.getLongRowCount();
+
+			List<Map<String, Object>> result = app.getResultData();
+			Iterator<Map<String, Object>> it = result.iterator();
+			while (it.hasNext()) {
+				JGLXLOOKUP prj = new JGLXLOOKUP();
+				Map<String, Object> row = (Map<String, Object>) it.next();
+				BeanUtils.populate(prj, row);
+				pojos.add(prj);
+			}
+			dpc = new DivPageComp(pageNum, numPerPage, allCount, 10);
+
+			listPage = new ListPage("", searchForm, pojos, dpc);
+			listPage = DataAssemUtil.assemHead(listPage, pojos, null);
+
+			model.put("listPage", listPage);
+			model.put("random", Math.random());
+			model.put("PRJ_ID", prjId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
+		return "forward:component/view/JGLXLookup.jsp";
+	}
+
+	/**
+	 * 执行结构类型查找带回
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/doJGLXLookupPageQuery")
+	@GET
+	@POST
+	public String doJGLXLookupPageQuery(Map<String, Object> model) {
+
+		String prjId = getParam("PRJ_ID");
+
+		String where = "";
+		if (!"".equalsIgnoreCase(prjId)) {
+			where += " AND PRJ_ID = " + prjId + " ";
+		}
+
+		if (where.length() > 0) {
+			where = " WHERE " + where;
+			where = where.replaceFirst("AND", "");
+		}
+
+		// 声明分页查询
+		String pn = getParam("pageNum");
+		String size = getParam("numPerPage");
+
+		int pageNum = Integer.parseInt(pn == null ? "1" : pn);
+		int numPerPage = Integer.parseInt(size == null ? "20" : size);
+
+		long allCount = 0;
+		List<JGLXLOOKUP> pojos = new ArrayList<JGLXLOOKUP>();
+		DivPageComp dpc = null;
+		ListPage listPage = null;
+		SearchForm searchForm = new SearchForm("common/doJGLXLookupPageQuery",
+				"");
+		String sql = "SELECT DISTINCT (SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,CONSTRUCT_TYPE,FUN_GETCODEDESC('CONSTRUCT_TYPE',CONSTRUCT_TYPE) CONSTRUCT_TYPE_NAME FROM V_PRJ_BUILDING "
+				+ where;
+
+		// 1.查询界面的下拉列表框
+
+		try {
+			// 2.进行分页查询构成页面
+			// pageMod = service.getListPage(pageNum, numPerPage);
+			RequestInfo request = wrapRequest(sql);
+			request.setPageSize(numPerPage);
+			request.setRowCount(-1);
+			request.setStartRow((pageNum - 1) * numPerPage + 1);
+			request.setSQL(sql);
+
+			AppInfo app = _service.queryListByPage(request);
+			allCount = app.getLongRowCount();
+
+			List<Map<String, Object>> result = app.getResultData();
+			Iterator<Map<String, Object>> it = result.iterator();
+			while (it.hasNext()) {
+				JGLXLOOKUP prj = new JGLXLOOKUP();
+				Map<String, Object> row = (Map<String, Object>) it.next();
+				BeanUtils.populate(prj, row);
+				pojos.add(prj);
+			}
+			dpc = new DivPageComp(pageNum, numPerPage, allCount, 10);
+
+			listPage = new ListPage("", searchForm, pojos, dpc);
+			listPage = DataAssemUtil.assemHead(listPage, pojos, null);
+
+			model.put("listPage", listPage);
+			model.put("random", Math.random());
+			model.put("PRJ_ID", prjId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
+		return "forward:component/view/JGLXLookup.jsp";
+	}
+
+	/**
+	 * 打开施工单位查询窗口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/doSGDWLookup")
+	@GET
+	@POST
+	public String doSGDWLookup(Map<String, Object> model) {
+		String prjId = "".equals(getParam("PRJ_ID")) ? "0" : getParam("PRJ_ID");
+		String prjNo = getParam("PRJNO");
+		// 声明分页查询
+		int pageNum = 1;
+		int numPerPage = 20;
+
+		long allCount = 0;
+		List<CJDWLOOKUP> pojos = new ArrayList<CJDWLOOKUP>();
+		DivPageComp dpc = null;
+		ListPage listPage = null;
+		SearchForm searchForm = new SearchForm("common/doSGDWLookupPageQuery",
+				"");
+
+		String sql = "SELECT ID ,UNIT_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,GROUP_NAME,FUN_GETCODEDESC('UNIT_TYPE',UNIT_TYPE) UNIT_TYPE,FUN_GETCODEDESC('QUALI_LEVEL',QUALI_LEVEL) QUALI_LEVEL,CONTRACTOR,MEMO FROM V_PRJ_UNIT WHERE PRJ_ID="
+				+ prjId;
+
+		// 1.查询界面的下拉列表框
+		String code1 = "UNIT_TYPE|QUALI_LEVEL";
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			// 2.进行分页查询构成页面
+			// pageMod = service.getListPage(pageNum, numPerPage);
+			RequestInfo request = wrapRequest(sql);
+			request.setPageSize(numPerPage);
+			request.setRowCount(-1);
+			request.setStartRow(1);
+			request.setSQL(sql);
+
+			AppInfo app = _service.queryListByPage(request);
+			allCount = app.getLongRowCount();
+
+			List<Map<String, Object>> result = app.getResultData();
+			Iterator<Map<String, Object>> it = result.iterator();
+			while (it.hasNext()) {
+				CJDWLOOKUP prj = new CJDWLOOKUP();
+				Map<String, Object> row = (Map<String, Object>) it.next();
+				BeanUtils.populate(prj, row);
+				pojos.add(prj);
+			}
+			dpc = new DivPageComp(pageNum, numPerPage, allCount, 10);
+
+			listPage = new ListPage("", searchForm, pojos, dpc);
+			listPage = DataAssemUtil.assemHead(listPage, pojos, null);
+
+			model.put("listPage", listPage);
+			model.put("random", Math.random());
+			model.put("PRJ_ID", prjId);
+			model.put("PRJ_NO", prjNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
+		return "forward:component/view/SGDWLookup.jsp";
+	}
+
+	/**
+	 * 执行建设单位查找带回
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/doJSDWLookupPageQuery")
+	@GET
+	@POST
+	public String doJSDWLookupPageQuery(Map<String, Object> model) {
+
+		String prjId = getParam("PRJ_ID");
+		String unitType = getParam("UNIT_TYPE");
+		String unitName = getParam("UNIT_NAME");
+		String quaLevel = getParam("QUALI_LEVEL");
+		String memo = getParam("MEMO");
+
+		String where = "";
+		if (!"".equalsIgnoreCase(prjId)) {
+			where += " AND PRJ_ID = " + prjId + " ";
+		}
+		if (!"".equalsIgnoreCase(unitName)) {
+			where += " AND UNIT_NAME LIKE '" + unitName + "%' ";
+		}
+		if (!"".equalsIgnoreCase(quaLevel)) {
+			where += " AND QUALI_LEVEL = '" + quaLevel + "' ";
+		}
+		if (!"".equalsIgnoreCase(unitType)) {
+			where += " AND UNIT_TYPE = '" + unitType + "'";
+		}
+		if (!"".equalsIgnoreCase(memo)) {
+			where += " AND MEMO LIKE '%" + memo + "%'";
+		}
+		if (where.length() > 0) {
+			where = " WHERE " + where;
+			where = where.replaceFirst("AND", "");
+		}
+
+		// 声明分页查询
+		String pn = getParam("pageNum");
+		String size = getParam("numPerPage");
+
+		int pageNum = Integer.parseInt(pn == null ? "1" : pn);
+		int numPerPage = Integer.parseInt(size == null ? "20" : size);
+
+		long allCount = 0;
+		List<CJDWLOOKUP> pojos = new ArrayList<CJDWLOOKUP>();
+		DivPageComp dpc = null;
+		ListPage listPage = null;
+		SearchForm searchForm = new SearchForm("common/doJSDWLookupPageQuery",
+				"");
+		String sql = "SELECT ID ,UNIT_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,GROUP_NAME,FUN_GETCODEDESC('UNIT_TYPE',UNIT_TYPE) UNIT_TYPE,FUN_GETCODEDESC('QUALI_LEVEL',QUALI_LEVEL) QUALI_LEVEL,CONTRACTOR,MEMO FROM V_PRJ_UNIT "
+				+ where;
+
+		// 1.查询界面的下拉列表框
+		String code1 = "UNIT_TYPE|QUALI_LEVEL";
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			// 2.进行分页查询构成页面
+			// pageMod = service.getListPage(pageNum, numPerPage);
+			RequestInfo request = wrapRequest(sql);
+			request.setPageSize(numPerPage);
+			request.setRowCount(-1);
+			request.setStartRow((pageNum - 1) * numPerPage + 1);
+			request.setSQL(sql);
+
+			AppInfo app = _service.queryListByPage(request);
+			allCount = app.getLongRowCount();
+
+			List<Map<String, Object>> result = app.getResultData();
+			Iterator<Map<String, Object>> it = result.iterator();
+			while (it.hasNext()) {
+				CJDWLOOKUP prj = new CJDWLOOKUP();
+				Map<String, Object> row = (Map<String, Object>) it.next();
+				BeanUtils.populate(prj, row);
+				pojos.add(prj);
+			}
+			dpc = new DivPageComp(pageNum, numPerPage, allCount, 10);
+
+			listPage = new ListPage("", searchForm, pojos, dpc);
+			listPage = DataAssemUtil.assemHead(listPage, pojos, null);
+
+			model.put("listPage", listPage);
+			model.put("random", Math.random());
+			model.put("PRJ_ID", prjId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
+		return "forward:component/view/JSDWLookup.jsp";
+	}
+
+	/**
+	 * 获取检查扣分细项
+	 * 
+	 * @return
+	 */
+	@Path("/doGetCheckItem")
+	@GET
+	@POST
+	public String doGetCheckItem() {
+		try {
+			// 获取选中的省
+			String value = getParam("item");
+			// 查询下属的市
+			List<Map<String, Object>> result = JDBCOracleUtil
+					.executeQuery("select 'CHECKITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent CODE_DESC from t_checklist_prj where UPPER_CODE='"
+							+ value + "' order by check_code".toUpperCase());
+
+			return "out:" + BeanUtil.cascadeComboxList2JSArray(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * 打开项目查询窗口
 	 * 
 	 * @param model
@@ -435,30 +930,4 @@ public class CommonAction extends BaseAction {
 
 		return "forward:component/view/ProjectLookup.jsp";
 	}
-
-	/**
-	 * 获取检查扣分细项
-	 * 
-	 * @return
-	 */
-	@Path("/doGetCheckItem")
-	@GET
-	@POST
-	public String doGetCheckItem() {
-		try {
-			// 获取选中的省
-			String value = getParam("item");
-			// 查询下属的市
-			List<Map<String, Object>> result = JDBCOracleUtil
-					.executeQuery("select 'CHECKITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent CODE_DESC from t_checklist_prj where UPPER_CODE='"
-							+ value + "' order by check_code".toUpperCase());
-
-			return "out:" + BeanUtil.cascadeComboxList2JSArray(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
 }

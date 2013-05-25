@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#projectcheck_head").height();
-var sql = "SELECT ACT_SCORE, TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE, PRJNO, PRJ_NAME, CHECKITEM, PRJ_ID  FROM V_PRJ_CHECK_SUM";
+var sql = "SELECT ACT_SCORE, TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE, PRJNO, PRJ_NAME, CHECKITEM, PRJ_ID,CHECKGROUP_NO, DEPT_COUNT  FROM V_PRJ_CHECK_SUM";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
@@ -15,6 +15,10 @@ var dsOption = {
 		name : "PRJ_NAME"
 	}, {
 		name : "PRJ_ID"
+	}, {
+		name : "CHECKGROUP_NO"
+	}, {
+		name : "DEPT_COUNT"
 	} ],
 	uniqueField : 'PRJ_ID',
 	recordType : 'json'
@@ -31,6 +35,11 @@ var colsOption = [ {
 	editable : false,
 	header : "项目名称"
 }, {
+	id : "CHECKGROUP_NO",
+	width : 200,
+	editable : false,
+	header : "检查单编号"
+}, {
 	id : "CHECKDATE",
 	width : 150,
 	editable : false,
@@ -40,6 +49,11 @@ var colsOption = [ {
 	width : 100,
 	editable : false,
 	header : "检查项目合计"
+}, {
+	id : "DEPT_COUNT",
+	width : 150,
+	editable : false,
+	header : "扣分分公司数量"
 }, {
 	id : "ACT_SCORE",
 	width : 100,
