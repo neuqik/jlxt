@@ -1,6 +1,6 @@
 --------------------------------------------
 -- Export file for user JLXT              --
--- Created by kuqi on 2013/5/25, 23:23:04 --
+-- Created by kuqi on 2013/5/26, 19:09:46 --
 --------------------------------------------
 
 spool user_objects_jxlt.log
@@ -789,7 +789,7 @@ comment on column PRJ_BUILDING.security_level
   is '安全等级';
 comment on column PRJ_BUILDING.construct_type
   is '结构类型';
-create unique index IDX_PRJ_BUILDING on PRJ_BUILDING (PRJ_ID, BUILDING_ID);
+create index IDX_PRJ_BUILDING on PRJ_BUILDING (PRJ_ID, BUILDING_ID);
 alter table PRJ_BUILDING
   add constraint PK_PRJ_BUILDING primary key (ID);
 
@@ -804,7 +804,7 @@ create table PRJ_CHECK
   checkitem      VARCHAR2(20),
   checkdate      DATE,
   act_score      NUMBER(10,2),
-  dept_id        VARCHAR2(20),
+  dept_id        VARCHAR2(20) not null,
   jsdw_id        NUMBER(20),
   sgdw_id        NUMBER(20),
   prj_progress   VARCHAR2(1000),
@@ -847,6 +847,8 @@ comment on column PRJ_CHECK.memo
   is '备注';
 comment on column PRJ_CHECK.checkgroup_no
   is '评分单编号';
+create index IDX_PRJ_CHECK_1 on PRJ_CHECK (PRJ_ID);
+create index IDX_PRJ_CHECK_2 on PRJ_CHECK (CHECKGROUP_NO, CHECKITEM);
 alter table PRJ_CHECK
   add constraint PK_PRJ_CHECK primary key (ID);
 
@@ -1029,6 +1031,7 @@ comment on column PRJ_ORG.responsbility
 comment on column PRJ_ORG.memo
   is '备注';
 create unique index IDX_PRJ_ORG on PRJ_ORG (EMP_ID, PRJ_ROLE, PRJ_ID, ENTERTIME);
+create index IDX_PRJ_ORG_PRJID on PRJ_ORG (PRJ_ID);
 alter table PRJ_ORG
   add constraint PK_PRJ_ORG primary key (ID);
 
@@ -1074,6 +1077,7 @@ comment on column PRJ_UNIT.contract_tel
   is '电话';
 comment on column PRJ_UNIT.memo
   is '备注';
+create index IDX_PRJ_UNIT on PRJ_UNIT (PRJ_ID);
 alter table PRJ_UNIT
   add constraint PK_PRJ_UNIT primary key (ID);
 
@@ -1099,6 +1103,7 @@ comment on column PRJ_UNIT_RELATE.dept_id
 comment on column PRJ_UNIT_RELATE.memo
   is '备注';
 create unique index IDX_PRJ_UNIT_RELATE on PRJ_UNIT_RELATE (PRJ_ID, DEPT_ID, VALID);
+create unique index PK_PRJ_UNIT_RELATE on PRJ_UNIT_RELATE (ID);
 
 prompt
 prompt Creating table TMP_EMP_IMP
@@ -1283,7 +1288,7 @@ prompt
 create sequence SEQ_ID
 minvalue 1001
 maxvalue 999999999999999999
-start with 1196
+start with 1216
 increment by 1
 cache 5;
 
@@ -1422,7 +1427,7 @@ prompt Creating view V_PRJ_CHECK_SUM
 prompt =============================
 prompt
 CREATE OR REPLACE VIEW V_PRJ_CHECK_SUM AS
-select (SELECT PRJNO FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJNO,(SELECT PRJ_NAME FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJ_NAME,COUNT(CHECKITEM) CHECKITEM, COUNT(DISTINCT DEPT_ID) DEPT_COUNT,SUM(ACT_SCORE) ACT_SCORE,CHECKDATE, PRJ_ID, CHECKGROUP_NO from prj_check a where valid='1'group by prj_id,checkdate,checkgroup_no order by checkgroup_no desc;
+select (SELECT PRJNO FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJNO,(SELECT PRJ_NAME FROM v_prj_info where v_prj_info.ID = a.prj_id) PRJ_NAME,COUNT(DISTINCT CHECKITEM) CHECKITEM, COUNT(DISTINCT DEPT_ID) DEPT_COUNT,SUM(ACT_SCORE) ACT_SCORE,PRJ_ID, CHECKGROUP_NO from prj_check a where valid='1'group by prj_id,checkgroup_no order by checkgroup_no desc;
 
 prompt
 prompt Creating view V_PRJ_ORG
@@ -1479,6 +1484,75 @@ END pkg_prjcheck;
 /
 
 prompt
+prompt Creating function FUN_GETACTBEGIN
+prompt =================================
+prompt
+CREATE OR REPLACE FUNCTION fun_getactbegin(prm_prjid IN NUMBER)
+  RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询建筑的最早实际开工
+  SELECT to_char(MIN(act_begin), 'YYYY-MM-DD')
+    INTO RESULT
+    FROM v_prj_building
+   WHERE prj_id = prm_prjid;
+
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN '';
+  WHEN OTHERS THEN
+    RETURN '';
+END fun_getactbegin;
+/
+
+prompt
+prompt Creating function FUN_GETACTEND
+prompt ===============================
+prompt
+CREATE OR REPLACE FUNCTION fun_getactend(prm_prjid IN NUMBER)
+  RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询建筑的最早实际开工
+  SELECT to_char(MIN(act_end), 'YYYY-MM-DD')
+    INTO RESULT
+    FROM v_prj_building
+   WHERE prj_id = prm_prjid;
+
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN '';
+  WHEN OTHERS THEN
+    RETURN '';
+END fun_getactend;
+/
+
+prompt
+prompt Creating function FUN_GETACTTIME
+prompt ================================
+prompt
+CREATE OR REPLACE FUNCTION fun_getacttime(prm_prjid IN NUMBER)
+  RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询建筑的最早实际开工
+  SELECT to_char(MAX(act_end) - MIN(act_begin))
+    INTO RESULT
+    FROM v_prj_building
+   WHERE prj_id = prm_prjid;
+
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN '';
+  WHEN OTHERS THEN
+    RETURN '';
+END fun_getacttime;
+/
+
+prompt
 prompt Creating function FUN_GETAGE
 prompt ============================
 prompt
@@ -1510,6 +1584,29 @@ EXCEPTION
   WHEN OTHERS THEN
     RETURN null;
 END fun_getbirth;
+/
+
+prompt
+prompt Creating function FUN_GETCHECKITEM
+prompt ==================================
+prompt
+CREATE OR REPLACE FUNCTION fun_getcheckitem(codevalue IN VARCHAR2)
+  RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询中文
+  SELECT tc.checkcontent
+    INTO RESULT
+    FROM t_checklist_prj tc
+   WHERE tc.check_code = codevalue;
+
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN codevalue;
+  WHEN OTHERS THEN
+    RETURN codevalue;
+END fun_getcheckitem;
 /
 
 prompt
@@ -1565,6 +1662,118 @@ END fun_getcodevalue;
 /
 
 prompt
+prompt Creating function FUN_GETCONSTRUCT
+prompt ==================================
+prompt
+CREATE OR REPLACE FUNCTION fun_getconstruct(prm_prjid IN NUMBER)
+  RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询建筑的内容
+  FOR c IN (SELECT DISTINCT construct_type
+              FROM v_prj_building
+             WHERE prj_id = prm_prjid) LOOP
+    RESULT := RESULT || fun_getcodedesc('CONSTRUCT_TYPE', c.construct_type) || '|';
+  END LOOP;
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN '';
+  WHEN OTHERS THEN
+    RETURN '';
+END fun_getconstruct;
+/
+
+prompt
+prompt Creating function FUN_GETDEPT
+prompt =============================
+prompt
+CREATE OR REPLACE FUNCTION fun_getdept(prm_prjid IN NUMBER) RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询单位信息
+  FOR c IN (SELECT DISTINCT dept_id
+              FROM v_prj_unit_relate
+             WHERE prj_id = prm_prjid) LOOP
+    RESULT := RESULT || fun_getcodedesc('DEPT_ID', c.dept_id) || '|';
+  END LOOP;
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN '';
+  WHEN OTHERS THEN
+    RETURN '';
+END fun_getdept;
+/
+
+prompt
+prompt Creating function FUN_GETFLOOR
+prompt ==============================
+prompt
+CREATE OR REPLACE FUNCTION fun_getfloor(prm_prjid IN NUMBER)
+  RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询建筑的最大高度
+  SELECT MAX(underfloor) || '/' || MAX(abovefloor)
+    INTO RESULT
+    FROM v_prj_building v
+   WHERE prj_id = prm_prjid;
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN '';
+  WHEN OTHERS THEN
+    RETURN '';
+END fun_getfloor;
+/
+
+prompt
+prompt Creating function FUN_GETHEIGHT
+prompt ===============================
+prompt
+CREATE OR REPLACE FUNCTION fun_getheight(prm_prjid IN NUMBER)
+  RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询建筑的最大高度
+  SELECT MAX(height)
+    INTO RESULT
+    FROM v_prj_building v
+   WHERE prj_id = prm_prjid;
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN '';
+  WHEN OTHERS THEN
+    RETURN '';
+END fun_getheight;
+/
+
+prompt
+prompt Creating function FUN_GETIMAGE
+prompt ==============================
+prompt
+CREATE OR REPLACE FUNCTION fun_getimage(prm_prjid IN NUMBER)
+  RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询建筑的内容
+  FOR c IN (SELECT DISTINCT image_progress
+              FROM v_prj_building
+             WHERE prj_id = prm_prjid) LOOP
+    RESULT := RESULT || fun_getcodedesc('IMAGE_PROGRESS', c.image_progress) || '|';
+  END LOOP;
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN '';
+  WHEN OTHERS THEN
+    RETURN '';
+END fun_getimage;
+/
+
+prompt
 prompt Creating function FUN_GETLOC
 prompt ============================
 prompt
@@ -1585,6 +1794,28 @@ EXCEPTION
   WHEN OTHERS THEN
     RETURN codevalue;
 END fun_getloc;
+/
+
+prompt
+prompt Creating function FUN_GETSECLEVEL
+prompt =================================
+prompt
+CREATE OR REPLACE FUNCTION fun_getseclevel(prm_prjid IN NUMBER)
+  RETURN VARCHAR2 IS
+  RESULT VARCHAR2(2000);
+BEGIN
+  -- 查询建筑的安全等级
+  SELECT fun_getcodedesc('SECURITY_LEVEL', MIN(security_level))
+    INTO RESULT
+    FROM v_prj_building v
+   WHERE prj_id = prm_prjid;
+  RETURN RESULT;
+EXCEPTION
+  WHEN no_data_found THEN
+    RETURN '';
+  WHEN OTHERS THEN
+    RETURN '';
+END fun_getseclevel;
 /
 
 prompt
@@ -1717,7 +1948,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
     -- 1.2.检查时间是否处于项目的有效期范围内
     IF d_checkdate > d_enddate THEN
       prm_appcode := '-1';
-      prm_errmsg  := '检查日期晚于竣工日期';
+      prm_errmsg  := '检查日期晚于竣工日期'|| to_char(d_enddate, 'YYYY-MM-DD');
       RETURN;
     END IF;
     IF d_checkdate < d_startdate THEN
@@ -1792,7 +2023,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
     -- 3.复制当前项目的基本信息到表中的冗余字段
     -- 3.1.处理多个单位的情况
     -- 如果没有检查表编码，则认为是第一个，然后返回编码
-    IF prm_checkgroup IS NULL OR prm_checkdate = '' THEN
+    IF prm_checkgroup IS NULL OR nvl(prm_checkdate,'') = '' THEN
       SELECT to_char(SYSDATE, 'YYYYMMDDHH24MISS')
         INTO prm_checkgroup_out
         FROM dual;

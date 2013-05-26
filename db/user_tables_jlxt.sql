@@ -1,5 +1,5 @@
 ﻿prompt PL/SQL Developer import file
-prompt Created on 2013年5月25日 by kuqi
+prompt Created on 2013年5月26日 by kuqi
 set feedback off
 set define off
 prompt Creating HRD_EMP...
@@ -735,7 +735,7 @@ comment on column PRJ_BUILDING.security_level
   is '安全等级';
 comment on column PRJ_BUILDING.construct_type
   is '结构类型';
-create unique index IDX_PRJ_BUILDING on PRJ_BUILDING (PRJ_ID, BUILDING_ID);
+create index IDX_PRJ_BUILDING on PRJ_BUILDING (PRJ_ID, BUILDING_ID);
 alter table PRJ_BUILDING
   add constraint PK_PRJ_BUILDING primary key (ID);
 
@@ -747,7 +747,7 @@ create table PRJ_CHECK
   checkitem      VARCHAR2(20),
   checkdate      DATE,
   act_score      NUMBER(10,2),
-  dept_id        VARCHAR2(20),
+  dept_id        VARCHAR2(20) not null,
   jsdw_id        NUMBER(20),
   sgdw_id        NUMBER(20),
   prj_progress   VARCHAR2(1000),
@@ -790,6 +790,8 @@ comment on column PRJ_CHECK.memo
   is '备注';
 comment on column PRJ_CHECK.checkgroup_no
   is '评分单编号';
+create index IDX_PRJ_CHECK_1 on PRJ_CHECK (PRJ_ID);
+create index IDX_PRJ_CHECK_2 on PRJ_CHECK (CHECKGROUP_NO, CHECKITEM);
 alter table PRJ_CHECK
   add constraint PK_PRJ_CHECK primary key (ID);
 
@@ -963,6 +965,7 @@ comment on column PRJ_ORG.responsbility
 comment on column PRJ_ORG.memo
   is '备注';
 create unique index IDX_PRJ_ORG on PRJ_ORG (EMP_ID, PRJ_ROLE, PRJ_ID, ENTERTIME);
+create index IDX_PRJ_ORG_PRJID on PRJ_ORG (PRJ_ID);
 alter table PRJ_ORG
   add constraint PK_PRJ_ORG primary key (ID);
 
@@ -1005,6 +1008,7 @@ comment on column PRJ_UNIT.contract_tel
   is '电话';
 comment on column PRJ_UNIT.memo
   is '备注';
+create index IDX_PRJ_UNIT on PRJ_UNIT (PRJ_ID);
 alter table PRJ_UNIT
   add constraint PK_PRJ_UNIT primary key (ID);
 
@@ -1027,6 +1031,7 @@ comment on column PRJ_UNIT_RELATE.dept_id
 comment on column PRJ_UNIT_RELATE.memo
   is '备注';
 create unique index IDX_PRJ_UNIT_RELATE on PRJ_UNIT_RELATE (PRJ_ID, DEPT_ID, VALID);
+create unique index PK_PRJ_UNIT_RELATE on PRJ_UNIT_RELATE (ID);
 
 prompt Creating TMP_EMP_IMP...
 create table TMP_EMP_IMP
@@ -1619,33 +1624,57 @@ commit;
 prompt 93 records loaded
 prompt Loading PRJ_BUILDING...
 insert into PRJ_BUILDING (id, prj_id, building_id, underfloor, abovefloor, height, building_area, act_begin, act_end, act_time, progress, image_progress, memo, valid, building_type, builder_license, license_date, security_level, construct_type)
-values (1137, 1136, '1#', '3', '12', '120m2', '1250.2', to_date('07-05-2013', 'dd-mm-yyyy'), to_date('23-05-2013', 'dd-mm-yyyy'), '120天', '凑活看吧', '02', '没啥说的', '1', '3', 'L(1230)', null, '01', '16');
+values (1137, 1136, '1#', '-3', '12', '120', '1250.2', to_date('07-05-2013', 'dd-mm-yyyy'), to_date('23-05-2013', 'dd-mm-yyyy'), '120天', '凑活看吧', '02', '没啥说的', '1', '3', 'L(1230)', null, '01', '16');
 insert into PRJ_BUILDING (id, prj_id, building_id, underfloor, abovefloor, height, building_area, act_begin, act_end, act_time, progress, image_progress, memo, valid, building_type, builder_license, license_date, security_level, construct_type)
-values (1187, 1171, '2号楼', '-4', '10', '192', '229', null, null, null, null, null, null, '1', '3', null, null, null, '13');
+values (1187, 1171, '2号楼', '-4', '10', '192', '1293', to_date('26-05-2013', 'dd-mm-yyyy'), to_date('30-05-2013', 'dd-mm-yyyy'), null, null, null, null, '1', '3', null, null, '02', '13');
 insert into PRJ_BUILDING (id, prj_id, building_id, underfloor, abovefloor, height, building_area, act_begin, act_end, act_time, progress, image_progress, memo, valid, building_type, builder_license, license_date, security_level, construct_type)
-values (1186, 1171, '1号楼', '-2', '8', '120', '129', null, null, null, null, null, null, '1', '1', null, null, null, '11');
+values (1186, 1171, '1号楼', '-4', '12', '113', '229', to_date('27-05-2013', 'dd-mm-yyyy'), to_date('30-05-2013', 'dd-mm-yyyy'), null, null, null, null, '1', '3', null, null, '01', '13');
 insert into PRJ_BUILDING (id, prj_id, building_id, underfloor, abovefloor, height, building_area, act_begin, act_end, act_time, progress, image_progress, memo, valid, building_type, builder_license, license_date, security_level, construct_type)
-values (1166, 1135, '13', '2', '32', '12.3m', '1239', to_date('12-05-2013', 'dd-mm-yyyy'), null, '1213', null, null, null, '1', '1', null, null, null, '11');
+values (1166, 1135, '13', '-2', '32', '12.3', '1239', to_date('12-05-2013', 'dd-mm-yyyy'), to_date('04-10-2013', 'dd-mm-yyyy'), '1213', null, null, null, '1', '1', null, null, '03', '11');
+insert into PRJ_BUILDING (id, prj_id, building_id, underfloor, abovefloor, height, building_area, act_begin, act_end, act_time, progress, image_progress, memo, valid, building_type, builder_license, license_date, security_level, construct_type)
+values (1206, 1205, '1号楼', '-2', '10', '120.4', '1029', to_date('26-05-2013', 'dd-mm-yyyy'), null, null, null, null, null, '1', '1', null, null, '02', '12');
 commit;
-prompt 4 records loaded
+prompt 5 records loaded
 prompt Loading PRJ_CHECK...
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1196, 1136, '1001', to_date('28-05-2013', 'dd-mm-yyyy'), 10, 'A00', 1147, 1147, null, '16', '1', to_date('05-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, '1', '20130525080824');
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1197, 1136, '1005', to_date('28-05-2013', 'dd-mm-yyyy'), 10, 'A01', 1147, 1147, null, '16', '1', to_date('05-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, '1', '20130525080824');
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1201, 1135, '1004', to_date('06-05-2013', 'dd-mm-yyyy'), 10, 'A00', 1170, 1148, null, '11', '12', to_date('01-05-2013', 'dd-mm-yyyy'), to_date('07-05-2013', 'dd-mm-yyyy'), null, '1', '20130526000213');
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1202, 1135, '1002', to_date('06-05-2013', 'dd-mm-yyyy'), 1, 'B09', 1170, 1148, null, '11', '12', to_date('01-05-2013', 'dd-mm-yyyy'), to_date('07-05-2013', 'dd-mm-yyyy'), null, '1', '20130526000213');
 insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
 values (1190, 1171, '1000', to_date('22-05-2013', 'dd-mm-yyyy'), 90, 'A01', 1181, 1181, null, '13', '23', to_date('21-05-2013', 'dd-mm-yyyy'), to_date('26-05-2013', 'dd-mm-yyyy'), null, '1', '20130525080244');
 insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
-values (1191, 1136, '2001', to_date('16-05-2013', 'dd-mm-yyyy'), 89, 'A00', 1146, 1147, null, '16', '1', to_date('05-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, '1', '20130525080824');
+values (1200, 1171, '4006', to_date('22-05-2013', 'dd-mm-yyyy'), 10.2, 'A01', 1199, 1181, null, '11', '23', to_date('21-05-2013', 'dd-mm-yyyy'), to_date('26-05-2013', 'dd-mm-yyyy'), null, '1', '20130525080244');
 insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
-values (1192, 1136, '2001', to_date('16-05-2013', 'dd-mm-yyyy'), 89, 'A01', 1146, 1147, null, '16', '1', to_date('05-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, '1', '20130525080824');
+values (1203, 1135, '3000', to_date('07-05-2013', 'dd-mm-yyyy'), 3, 'A00', 1170, 1148, null, '11', '12', to_date('01-05-2013', 'dd-mm-yyyy'), to_date('07-05-2013', 'dd-mm-yyyy'), null, '1', '20130526000213');
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1204, 1135, '3000', to_date('07-05-2013', 'dd-mm-yyyy'), 3, 'B09', 1170, 1148, null, '11', '12', to_date('01-05-2013', 'dd-mm-yyyy'), to_date('07-05-2013', 'dd-mm-yyyy'), null, '1', '20130526000213');
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1214, 1205, '4006', to_date('27-05-2013', 'dd-mm-yyyy'), 4, 'A00', 1212, 1213, null, '12', 'B10006', to_date('01-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, '1', '20130526001325');
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1215, 1205, '4006', to_date('27-05-2013', 'dd-mm-yyyy'), 4, 'B05', 1212, 1213, null, '12', 'B10006', to_date('01-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, '1', '20130526001325');
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1191, 1136, '2001', to_date('16-05-2013', 'dd-mm-yyyy'), 8.9, 'A00', 1146, 1147, null, '16', '1', to_date('05-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, '1', '20130525080824');
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1192, 1136, '2006', to_date('16-05-2013', 'dd-mm-yyyy'), 89, 'B01', 1147, 1146, '正在施工中', '16', '4', to_date('05-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), '这是备注吗？', '1', '20130525080824');
+insert into PRJ_CHECK (id, prj_id, checkitem, checkdate, act_score, dept_id, jsdw_id, sgdw_id, prj_progress, construct_type, emp_id, begindate, enddate, memo, valid, checkgroup_no)
+values (1198, 1171, '3013', to_date('22-05-2013', 'dd-mm-yyyy'), 9, 'A01', 1181, 1181, '项目进展似乎正常', '13', '23', to_date('21-05-2013', 'dd-mm-yyyy'), to_date('26-05-2013', 'dd-mm-yyyy'), '没有啥备注可写', '1', '20130525080244');
 commit;
-prompt 3 records loaded
+prompt 13 records loaded
 prompt Loading PRJ_INFO...
 insert into PRJ_INFO (id, prjno, contractno, prj_name, prj_area, quality_target, prj_starttime, prj_endtime, prj_time, prj_pic, prj_progress, memo, valid, location1, location2, location3, location4, buildingcount, contractarea, prj_level, prj_type, prj_invest, weekmeeting, prj_map, prj_region, prj_archive, weekmeetingtime, prj_archivetime)
-values (1171, 'P2013-002', 'HT120ASDFL', '铁西体育场', '123213', '2', to_date('21-05-2013', 'dd-mm-yyyy'), to_date('26-05-2013', 'dd-mm-yyyy'), null, null, null, null, '1', '110000000000', '110100000000', '110101000000', 'w', null, '12321', '3', '02', '123213', '01', '123.414501,41.790738', null, null, '11', null);
+values (1171, 'P2013-002', 'HT120ASDFL', '铁西体育场', '123213', '2', to_date('21-05-2013', 'dd-mm-yyyy'), to_date('26-05-2013', 'dd-mm-yyyy'), '5', null, null, null, '1', '110000000000', '110100000000', '110101000000', '不知道是什么街道', null, '12321', '3', '02', '123213', '01', '123.414501,41.790738', null, '0', '16', null);
+insert into PRJ_INFO (id, prjno, contractno, prj_name, prj_area, quality_target, prj_starttime, prj_endtime, prj_time, prj_pic, prj_progress, memo, valid, location1, location2, location3, location4, buildingcount, contractarea, prj_level, prj_type, prj_invest, weekmeeting, prj_map, prj_region, prj_archive, weekmeetingtime, prj_archivetime)
+values (1205, 'P2013-003', 'HT039182', '沈阳市安居工程', null, '2', to_date('01-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, null, null, null, '1', '210000000000', '210100000000', '210101000000', null, null, '1029', '2', '01', '123', '01', '123.435163,41.794448', null, null, '10', null);
 insert into PRJ_INFO (id, prjno, contractno, prj_name, prj_area, quality_target, prj_starttime, prj_endtime, prj_time, prj_pic, prj_progress, memo, valid, location1, location2, location3, location4, buildingcount, contractarea, prj_level, prj_type, prj_invest, weekmeeting, prj_map, prj_region, prj_archive, weekmeetingtime, prj_archivetime)
 values (1136, 'P2013-001', 'HT123123', '奥体中心', '123123', '2', to_date('05-05-2013', 'dd-mm-yyyy'), to_date('31-05-2013', 'dd-mm-yyyy'), null, null, '正在进行外墙施工', null, '1', '210000000000', '210100000000', '210101000000', 'wu ', null, '12312', '2', '01', '123213', '01', '123.377024,41.793158', null, null, '38', null);
 insert into PRJ_INFO (id, prjno, contractno, prj_name, prj_area, quality_target, prj_starttime, prj_endtime, prj_time, prj_pic, prj_progress, memo, valid, location1, location2, location3, location4, buildingcount, contractarea, prj_level, prj_type, prj_invest, weekmeeting, prj_map, prj_region, prj_archive, weekmeetingtime, prj_archivetime)
-values (1135, '1036', 'HT13202193', '2013暖房工程—青年宫保安寺', '12312', '2', to_date('09-05-2013', 'dd-mm-yyyy'), to_date('07-05-2013', 'dd-mm-yyyy'), null, null, '刚开始地基', '无备注', '1', '210000000000', '210100000000', '210104000000', '哪个接到', null, '123A', '2', '03', 'ASDFASF', '02', '123.411016,41.761096', 'ASDF', '0', '17', null);
+values (1135, 'P2013-004', 'HT13202193', '2013暖房工程—青年宫保安寺', '12312', '2', to_date('01-05-2013', 'dd-mm-yyyy'), to_date('07-05-2013', 'dd-mm-yyyy'), null, null, '刚开始地基', '无备注', '1', '210000000000', '210100000000', '210104000000', '哪个接到', null, '1233', '2', '03', 'ASDFASF', '02', '123.411016,41.761096', 'ASDF', '0', '17', null);
 commit;
-prompt 3 records loaded
+prompt 4 records loaded
 prompt Loading PRJ_MAJORCHECK...
 prompt Table is empty
 prompt Loading PRJ_ORG...
@@ -1666,6 +1695,8 @@ values (1163, '1', '3', 1136, to_date('12-05-2013', 'dd-mm-yyyy'), null, null, n
 insert into PRJ_ORG (id, emp_id, prj_role, prj_id, entertime, leavetime, responsbility, memo, valid)
 values (1176, '12', '1', 1135, to_date('12-05-2013', 'dd-mm-yyyy'), to_date('25-05-2013', 'dd-mm-yyyy'), null, null, '1');
 insert into PRJ_ORG (id, emp_id, prj_role, prj_id, entertime, leavetime, responsbility, memo, valid)
+values (1209, 'B10006', '1', 1205, to_date('26-05-2013', 'dd-mm-yyyy'), null, null, null, '1');
+insert into PRJ_ORG (id, emp_id, prj_role, prj_id, entertime, leavetime, responsbility, memo, valid)
 values (1159, '7', '1', 1136, to_date('13-05-2013', 'dd-mm-yyyy'), null, null, null, '0');
 insert into PRJ_ORG (id, emp_id, prj_role, prj_id, entertime, leavetime, responsbility, memo, valid)
 values (1188, '23', '1', 1171, to_date('20-05-2013', 'dd-mm-yyyy'), null, null, null, '1');
@@ -1673,13 +1704,19 @@ insert into PRJ_ORG (id, emp_id, prj_role, prj_id, entertime, leavetime, respons
 values (1157, '1', '2', 1135, to_date('12-05-2013', 'dd-mm-yyyy'), null, null, null, '0');
 insert into PRJ_ORG (id, emp_id, prj_role, prj_id, entertime, leavetime, responsbility, memo, valid)
 values (1158, '2', '1', 1135, to_date('15-05-2013', 'dd-mm-yyyy'), null, null, null, '0');
+insert into PRJ_ORG (id, emp_id, prj_role, prj_id, entertime, leavetime, responsbility, memo, valid)
+values (1210, 'B10006', '2', 1205, to_date('26-05-2013', 'dd-mm-yyyy'), null, null, null, '1');
+insert into PRJ_ORG (id, emp_id, prj_role, prj_id, entertime, leavetime, responsbility, memo, valid)
+values (1211, '11', '3', 1205, to_date('19-05-2013', 'dd-mm-yyyy'), null, null, null, '1');
 commit;
-prompt 12 records loaded
+prompt 15 records loaded
 prompt Loading PRJ_UNIT...
 insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
 values (1147, 1136, '不知道1', '不知道集团', '01', '22', 'asdfaf', '不认识', null, null, null, '1');
 insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
 values (1149, 1136, '不知道3', 'asdfa', '02', null, null, '3243', null, null, null, '0');
+insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
+values (1199, 1171, '江苏第八工程集团第四分公司', '江苏第八工程集团', '06', '33', null, '不知道', null, null, null, '1');
 insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
 values (1146, 1136, '不知道', '不知道集团', '05', '12', '在哪呢？', '张三', '老板', '谁知道', '无备注', '1');
 insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
@@ -1687,11 +1724,15 @@ values (1151, 1135, null, null, null, null, null, null, null, null, null, '0');
 insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
 values (1170, 1135, '中建五局', '中建', '01', '31', null, '局长', null, null, null, '1');
 insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
+values (1212, 1205, '沈阳市第一建设工程公司', '参建集团', '01', null, null, 'a', null, null, null, '1');
+insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
 values (1148, 1135, '不知道3', '鬼知道是那么集团', '10', '22', '3a', 'what?', null, null, null, '1');
 insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
 values (1181, 1171, '南通四建集团有限公司沈阳分公司第一工程队', '南通四建集团有限公司', '01', '11', null, '234', null, null, null, '1');
+insert into PRJ_UNIT (id, prj_id, unit_name, group_name, unit_type, quali_level, unit_address, contractor, title, contract_tel, memo, valid)
+values (1213, 1205, '沈阳市第二建设工程公司', '参建集团', '13', '34', null, 'b', null, null, null, '1');
 commit;
-prompt 7 records loaded
+prompt 10 records loaded
 prompt Loading PRJ_UNIT_RELATE...
 insert into PRJ_UNIT_RELATE (id, prj_id, dept_id, memo, valid)
 values (1145, 1136, 'A01', '负责第3、4、5栋楼', '1');
@@ -1703,8 +1744,12 @@ insert into PRJ_UNIT_RELATE (id, prj_id, dept_id, memo, valid)
 values (1141, 1136, 'A00', '负责这个项目', '1');
 insert into PRJ_UNIT_RELATE (id, prj_id, dept_id, memo, valid)
 values (1177, 1135, 'B09', '辅助工作', '1');
+insert into PRJ_UNIT_RELATE (id, prj_id, dept_id, memo, valid)
+values (1207, 1205, 'A00', '总体负责', '1');
+insert into PRJ_UNIT_RELATE (id, prj_id, dept_id, memo, valid)
+values (1208, 1205, 'B05', '监理负责', '1');
 commit;
-prompt 5 records loaded
+prompt 7 records loaded
 prompt Loading TMP_EMP_IMP...
 insert into TMP_EMP_IMP (col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19, col20, col21, col22, col23, col24, col25, col26, col27, col28, col29, col30, col31, col32, col33, col34, col35, col36, col37, col38, col39, col40, col41, col42, col43, col44, col45)
 values ('1', '李学志', '49', '男', '210104196307055258', '已婚', '党员', '汉', '13904041007', null, null, null, '沈阳市皇姑区宁山中路66-1号532', '沈阳', '1993/7/1', '20', '硕士', '沈阳建筑工程学院', '97-1-15', '建筑工程', '土建', '所长', '高级工程师', '建筑施工', '2002.12.7', '0044584', '辽宁省人事厅', '评定', '21000495', '00249138', '97033', '无', '01130', '无', '201101321', null, null, null, null, '否', null, null, '在职', null, null);
@@ -2209,11 +2254,11 @@ values (230, 'REGMAJOR', '105', '注册专业', '通信工程', '1', null);
 insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
 values (916, 'CONSTRUCT_TYPE', '11', '结构类型', '砖混', '1', null);
 insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
-values (917, 'CONSTRUCT_TYPE', '12', '结构类型', '框架' || chr(9) || '', '1', null);
+values (917, 'CONSTRUCT_TYPE', '12', '结构类型', '框架', '1', null);
 insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
-values (918, 'CONSTRUCT_TYPE', '13', '结构类型', '排架' || chr(9) || '', '1', null);
+values (918, 'CONSTRUCT_TYPE', '13', '结构类型', '排架', '1', null);
 insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
-values (919, 'CONSTRUCT_TYPE', '14', '结构类型', '剪力墙' || chr(9) || '', '1', null);
+values (919, 'CONSTRUCT_TYPE', '14', '结构类型', '剪力墙', '1', null);
 insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
 values (920, 'CONSTRUCT_TYPE', '15', '结构类型', '框剪', '1', null);
 insert into T_CODELIST (id, code_type, code_value, code_type_desc, code_desc, valid, memo)
