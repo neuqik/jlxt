@@ -16,6 +16,7 @@ import net.biz.project.model.IPRJService;
 import net.biz.project.vo.PRJ_BUILDING;
 import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
+import net.biz.project.vo.PRJ_INFO_EXT;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
@@ -113,7 +114,7 @@ public class PRJAction extends BaseAction {
 	@POST
 	public String toEditProjectInfo(Map<String, Object> model) {
 		String prjId = MVC.ctx().getRequest().getParameter("PRJ_ID");
-		String sql = "SELECT BUILDINGCOUNT, CONTRACTAREA, CONTRACTNO, ID, LOCATION1, LOCATION2, LOCATION3, LOCATION4, MEMO, PRJNO, PRJ_ARCHIVE, PRJ_ARCHIVETIME, PRJ_AREA, PRJ_ENDTIME, PRJ_INVEST, PRJ_LEVEL, PRJ_MAP, PRJ_NAME, PRJ_PIC, PRJ_PROGRESS, PRJ_REGION, PRJ_STARTTIME, PRJ_TIME, PRJ_TYPE, QUALITY_TARGET, VALID, WEEKMEETING, WEEKMEETINGTIME FROM V_PRJ_INFO WHERE ID="
+		String sql = "SELECT BUILDINGCOUNT, CONTRACTAREA, CONTRACTNO, ID, LOCATION1, LOCATION2, LOCATION3, LOCATION4, MEMO, PRJNO, PRJ_ARCHIVE, PRJ_ARCHIVETIME, PRJ_AREA, PRJ_ENDTIME, PRJ_INVEST, PRJ_LEVEL, PRJ_MAP, PRJ_NAME, PRJ_PIC, PRJ_PROGRESS, PRJ_REGION, PRJ_STARTTIME, (PRJ_ENDTIME-PRJ_STARTTIME) PRJ_TIME, PRJ_TYPE, QUALITY_TARGET, VALID, WEEKMEETING, WEEKMEETINGTIME FROM V_PRJ_INFO WHERE ID="
 				+ prjId;
 		String code1 = "DEPT_ID|PRJ_LEVEL|PRJ_TYPE|WEEKMEETING|WEEKMEETINGTIME|PRJ_ARCHIVE|LOCATION1|QUALITY_TARGET";
 		Map a = CodeList.getCodeMap();
@@ -122,10 +123,19 @@ public class PRJAction extends BaseAction {
 			for (int i = 0; i < codes.length; i++) {
 				model.put(codes[i], getCodeList(codes[i]));
 			}
-			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql);
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql
+					.toUpperCase());
 			PRJ_INFO prj = new PRJ_INFO();
 			BeanUtils.populate(prj, result.get(0));
 			model.put("prj", prj);
+			// 获取辅助显示信息
+			sql = "SELECT fun_getconstruct(ID) CONSTRUCT_TYPE,fun_getheight(ID) HEIGHT,fun_getfloor(ID) FLOOR, fun_getseclevel(ID) SECURITY_LEVEL ,fun_getactbegin(ID) ACT_BEGIN, fun_getactend(ID) ACT_END, fun_getacttime(ID) ACT_TIME, fun_getdept(ID) DEPT_ID, fun_getimage(ID) IMAGE_PROGRESS FROM V_PRJ_INFO WHERE ID="
+					+ prjId;
+			List<Map<String, Object>> result1 = JDBCOracleUtil.executeQuery(sql
+					.toUpperCase());
+			PRJ_INFO_EXT prj1 = new PRJ_INFO_EXT();
+			BeanUtils.populate(prj1, result1.get(0));
+			model.put("prjExt", prj1);
 			// 获取LOCATION2和LOCATION3的CodeList值
 			model.put("LOCATION2", CodeList.getLocation2(prj.getLOCATION1()));
 			model.put("LOCATION3", CodeList.getLocation3(prj.getLOCATION2()));
@@ -603,7 +613,7 @@ public class PRJAction extends BaseAction {
 	}
 
 	/**
-	 * 增加评分
+	 * 增加检查单
 	 * 
 	 * @param model
 	 * @return
@@ -643,7 +653,28 @@ public class PRJAction extends BaseAction {
 			PRJ_CHECK newPrj = new PRJ_CHECK();
 			newPrj.setCHECKGROUP_NO(checkgroup);
 			model.put("prj", newPrj);
-			return successJSON("添加评分成功", "dialog", "prj/addscore", "tjpf");
+			return successJSONReload("保存评分成功", "dialog", "prj/showcheckgroup",
+					"bjpf");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 删除评分
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/delscore")
+	@GET
+	@POST
+	public String toDelScore(Map<String, String> model) {
+		try {
+			String Id = getParam("ID");
+			myservice.delScore(Id);
+			return successJSON("删除评分成功", "dialog", "prj/showcheckgroup", "sckf");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
@@ -671,5 +702,99 @@ public class PRJAction extends BaseAction {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
+	}
+
+	/**
+	 * 显示检查单信息
+	 * 
+	 * @return
+	 */
+	@Path("/showcheckgroup")
+	@GET
+	@POST
+	public String toShowCheckGroup(Map<String, String> model) {
+		String prjId = getParam("PRJ_ID");
+		String checkgroupNo = getParam("CHECKGROUP_NO");
+		model.put("PRJ_ID", prjId);
+		model.put("CHECKGROUP_NO", checkgroupNo);
+		return "forward:prj/view/showcheckgroup.jsp";
+	}
+
+	/**
+	 * 增加扣分
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/addscorebygroup")
+	@GET
+	@POST
+	public String toAddScoreByGroup(Map<String, Object> model) {
+		// 获取检查单编号
+		String checkgroupNo = getParam("CHECKGROUP_NO");
+		String code1 = "ITEM|";
+
+		// 获取对应的PRJ_ID
+
+		Map a = CodeList.getCodeMap();
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			// 获取项目编号
+			List<Map<String, Object>> result = JDBCOracleUtil
+					.executeQuery("SELECT PRJ_ID,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME FROM V_PRJ_CHECK WHERE CHECKGROUP_NO='"
+							+ checkgroupNo + "' AND ROWNUM = 1");
+
+			PRJ_CHECK prjCheck = new PRJ_CHECK();
+			prjCheck.setCHECKGROUP_NO(checkgroupNo);
+			prjCheck.setPRJ_ID(String.valueOf(result.get(0).get("PRJ_ID")));
+			prjCheck.setPRJNO(String.valueOf(result.get(0).get("PRJNO")));
+			prjCheck.setPRJ_NAME(String.valueOf(result.get(0).get("PRJ_NAME")));
+			model.put("CHECKGROUP_NO", checkgroupNo);
+			model.put("prj", prjCheck);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return "forward:prj/view/addscore.jsp";
+	}
+
+	/**
+	 * 编辑扣分
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/editscore")
+	@GET
+	@POST
+	public String toEditScore(Map<String, Object> model) {
+		// 获取检查单编号
+		String id = getParam("ID");
+
+		String sql = "SELECT ACT_SCORE, TO_CHAR(BEGINDATE,'YYYY-MM-DD') BEGINDATE, TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE, CHECKGROUP_NO, (SELECT UPPER_CODE FROM T_CHECKLIST_PRJ WHERE CHECK_CODE = CHECKITEM) ITEM, CHECKITEM, CONSTRUCT_TYPE,FUN_GETCODEDESC('CONSTRUCT_TYPE',CONSTRUCT_TYPE) CONSTRUCT_TYPE_NAME, FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID, (SELECT EMP_NAME FROM HRD_EMP A WHERE A.EMP_ID=C.EMP_ID) EMP_ID, TO_CHAR(ENDDATE,'YYYY-MM-DD') ENDDATE, ID, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=JSDW_ID) UNIT_NAME, JSDW_ID, MEMO, (SELECT PRJNO FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJNO,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJ_NAME, PRJ_ID, PRJ_PROGRESS, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=SGDW_ID) SGDW_NAME, SGDW_ID, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_CHECK C WHERE  ID="
+				+ id;
+		// 获取对应的PRJ_ID
+		String code1 = "ITEM|";
+		Map a = CodeList.getCodeMap();
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql);
+			PRJ_CHECK prj = new PRJ_CHECK();
+			BeanUtils.populate(prj, result.get(0));
+
+			model.put("CHECKGROUP_NO", prj.getCHECKGROUP_NO());
+			model.put("CHECKITEM", CodeList.getCheckItem(prj.getITEM()));
+			model.put("prj", prj);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+		return "forward:prj/view/addscore.jsp";
 	}
 }

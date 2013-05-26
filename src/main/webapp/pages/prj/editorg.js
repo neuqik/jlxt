@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#editorg_head").height();
-var sql = "SELECT EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=A.EMP_ID) EMP_NAME, TO_CHAR(ENTERTIME,'YYYY-MM-DD') ENTERTIME, ID, TO_CHAR(LEAVETIME,'YYYY-MM-DD') LEAVETIME, MEMO, PRJ_ID, FUN_GETCODEDESC('PRJ_ROLE',PRJ_ROLE) PRJ_ROLE, RESPONSBILITY, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_ORG A WHERE PRJ_ID="
+var sql = "SELECT EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=A.EMP_ID) EMP_NAME, TO_CHAR(ENTERTIME,'YYYY-MM-DD') ENTERTIME, ID, TO_CHAR(LEAVETIME,'YYYY-MM-DD') LEAVETIME, MEMO, PRJ_ID, FUN_GETCODEDESC('PRJ_ROLE',PRJ_ROLE) PRJ_ROLE, FUN_GETCODEDESC('DEPT_ID',(SELECT DEPT_ID FROM HRD_EMP WHERE EMP_ID = A.EMP_ID)) DEPT_ID, RESPONSBILITY, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_ORG A WHERE PRJ_ID="
 		+ prjId;
 // 定义数据类型
 var dsOption = {
@@ -21,6 +21,8 @@ var dsOption = {
 	}, {
 		name : "PRJ_ROLE"
 	}, {
+		name : "DEPT_ID"
+	}, {
 		name : "RESPONSBILITY"
 	}, {
 		name : "VALID"
@@ -37,7 +39,7 @@ var colsOption = [ {
 	id : "PRJ_ROLE",
 	width : 150,
 	editable : false,
-	header : "项目中角色"
+	header : "项目职务"
 }, {
 	id : "EMP_ID",
 	width : 100,
@@ -52,7 +54,12 @@ var colsOption = [ {
 	id : "RESPONSBILITY",
 	width : 200,
 	editable : false,
-	header : "项目责任"
+	header : "项目分工"
+}, {
+	id : "DEPT_ID",
+	width : 200,
+	editable : false,
+	header : "部门/分公司"
 }, {
 	id : "ENTERTIME",
 	width : 150,

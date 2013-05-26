@@ -22,7 +22,7 @@
 						size="30" readonly="readonly" value="${prj.EMP_NAME}" />
 				</p>
 				<p>
-					<label>项目中角色：</label> <select name="PRJ_ROLE"
+					<label>项目职务：</label> <select name="PRJ_ROLE"
 						class="combox required"><option value="">请选择...</option>
 						<c:forEach var="item" items="${PRJ_ROLE}">
 							<option value="${item.codeValue}"
@@ -42,7 +42,7 @@
 						href="javascript:;">选择</a>
 				</p>
 				<p>
-					<label>项目责任：</label><input type="text" size="30"
+					<label>项目分工：</label><input type="text" size="30"
 						name="RESPONSBILITY" value="${prj.RESPONSBILITY}" maxlength="200" />
 				</p>
 				<p>

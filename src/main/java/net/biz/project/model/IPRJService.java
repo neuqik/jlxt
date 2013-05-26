@@ -110,12 +110,22 @@ public interface IPRJService {
 	 * @throws Exception
 	 */
 	public String saveMap(String pRJNO, String pRJMAP) throws Exception;
+
 	/**
 	 * 保存新的评分记录
+	 * 
 	 * @param prjInfo
 	 * @return 返回检查表编号
 	 * @throws Exception
 	 */
 	public String saveNewScore(PRJ_CHECK prjInfo) throws Exception;
+
+	/**
+	 * 删除评分记录
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
+	public void delScore(String id) throws Exception;
 
 }

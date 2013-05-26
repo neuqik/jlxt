@@ -9,7 +9,7 @@
 			<div class="pageFormContent" layoutH="58">
 				<p>
 					<label>项目编号：</label><input type="text" size="30" name="PRJNO"
-						maxlength="20"  readonly="readonly"/>
+						maxlength="20" readonly="readonly" />
 				</p>
 				<p>
 					<label>合同编号：</label><input type="text" size="30" name="CONTRACTNO"
@@ -20,14 +20,12 @@
 						maxlength="200" class="required" />
 				</p>
 				<p>
-					<label>合同面积：</label><input type="text" size="30"
-						name="CONTRACTAREA" maxlength="20" class="required" />
+					<label>项目类别：</label> <select name="PRJ_TYPE"
+						class="combox required"><option value="">请选择...</option>
+						<c:forEach var="item" items="${PRJ_TYPE}">
+							<option value="${item.codeValue}">${item.codeDesc}</option>
+						</c:forEach></select>
 				</p>
-				<p>
-					<label>单体数量(计算)：</label><input type="text" size="30"
-						name="BUILDINGCOUNT" maxlength="22" readonly="readonly" />
-				</p>
-
 				<p>
 					<label>项目等级：</label> <select name="PRJ_LEVEL"
 						class="combox required"><option value="">请选择...</option>
@@ -36,64 +34,41 @@
 						</c:forEach></select>
 				</p>
 				<p>
-					<label>项目类别：</label> <select name="PRJ_TYPE"
-						class="combox required"><option value="">请选择...</option>
-						<c:forEach var="item" items="${PRJ_TYPE}">
-							<option value="${item.codeValue}">${item.codeDesc}</option>
-						</c:forEach></select>
+					<label>合同面积：</label><input type="text" size="30"
+						name="CONTRACTAREA" maxlength="20" class="required" />
 				</p>
 				<p>
-					<label>项目总投资：</label><input type="text" size="30" name="PRJ_INVEST"
-						class="required" maxlength="20" />
-				</p>
-				<p>
-					<label>项目面积(平方米)：</label><input type="text" size="30"
+					<label>实际面积(计算)：</label><input type="text" size="30"
 						name="PRJ_AREA" maxlength="20" class="required" />
 				</p>
 				<p>
-					<label>项目开工时间：</label> <input type="text" name="PRJ_STARTTIME"
+					<label>项目投资：</label><input type="text" size="30" name="PRJ_INVEST"
+						class="required" maxlength="20" />
+				</p>
+				<p>
+					<label>单体数量(计算)：</label><input type="text" size="30"
+						name="BUILDINGCOUNT" maxlength="22" readonly="readonly" />
+				</p>
+				<p>
+					<label>质量目标：</label> <select name="QUALITY_TARGET"
+						class="combox required"><option value="">请选择...</option>
+						<c:forEach var="item" items="${QUALITY_TARGET}">
+							<option value="${item.codeValue}">${item.codeDesc}</option>
+						</c:forEach></select>
+				</p>
+				<p>
+					<label>合同开工：</label> <input type="text" name="PRJ_STARTTIME"
 						class="date required" size="30" yearstart="-80" yearend="5" /><a
 						class="inputDateButton" href="javascript:;">选择</a>
 				</p>
 				<p>
-					<label>项目结束时间：</label> <input type="text" name="PRJ_ENDTIME"
+					<label>合同结束：</label> <input type="text" name="PRJ_ENDTIME"
 						class="date required" size="30" yearstart="-80" yearend="5" /><a
 						class="inputDateButton" href="javascript:;">选择</a>
 				</p>
 				<p>
-					<label>周例会星期：</label><select name="WEEKMEETING" class="combox"><option
-							value="">请选择...</option>
-						<c:forEach var="item" items="${WEEKMEETING}">
-							<option value="${item.codeValue}">${item.codeDesc}</option>
-						</c:forEach></select>
-				</p>
-				<p>
-					<label>周例会时间：</label><select name="WEEKMEETINGTIME" class="combox"><option
-							value="">请选择...</option>
-						<c:forEach var="item" items="${WEEKMEETINGTIME}">
-							<option value="${item.codeValue}">${item.codeDesc}</option>
-						</c:forEach></select>
-				</p>
-				<p>
-					<label>项目地图：</label><input type="text" size="30" name="PRJ_MAP"
-						maxlength="200" />
-				</p>
-				<p>
-					<label>施工区域：</label><input type="text" size="30" name="PRJ_REGION"
-						maxlength="20" />
-				</p>
-				<p>
-					<label>档案归档标志：</label> <select name="PRJ_ARCHIVE" class="combox"><option
-							value="">请选择...</option>
-						<c:forEach var="item" items="${PRJ_ARCHIVE}">
-							<option value="${item.codeValue}">${item.codeDesc}</option>
-						</c:forEach></select>
-				</p>
-
-				<p>
-					<label>档案归档时间：</label> <input type="text" name="PRJ_ARCHIVETIME"
-						class="date" size="30" yearstart="-80" yearend="5" /><a
-						class="inputDateButton" href="javascript:;">选择</a>
+					<label>合同工期(天)：</label><input type="text" size="30" name="PRJ_TIME"
+						value="${prj.PRJ_TIME}" maxlength="20" />
 				</p>
 				<p>
 					<label>项目地址(省)：</label> <select id="LOCATION1" name="LOCATION1"
@@ -125,23 +100,43 @@
 						name="LOCATION4" maxlength="2000" />
 				</p>
 				<p>
-					<label>质量目标：</label> <select name="QUALITY_TARGET"
-						class="combox required"><option value="">请选择...</option>
-						<c:forEach var="item" items="${QUALITY_TARGET}">
+					<label>例会时间：</label><select name="WEEKMEETING" class="combox"><option
+							value="">请选择...</option>
+						<c:forEach var="item" items="${WEEKMEETING}">
+							<option value="${item.codeValue}">${item.codeDesc}</option>
+						</c:forEach></select> <select name="WEEKMEETINGTIME" class="combox"><option
+							value="">请选择...</option>
+						<c:forEach var="item" items="${WEEKMEETINGTIME}">
 							<option value="${item.codeValue}">${item.codeDesc}</option>
 						</c:forEach></select>
 				</p>
 				<p>
-					<label>项目工期：</label><input type="text" size="30" name="PRJ_TIME"
+					<label>项目进展：</label><input type="text" size="30"
+						name="PRJ_PROGRESS" maxlength="1000" />
+				</p>
+				<p>
+					<label>归档时间：</label> <input type="text" name="PRJ_ARCHIVETIME"
+						class="date" size="30" yearstart="-80" yearend="5" /><a
+						class="inputDateButton" href="javascript:;">选择</a>
+				</p>
+				<p>
+					<label>归档标志：</label> <select name="PRJ_ARCHIVE" class="combox"><option
+							value="">请选择...</option>
+						<c:forEach var="item" items="${PRJ_ARCHIVE}">
+							<option value="${item.codeValue}">${item.codeDesc}</option>
+						</c:forEach></select>
+				</p>
+				<p>
+					<label>项目地图：</label><input type="text" size="30" name="PRJ_MAP"
+						maxlength="200" />
+				</p>
+				<p>
+					<label>施工区域：</label><input type="text" size="30" name="PRJ_REGION"
 						maxlength="20" />
 				</p>
 				<p>
 					<label>项目图片：</label><input type="text" size="30" name="PRJ_PIC"
 						maxlength="200" />
-				</p>
-				<p>
-					<label>项目进展情况：</label><input type="text" size="30"
-						name="PRJ_PROGRESS" maxlength="1000" />
 				</p>
 				<p>
 					<label>备注：</label><input type="text" size="30" name="MEMO"

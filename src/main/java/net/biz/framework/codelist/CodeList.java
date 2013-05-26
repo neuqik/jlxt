@@ -320,4 +320,44 @@ public class CodeList {
 		}
 		return loc3;
 	}
+
+	public static List<Code> getCheckItem(String item) throws SQLException,
+			InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
+		List<Code> items = new ArrayList<Code>();
+		String sql = "select 'CHECKITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent CODE_DESC from t_checklist_prj where member='1' and upper_code='"
+				+ item + "' order by check_code";
+		List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(
+				sql.toUpperCase(), JDBCOracleUtil.getConnection());
+		String lastCodeType = "";
+		Iterator<Map<String, Object>> it = result.iterator();
+		while (it.hasNext()) {
+			Map<String, Object> row = (Map<String, Object>) it.next();
+
+			Code code = new Code();
+			String codeType = (String) row.get("CODE_TYPE");
+			String codeValue = (String) row.get("CODE_VALUE");
+			String codeDesc = (String) row.get("CODE_DESC");
+			if ("".equals(lastCodeType)) {
+				lastCodeType = codeType;
+			}
+			code.setCodeType(codeType);
+			code.setCodeValue(codeValue);
+			code.setCodeDesc(codeDesc);
+			// 如果还是在这个里面，则添加到list中
+			if (lastCodeType.equals(codeType)) {
+				items.add(code);
+				if (!it.hasNext()) {
+					System.out.println("装载代码:" + lastCodeType);
+					codeMap.put(lastCodeType, items);
+				}
+			} else {
+				System.out.println("装载代码:" + lastCodeType);
+				items = new ArrayList<Code>();
+				items.add(code);
+				lastCodeType = codeType;
+			}
+		}
+		return items;
+	}
 }

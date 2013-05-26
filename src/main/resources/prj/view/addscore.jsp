@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <script type="text/javascript">
+	$("#PRJNO").select();
 	function initVar() {
 		var PRJ_ID = $("#PRJ_ID").val();
 		var PRJNO = $("#PRJNO").val();
@@ -41,7 +42,7 @@
 					value="${prj.PRJ_ID}" maxlength="22" type="hidden" />
 				<p>
 					<label>项目编号：</label><input class="required" id="PRJNO"
-						value="${prj.EMP_ID}" name="PRJNO" size="30" type="text" alt=""
+						value="${prj.PRJNO}" name="PRJNO" size="30" type="text" alt=""
 						lookupGroup="" lookupName="PRJNO" onBlur="initVar();" /> <a
 						class="btnLook" href="${BaseURL}common/doProjectLookup"
 						lookupGroup="" lookupName="PRJNO" lookupPk="PRJ_ID">查找</a>
@@ -123,11 +124,13 @@
 						refUrl="${BaseURL}common/doGetCheckItem?item={value}"><option
 							value="">请选择...</option>
 						<c:forEach var="item" items="${ITEM}">
-							<option value="${item.codeValue}">${item.codeDesc}</option>
+							<option value="${item.codeValue}"
+								<c:if test="${item.codeValue == prj.ITEM}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
 						</c:forEach></select> <select id="CHECKITEM" name="CHECKITEM" class="combox required"><option
 							value="">请选择...</option>
 						<c:forEach var="item" items="${CHECKITEM}">
-							<option value="${item.codeValue}">${item.codeDesc}</option>
+							<option value="${item.codeValue}"
+								<c:if test="${item.codeValue == prj.CHECKITEM}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
 						</c:forEach></select>
 				</p>
 			</div>

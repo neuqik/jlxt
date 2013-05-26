@@ -97,9 +97,8 @@ var colsOption = [ {
 	width : 100,
 	editable : false,
 	header : "项目名称",
-	frozen : true,
 	toolTip : true,
-	toolTipWidth : 350
+	toolTipWidth : 450
 }, {
 	id : "CONTRACTNO",
 	width : 100,
@@ -129,17 +128,17 @@ var colsOption = [ {
 	id : "PRJ_STARTTIME",
 	width : 100,
 	editable : false,
-	header : "项目开工时间"
+	header : "合同开工时间"
 }, {
 	id : "PRJ_ENDTIME",
 	width : 100,
 	editable : false,
-	header : "项目结束时间"
+	header : "合同结束时间"
 }, {
 	id : "PRJ_PROGRESS",
 	width : 100,
 	editable : false,
-	header : "项目进展情况",
+	header : "进展情况",
 	toolTip : true,
 	toolTipWidth : 350,
 	editor : {
@@ -219,12 +218,12 @@ var colsOption = [ {
 	id : "PRJ_ARCHIVE",
 	width : 100,
 	editable : false,
-	header : "档案归档标志"
+	header : "归档标志"
 }, {
 	id : "PRJ_ARCHIVETIME",
 	width : 100,
 	editable : false,
-	header : "档案归档时间"
+	header : "归档时间"
 }, {
 	id : "PRJ_MAP",
 	width : 150,
@@ -254,7 +253,7 @@ var colsOption = [ {
 	id : "PRJ_TIME",
 	width : 100,
 	editable : false,
-	header : "项目工期"
+	header : "合同工期"
 }, {
 	id : "MEMO",
 	width : 100,
@@ -322,7 +321,7 @@ var gridOption = {
 			columnObj, grid) {
 		// TODO:双击行事件
 		navTab.openTab("xgxm", MyURL + "prj/editproject?PRJ_ID=" + record.ID, {
-			title : "维护项目",
+			title : "编辑项目",
 			fresh : false,
 			data : {}
 		});

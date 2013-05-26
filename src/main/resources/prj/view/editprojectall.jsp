@@ -10,13 +10,12 @@
 						class="j-ajax" rel="xmxx"><span>项目信息</span></a></li>
 					<li><a href="${BaseURL}prj/editbuilding?PRJ_ID=${PRJ_ID}"
 						class="j-ajax" rel="gcxx"><span>工程信息</span></a></li>
-					<li><a href="${BaseURL}prj/editrelate?PRJ_ID=${PRJ_ID}"
-						class="j-ajax" rel="bmfgs"><span>部门/分公司</span></a></li>
-					<li><a href="${BaseURL}prj/editorg?PRJ_ID=${PRJ_ID}"
-						class="j-ajax" rel="zzxx"><span>组织信息</span></a></li>
 					<li><a href="${BaseURL}prj/editunitall?PRJ_ID=${PRJ_ID}"
 						class="j-ajax" rel="cjdw"><span>参建单位</span></a></li>
-
+					<li><a href="${BaseURL}prj/editorg?PRJ_ID=${PRJ_ID}"
+						class="j-ajax" rel="zzxx"><span>监理机构</span></a></li>
+					<li><a href="${BaseURL}prj/editrelate?PRJ_ID=${PRJ_ID}"
+						class="j-ajax" rel="bmfgs"><span>监理部门(分公司)</span></a></li>
 				</ul>
 			</div>
 		</div>

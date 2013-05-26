@@ -84,13 +84,13 @@ var colsOption = [ {
 	id : "BUILDING_AREA",
 	width : 120,
 	editable : true,
-	header : "单栋建筑面积(平方米)",
+	header : "单栋建筑面积(平米)",
 	editor : {
 		type : "text",
 		validator : function(value, record, colObj, grid) {
 			// 如果输入了值
 			if (value.length > 0) {
-				if(isNaN(value)){
+				if (isNaN(value)) {
 					return "请输入数字";
 				}
 				return true;
@@ -105,7 +105,21 @@ var colsOption = [ {
 	editable : true,
 	header : "地上层数",
 	editor : {
-		type : "text"
+		type : "text",
+		validator : function(value, record, colObj, grid) {
+			// 如果输入了值
+			if (value.length > 0) {
+				if (isNaN(value)) {
+					return "请输入数字";
+				}
+				if (value <= 0) {
+					return "请输入正整数";
+				}
+				return true;
+			} else {
+				return "请输入地上层数";
+			}
+		}
 	}
 }, {
 	id : "UNDERFLOOR",
@@ -113,33 +127,58 @@ var colsOption = [ {
 	editable : true,
 	header : "地下层数",
 	editor : {
-		type : "text"
+		type : "text",
+		validator : function(value, record, colObj, grid) {
+			// 如果输入了值
+			if (value.length > 0) {
+				if (isNaN(value)) {
+					return "请输入数字";
+				}
+				if (value >= 0) {
+					return "请输入负整数";
+				}
+				return true;
+			} else {
+				return "请输入地下层数";
+			}
+		}
 	}
 }, {
 	id : "HEIGHT",
 	width : 100,
 	editable : true,
-	header : "建筑高度",
+	header : "建筑高度(米)",
 	editor : {
-		type : "text"
+		type : "text",
+		validator : function(value, record, colObj, grid) {
+			// 如果输入了值
+			if (value.length > 0) {
+				if (isNaN(value)) {
+					return "请输入数字";
+				}
+				return true;
+			} else {
+				return "请输入建筑高度";
+			}
+		}
 	}
 }, {
 	id : "CONSTRUCT_TYPE",
 	width : 100,
 	editable : true,
-	header : "结构类型",
+	header : "工程结构",
 	editor : {
 		type : "select",
 		options : {
-			'01' : '砖混',
-			'02' : '框架',
-			'03' : '排架',
-			'04' : '剪力墙',
-			'05' : '框剪',
-			'06' : '框筒',
-			'07' : '筒体',
-			'08' : '钢结构',
-			'09' : '装配式'
+			'11' : '砖混',
+			'12' : '框架',
+			'13' : '排架',
+			'14' : '剪力墙',
+			'15' : '框剪',
+			'16' : '框筒',
+			'17' : '筒体',
+			'18' : '钢结构',
+			'19' : '装配式'
 		},
 		defaultText : '01'
 	}
@@ -170,7 +209,7 @@ var colsOption = [ {
 	id : "ACT_END",
 	width : 100,
 	editable : true,
-	header : "实际竣工日期",
+	header : "实际结束日期",
 	editor : {
 		type : "date"
 	}
@@ -178,7 +217,7 @@ var colsOption = [ {
 	id : "ACT_TIME",
 	width : 100,
 	editable : true,
-	header : "实际工期",
+	header : "实际工期(天)",
 	editor : {
 		type : "text"
 	}

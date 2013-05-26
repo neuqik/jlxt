@@ -52,65 +52,96 @@
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this, navTabAjaxDone)">
 			<div class="pageFormContent" layoutH="58">
-				<p>
-					<label>员工编号：</label> <input name="EMP_ID" type="text" size="30"
-						value="${EMP_ID}" readonly="readonly" />
-				</p>
-				<p>
-					<label>姓名：</label> <input name="EMP_NAME" class="required"
-						type="text" size="30" value="${emp.EMP_NAME}" alt="请输入员工姓名" />
-				</p>
-				<p>
-					<label>部门/分公司：</label> <select name="DEPT_ID" size="30"
-						class="required combox"><option value="">请选择...</option>
-						<c:forEach var="item" items="${DEPT_ID}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == emp.DEPT_ID}">
+				<table>
+					<th>
+						<p>
+							<label>员工编号：</label> <input name="EMP_ID" type="text" size="30"
+								value="${EMP_ID}" readonly="readonly" />
+						</p>
+						<p>
+							<label>姓名：</label> <input name="EMP_NAME" class="required"
+								type="text" size="30" value="${emp.EMP_NAME}" alt="请输入员工姓名" />
+						</p>
+						<p>
+							<label>部门/分公司：</label> <select name="DEPT_ID" size="30"
+								class="required combox"><option value="">请选择...</option>
+								<c:forEach var="item" items="${DEPT_ID}">
+									<option value="${item.codeValue}"
+										<c:if test="${item.codeValue == emp.DEPT_ID}">
 								selected="selected"
 							</c:if>>${item.codeDesc}</option>
-						</c:forEach>
-					</select>
-				</p>
-				<p>
-					<label>身份证号码：</label> <input name="IDCARD" class="required"
-						type="text" size="30" minlength="15" maxlength="18" alt="请输入身份证号码"
-						value="${emp.IDCARD}" remote="${BaseURL}hrs/validIDCardUpdate"
-						onChange="showBirthday(this.value);" />
-				</p>
-				<p>
-					<label>出生日期：</label> <input id="BIRTH" type="text" name="BIRTH"
-						class="date required" size="30" yearstart="-80" yearend="5"
-						value="${emp.BIRTH}" /><a class="inputDateButton"
-						href="javascript:;">选择</a>
-				</p>
-				<p>
-					<label>年龄：</label> <input type="text" size="30" name="AGE" id="AGE"
-						maxlength="3" class="required" value="${emp.AGE}" />
-				</p>
-				<p>
-					<!-- class不能选择combox，如果增加，则会添加一个超链接的对象，导致修改value不能实时显示 -->
-					<label>性别：</label> <select id="GENDER" name="GENDER"
-						class="required "><option value="">请选择...</option>
-						<c:forEach var="item" items="${GENDER}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == emp.GENDER}">
+								</c:forEach>
+							</select>
+						</p>
+						<p>
+							<label>身份证号码：</label> <input name="IDCARD" class="required"
+								type="text" size="30" minlength="15" maxlength="18"
+								alt="请输入身份证号码" value="${emp.IDCARD}"
+								remote="${BaseURL}hrs/validIDCardUpdate"
+								onChange="showBirthday(this.value);" />
+						</p>
+						<p>
+							<label>出生日期：</label> <input id="BIRTH" type="text" name="BIRTH"
+								class="date required" size="30" yearstart="-80" yearend="5"
+								value="${emp.BIRTH}" /><a class="inputDateButton"
+								href="javascript:;">选择</a>
+						</p>
+						<p>
+							<label>年龄：</label> <input type="text" size="30" name="AGE"
+								id="AGE" maxlength="3" class="required" value="${emp.AGE}" />
+						</p>
+						<p>
+							<!-- class不能选择combox，如果增加，则会添加一个超链接的对象，导致修改value不能实时显示 -->
+							<label>性别：</label> <select id="GENDER" name="GENDER"
+								class="required "><option value="">请选择...</option>
+								<c:forEach var="item" items="${GENDER}">
+									<option value="${item.codeValue}"
+										<c:if test="${item.codeValue == emp.GENDER}">
 								selected="selected"
 							</c:if>>${item.codeDesc}</option>
-						</c:forEach>
-					</select>
-				</p>
-				<p>
-					<!-- class不能选择combox，如果增加，则会添加一个超链接的对象，导致修改value不能实时显示 -->
-					<label>民族：</label> <select id="NATION" name="NATION"
-						class="required combox"><option value="">请选择...</option>
-						<c:forEach var="item" items="${NATION}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == emp.NATION}">
+								</c:forEach>
+							</select>
+						</p>
+						<p>
+							<!-- class不能选择combox，如果增加，则会添加一个超链接的对象，导致修改value不能实时显示 -->
+							<label>民族：</label> <select id="NATION" name="NATION"
+								class="required combox"><option value="">请选择...</option>
+								<c:forEach var="item" items="${NATION}">
+									<option value="${item.codeValue}"
+										<c:if test="${item.codeValue == emp.NATION}">
 								selected="selected"
 							</c:if>>${item.codeDesc}</option>
-						</c:forEach>
-					</select>
-				</p>
+								</c:forEach>
+							</select>
+						</p>
+						<p>
+							<label>婚姻状况：</label> <select name="MARRIAGE"
+								class="required combox"><option value="">请选择...</option>
+								<c:forEach var="item" items="${MARRIAGE}">
+									<option value="${item.codeValue}"
+										<c:if test="${item.codeValue == emp.MARRIAGE}">
+								selected="selected"
+							</c:if>>${item.codeDesc}</option>
+								</c:forEach>
+							</select>
+						</p>
+						<p>
+							<label>政治面貌：</label> <select name="POLITIC" class="combox"><option
+									value="">请选择...</option>
+								<c:forEach var="item" items="${POLITIC}">
+									<option value="${item.codeValue}"
+										<c:if test="${item.codeValue == emp.POLITIC}">
+								selected="selected"
+							</c:if>>${item.codeDesc}</option>
+								</c:forEach>
+							</select>
+						</p>
+					</th>
+					<th align="left"><img alt="员工照片"
+						src="${BaseURL}pictures/emp/${EMP_ID}.jpg" width="200px"
+						height="200px" border="3" /></th>
+				</table>
+				<div class="divider"></div>
 				<p>
 					<label>员工类型：</label> <select name="EMPTYPE" class="combox"><option
 							value="">请选择...</option>
@@ -178,8 +209,8 @@
 					</select>
 				</p>
 				<p>
-					<label>保险状态：</label> <select name="INSUSTATUS"
-						class="" disabled><option value="">请选择...</option>
+					<label>保险状态：</label> <select name="INSUSTATUS" class="" disabled><option
+							value="">请选择...</option>
 						<c:forEach var="item" items="${INSUSTATUS}">
 							<option value="${item.codeValue}"
 								<c:if test="${item.codeValue == emp.INSUSTATUS}">
@@ -188,32 +219,12 @@
 						</c:forEach>
 					</select>
 				</p>
-				<p>
-					<label>婚姻状况：</label> <select name="MARRIAGE"
-						class="required combox"><option value="">请选择...</option>
-						<c:forEach var="item" items="${MARRIAGE}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == emp.MARRIAGE}">
-								selected="selected"
-							</c:if>>${item.codeDesc}</option>
-						</c:forEach>
-					</select>
-				</p>
+
 				<p>
 					<label>文化程度：</label> <input type="text" size="30" name="EDUCATION"
 						maxlength="20" value="${emp.EDUCATION}" />
 				</p>
-				<p>
-					<label>政治面貌：</label> <select name="POLITIC" class="combox"><option
-							value="">请选择...</option>
-						<c:forEach var="item" items="${POLITIC}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == emp.POLITIC}">
-								selected="selected"
-							</c:if>>${item.codeDesc}</option>
-						</c:forEach>
-					</select>
-				</p>
+
 				<p>
 					<label>参加工作日期：</label> <input type="text" name="WORKDATE"
 						class="date" size="30" yearstart="-80" yearend="5"

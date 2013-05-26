@@ -6,8 +6,7 @@
 		<form method="post" action="${BaseURL}prj/saveeditproject"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this, navTabAjaxDone)">
-			<div class="pageFormContent"
-				style="overflow-x: hidden; overflow-y: auto">
+			<div class="pageFormContent" layoutH="88">
 				<INPUT type="hidden" name="ID" value="${prj.ID}" />
 				<p>
 					<label>项目编号：</label><input type="text" size="30" name="PRJNO"
@@ -22,21 +21,9 @@
 						value="${prj.PRJ_NAME}" maxlength="200" class="required" />
 				</p>
 				<p>
-					<label>合同面积：</label><input type="text" size="30"
-						name="CONTRACTAREA" value="${prj.CONTRACTAREA}" maxlength="20" />
-				</p>
-				<p>
-					<label>单体数量(计算)：</label><input type="text" size="30"
-						name="BUILDINGCOUNT" maxlength="22" readonly="readonly"
-						value="${prj.BUILDINGCOUNT}" />
-				</p>
-				<p>
-					<label>项目等级：</label> <select name="PRJ_LEVEL"
-						class="combox required"><option value="">请选择...</option>
-						<c:forEach var="item" items="${PRJ_LEVEL}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == prj.PRJ_LEVEL}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
-						</c:forEach></select>
+					<label>结构类型：</label><input type="text" size="30"
+						name="CONSTRUCT_TYPE" maxlength="50" readonly="readonly"
+						value="${prjExt.CONSTRUCT_TYPE}" />
 				</p>
 				<p>
 					<label>项目类别：</label> <select name="PRJ_TYPE"
@@ -47,64 +34,78 @@
 						</c:forEach></select>
 				</p>
 				<p>
-					<label>项目总投资：</label><input type="text" size="30" name="PRJ_INVEST"
-						value="${prj.PRJ_INVEST}" maxlength="20" />
+					<label>项目等级：</label> <select name="PRJ_LEVEL"
+						class="combox required"><option value="">请选择...</option>
+						<c:forEach var="item" items="${PRJ_LEVEL}">
+							<option value="${item.codeValue}"
+								<c:if test="${item.codeValue == prj.PRJ_LEVEL}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+						</c:forEach></select>
 				</p>
 				<p>
-					<label>项目面积(计算)：</label><input type="text" size="30"
+					<label>合同面积：</label><input type="text" size="30"
+						name="CONTRACTAREA" value="${prj.CONTRACTAREA}" maxlength="20" />
+				</p>
+				<p>
+					<label>实际面积(计算)：</label><input type="text" size="30"
 						name="PRJ_AREA" value="${prj.PRJ_AREA}" maxlength="20"
 						readonly="readonly" />
 				</p>
 				<p>
-					<label>项目开工时间：</label> <input type="text" name="PRJ_STARTTIME"
+					<label>结构层数：</label><input type="text" size="30"
+						readonly="readonly" value="${prjExt.FLOOR}" />
+				</p>
+				<p>
+					<label>项目高度(米)：</label><input type="text" size="30"
+						readonly="readonly" value="${prjExt.HEIGHT}" />
+				</p>
+				<p>
+					<label>项目投资：</label><input type="text" size="30" name="PRJ_INVEST"
+						value="${prj.PRJ_INVEST}" maxlength="20" />
+				</p>
+				<p>
+					<label>单体数量(计算)：</label><input type="text" size="30"
+						name="BUILDINGCOUNT" maxlength="22" readonly="readonly"
+						value="${prj.BUILDINGCOUNT}" />
+				</p>
+				<p>
+					<label>质量目标：</label> <select name="QUALITY_TARGET"
+						class="combox required"><option value="">请选择...</option>
+						<c:forEach var="item" items="${QUALITY_TARGET}">
+							<option value="${item.codeValue}"
+								<c:if test="${item.codeValue == prj.QUALITY_TARGET}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+						</c:forEach></select>
+				</p>
+				<p>
+					<label>安全等级：</label><input type="text" size="30"
+						readonly="readonly" value="${prjExt.SECURITY_LEVEL}" />
+				</p>
+				<p>
+					<label>合同开工：</label> <input type="text" name="PRJ_STARTTIME"
 						class="date required" size="30" yearstart="-80" yearend="5"
 						value="${prj.PRJ_STARTTIME}" /><a class="inputDateButton"
 						href="javascript:;">选择</a>
 				</p>
 				<p>
-					<label>项目结束时间：</label> <input type="text" name="PRJ_ENDTIME"
+					<label>合同结束：</label> <input type="text" name="PRJ_ENDTIME"
 						class="date required" size="30" yearstart="-80" yearend="5"
 						value="${prj.PRJ_ENDTIME}" /><a class="inputDateButton"
 						href="javascript:;">选择</a>
 				</p>
 				<p>
-					<label>周例会星期：</label> <select name="WEEKMEETING" class="combox"><option
-							value="">请选择...</option>
-						<c:forEach var="item" items="${WEEKMEETING}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == prj.WEEKMEETING}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
-						</c:forEach></select>
+					<label>合同工期(天)：</label><input type="text" size="30" name="PRJ_TIME"
+						value="${prj.PRJ_TIME}" maxlength="20"  readonly="readonly"/>
 				</p>
 				<p>
-					<label>周例会时间：</label> <select name="WEEKMEETINGTIME" class="combox"><option
-							value="">请选择...</option>
-						<c:forEach var="item" items="${WEEKMEETINGTIME}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == prj.WEEKMEETINGTIME}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
-						</c:forEach></select>
+					<label>实际开工：</label><input type="text" size="30"
+						readonly="readonly" value="${prjExt.ACT_BEGIN}" />
 				</p>
 				<p>
-					<label>项目地图：</label><input type="text" size="30" name="PRJ_MAP"
-						value="${prj.PRJ_MAP}" maxlength="200" />
+					<label>实际结束：</label><input type="text" size="30"
+						readonly="readonly" value="${prjExt.ACT_END}" />
 				</p>
 				<p>
-					<label>施工区域：</label><input type="text" size="30" name="PRJ_REGION"
-						value="${prj.PRJ_REGION}" maxlength="20" />
-				</p>
-				<p>
-					<label>档案归档标志：</label> <select name="PRJ_ARCHIVE" class="combox"><option
-							value="">请选择...</option>
-						<c:forEach var="item" items="${PRJ_ARCHIVE}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == prj.PRJ_ARCHIVE}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
-						</c:forEach></select>
-				</p>
-
-				<p>
-					<label>档案归档时间：</label> <input type="text" name="PRJ_ARCHIVETIME"
-						class="date" size="30" yearstart="-80" yearend="5"
-						value="${prj.PRJ_ARCHIVETIME}" /><a class="inputDateButton"
-						href="javascript:;">选择</a>
+					<label>实际工期(天)：</label><input type="text" size="30"
+						readonly="readonly" value="${prjExt.ACT_TIME}" />
 				</p>
 				<p>
 					<label>项目地址(省)：</label> <select id="LOCATION1" name="LOCATION1"
@@ -140,24 +141,55 @@
 						class="required" />
 				</p>
 				<p>
-					<label>质量目标：</label> <select name="QUALITY_TARGET"
-						class="combox required"><option value="">请选择...</option>
-						<c:forEach var="item" items="${QUALITY_TARGET}">
+					<label>分公司：</label><input type="text" size="30" readonly="readonly"
+						value="${prjExt.DEPT_ID}" />
+				</p>
+				<p>
+					<label>例会时间：</label> <select name="WEEKMEETING" class="combox"><option
+							value="">请选择...</option>
+						<c:forEach var="item" items="${WEEKMEETING}">
 							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == prj.QUALITY_TARGET}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+								<c:if test="${item.codeValue == prj.WEEKMEETING}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+						</c:forEach></select> <select name="WEEKMEETINGTIME" class="combox"><option
+							value="">请选择...</option>
+						<c:forEach var="item" items="${WEEKMEETINGTIME}">
+							<option value="${item.codeValue}"
+								<c:if test="${item.codeValue == prj.WEEKMEETINGTIME}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
 						</c:forEach></select>
 				</p>
 				<p>
-					<label>项目工期：</label><input type="text" size="30" name="PRJ_TIME"
-						value="${prj.PRJ_TIME}" maxlength="20" />
+					<label>施工阶段：</label><input type="text" size="30"
+						readonly="readonly" value="${prjExt.IMAGE_PROGRESS}" />
+				</p>
+				<p>
+					<label>项目进展：</label><input type="text" size="30"
+						name="PRJ_PROGRESS" value="${prj.PRJ_PROGRESS}" maxlength="1000" />
+				</p>
+				<p>
+					<label>项目地图：</label><input type="text" size="30" name="PRJ_MAP"
+						value="${prj.PRJ_MAP}" maxlength="200" />
+				</p>
+				<p>
+					<label>施工区域：</label><input type="text" size="30" name="PRJ_REGION"
+						value="${prj.PRJ_REGION}" maxlength="20" />
+				</p>
+				<p>
+					<label>归档标志：</label> <select name="PRJ_ARCHIVE" class="combox"><option
+							value="">请选择...</option>
+						<c:forEach var="item" items="${PRJ_ARCHIVE}">
+							<option value="${item.codeValue}"
+								<c:if test="${item.codeValue == prj.PRJ_ARCHIVE}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+						</c:forEach></select>
+				</p>
+				<p>
+					<label>归档时间：</label> <input type="text" name="PRJ_ARCHIVETIME"
+						class="date" size="30" yearstart="-80" yearend="5"
+						value="${prj.PRJ_ARCHIVETIME}" /><a class="inputDateButton"
+						href="javascript:;">选择</a>
 				</p>
 				<p>
 					<label>项目图片：</label><input type="text" size="30" name="PRJ_PIC"
 						value="${prj.PRJ_PIC}" maxlength="200" />
-				</p>
-				<p>
-					<label>项目进展情况：</label><input type="text" size="30"
-						name="PRJ_PROGRESS" value="${prj.PRJ_PROGRESS}" maxlength="1000" />
 				</p>
 				<p>
 					<label>备注：</label><input type="text" size="30" name="MEMO"

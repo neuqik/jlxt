@@ -22,9 +22,9 @@ public class Client {
 			Generator.getParam().put("path.web.jsp", "resources.prj.view");
 			Generator.getParam().put("path.web.js", "pages.prj");
 			// path.web.rest
-			Generator.getParam().put("path.web.rest", "projectcheck");
+			Generator.getParam().put("path.web.rest", "showcheckgroup");
 			// path.web.rest.init首字母大写
-			Generator.getParam().put("path.web.rest.init", "ProjectCheck");
+			Generator.getParam().put("path.web.rest.init", "ShowCheckGroup");
 			// ActionClassName
 			Generator.getParam().put("name.action", "PRJAction");
 			// ---------------js-----------------

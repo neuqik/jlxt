@@ -1,13 +1,11 @@
 var c = $("#myContent").height();
 var header = $("#projectcheck_head").height();
-var sql = "SELECT ACT_SCORE, TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE, PRJNO, PRJ_NAME, CHECKITEM, PRJ_ID,CHECKGROUP_NO, DEPT_COUNT  FROM V_PRJ_CHECK_SUM";
+var sql = "SELECT ACT_SCORE, PRJNO, PRJ_NAME, CHECKITEM, PRJ_ID,CHECKGROUP_NO, DEPT_COUNT  FROM V_PRJ_CHECK_SUM";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
 		name : "ACT_SCORE"
-	}, {
-		name : "CHECKDATE"
-	}, {
+	},{
 		name : "CHECKITEM"
 	}, {
 		name : "PRJNO"
@@ -25,6 +23,12 @@ var dsOption = {
 };
 // 定义列选项
 var colsOption = [ {
+	id : "PRJ_ID",
+	width : 100,
+	editable : false,
+	header : "项目ID",
+	hidden : true
+}, {
 	id : "PRJNO",
 	width : 150,
 	editable : false,
@@ -39,12 +43,7 @@ var colsOption = [ {
 	width : 200,
 	editable : false,
 	header : "检查单编号"
-}, {
-	id : "CHECKDATE",
-	width : 150,
-	editable : false,
-	header : "检查时间"
-}, {
+},{
 	id : "CHECKITEM",
 	width : 100,
 	editable : false,
@@ -107,6 +106,14 @@ var gridOption = {
 	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
 			columnObj, grid) {
 		// TODO:双击行事件
+		navTab.openTab("bjjcd", MyURL + "prj/showcheckgroup?CHECKGROUP_NO="
+				+ record.CHECKGROUP_NO, {
+			title : "查看检查单",
+			fresh : false,
+			data : {
+				PRJ_ID : record.ID
+			}
+		});
 	}
 };
 

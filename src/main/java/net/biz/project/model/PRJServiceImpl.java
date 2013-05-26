@@ -154,8 +154,8 @@ public class PRJServiceImpl implements IPRJService {
 
 			PRJ_BUILDING row = (PRJ_BUILDING) it1.next();
 			String id = row.getID();
-			sql = "UPDATE V_PRJ_BUILDING SET LICENSE_DATE=?,SECURITY_LEVEL=?,CONSTRUCT_TYPE=?,ACT_TIME=?,PROGRESS=?,BUILDER_LICENSE=?,BUILDING_TYPE=?,IMAGE_PROGRESS=?,MEMO=?,ACT_BEGIN=?,ACT_END=?,BUILDING_ID=?,UNDERFLOOR=?,ABOVEFLOOR=?,HEIGHT=?,BUILDING_AREA=? WHERE PRJ_ID = "
-					+ prjId;
+			sql = "UPDATE V_PRJ_BUILDING SET LICENSE_DATE=?,SECURITY_LEVEL=?,CONSTRUCT_TYPE=?,ACT_TIME=?,PROGRESS=?,BUILDER_LICENSE=?,BUILDING_TYPE=?,IMAGE_PROGRESS=?,MEMO=?,ACT_BEGIN=?,ACT_END=?,BUILDING_ID=?,UNDERFLOOR=?,ABOVEFLOOR=?,HEIGHT=?,BUILDING_AREA=? WHERE ID = "
+					+ id;
 
 			List<Object> params = new ArrayList<Object>();
 			params.add(row.getLICENSE_DATEForSqlDate());
@@ -216,8 +216,8 @@ public class PRJServiceImpl implements IPRJService {
 
 			PRJ_UNIT_RELATE row = (PRJ_UNIT_RELATE) it1.next();
 			String id = row.getID();
-			sql = "UPDATE V_PRJ_UNIT_RELATE SET DEPT_ID=?,MEMO=? WHERE PRJ_ID="
-					+ prjId;
+			sql = "UPDATE V_PRJ_UNIT_RELATE SET DEPT_ID=?,MEMO=? WHERE ID="
+					+ id;
 
 			List<Object> params = new ArrayList<Object>();
 			params.add(row.getDEPT_ID());
@@ -517,6 +517,26 @@ public class PRJServiceImpl implements IPRJService {
 	 * 保存新的评分记录
 	 */
 	public String saveNewScore(PRJ_CHECK prjInfo) throws Exception {
+		if (!"".equals(prjInfo.getID())) {
+			// 如果是编辑
+			String sql = "UPDATE V_PRJ_CHECK SET CHECKITEM=?,CHECKDATE=?,ACT_SCORE=?,MEMO=?,JSDW_ID=?,SGDW_ID=?,PRJ_PROGRESS=?,CONSTRUCT_TYPE=?,CHECKGROUP_NO=? WHERE ID="
+					+ prjInfo.getID();
+
+			List<Object> params = new ArrayList<Object>();
+
+			params.add(prjInfo.getCHECKITEM());
+			params.add(prjInfo.getCHECKDATEForSqlDate());
+			params.add(prjInfo.getACT_SCORE());
+			params.add(prjInfo.getMEMO());
+			params.add(prjInfo.getJSDW_ID());
+			params.add(prjInfo.getSGDW_ID());
+			params.add(prjInfo.getPRJ_PROGRESS());
+			params.add(prjInfo.getCONSTRUCT_TYPE());
+			params.add(prjInfo.getCHECKGROUP_NO());
+			JDBCOracleUtil.ExecuteDML(sql, params);
+			return prjInfo.getCHECKGROUP_NO();
+		}
+
 		Connection conn = null;
 		try {
 			conn = JDBCOracleUtil.getConnection();
@@ -552,5 +572,15 @@ public class PRJServiceImpl implements IPRJService {
 				conn.close();
 			}
 		}
+	}
+
+	/**
+	 * 删除评分
+	 */
+	public void delScore(String id) throws Exception {
+		String sql = "UPDATE V_PRJ_CHECK SET VALID='0' WHERE ID=?";
+		List<Object> params = new ArrayList<Object>();
+		params.add(id);
+		JDBCOracleUtil.ExecuteDML(sql, params);
 	}
 }

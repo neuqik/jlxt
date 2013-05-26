@@ -5,7 +5,7 @@ import java.sql.Date;
 import net.biz.util.DateUtils;
 
 public class PRJ_CHECK {
-	private String ID;
+	private String ID = "";
 
 	public void setID(String theID) {
 		ID = theID;
@@ -176,4 +176,63 @@ public class PRJ_CHECK {
 	public String getCHECKGROUP_NO() {
 		return CHECKGROUP_NO;
 	}
+
+	private String PRJNO;
+
+	public String getPRJNO() {
+		return PRJNO;
+	}
+
+	public void setPRJNO(String pRJNO) {
+		PRJNO = pRJNO;
+	}
+
+	private String PRJ_NAME;
+
+	public String getPRJ_NAME() {
+		return PRJ_NAME;
+	}
+
+	public void setPRJ_NAME(String pRJ_NAME) {
+		PRJ_NAME = pRJ_NAME;
+	}
+
+	private String UNIT_NAME;
+	private String SGDW_NAME;
+	private String CONSTRUCT_TYPE_NAME;
+
+	public String getUNIT_NAME() {
+		return UNIT_NAME;
+	}
+
+	public void setUNIT_NAME(String uNIT_NAME) {
+		UNIT_NAME = uNIT_NAME;
+	}
+
+	public String getSGDW_NAME() {
+		return SGDW_NAME;
+	}
+
+	public void setSGDW_NAME(String sGDW_NAME) {
+		SGDW_NAME = sGDW_NAME;
+	}
+
+	public String getCONSTRUCT_TYPE_NAME() {
+		return CONSTRUCT_TYPE_NAME;
+	}
+
+	public void setCONSTRUCT_TYPE_NAME(String cONSTRUCT_TYPE_NAME) {
+		CONSTRUCT_TYPE_NAME = cONSTRUCT_TYPE_NAME;
+	}
+
+	private String ITEM;
+
+	public String getITEM() {
+		return ITEM;
+	}
+
+	public void setITEM(String iTEM) {
+		ITEM = iTEM;
+	}
+
 }
