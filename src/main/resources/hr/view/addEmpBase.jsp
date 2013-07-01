@@ -196,7 +196,7 @@
 						maxlength="20" />
 				</p>
 				<p>
-					<label>紧急联系人：</label> <input type="text" size="30" name="EMERGENCY"
+					<label>紧急联系人电话：</label> <input type="text" size="30" name="EMERGENCY"
 						maxlength="20" />
 				</p>
 				<p>
