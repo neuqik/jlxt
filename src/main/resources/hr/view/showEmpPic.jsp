@@ -97,7 +97,7 @@
 				</c:if>
 				<div id="pic_img">
 					<img alt="员工照片" src="${BaseURL}pictures/emp/${EMP_ID}.jpg"
-						width="300px" height="300px" id="empic" name="pic" border="2" />
+						width="150px" height="220px" id="empic" name="pic" border="2" />
 				</div>
 				<font color="red">图片大小不能超过100k，提交后请点击刷新按钮查看</font>
 			</div>

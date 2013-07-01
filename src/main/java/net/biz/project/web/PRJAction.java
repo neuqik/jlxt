@@ -114,7 +114,7 @@ public class PRJAction extends BaseAction {
 	@POST
 	public String toEditProjectInfo(Map<String, Object> model) {
 		String prjId = MVC.ctx().getRequest().getParameter("PRJ_ID");
-		String sql = "SELECT BUILDINGCOUNT, CONTRACTAREA, CONTRACTNO, ID, LOCATION1, LOCATION2, LOCATION3, LOCATION4, MEMO, PRJNO, PRJ_ARCHIVE, PRJ_ARCHIVETIME, PRJ_AREA, PRJ_ENDTIME, PRJ_INVEST, PRJ_LEVEL, PRJ_MAP, PRJ_NAME, PRJ_PIC, PRJ_PROGRESS, PRJ_REGION, PRJ_STARTTIME, (PRJ_ENDTIME-PRJ_STARTTIME) PRJ_TIME, PRJ_TYPE, QUALITY_TARGET, VALID, WEEKMEETING, WEEKMEETINGTIME FROM V_PRJ_INFO WHERE ID="
+		String sql = "SELECT BUILDINGCOUNT, CONTRACTAREA, CONTRACTNO, ID, LOCATION1, LOCATION2, LOCATION3, LOCATION4, MEMO, PRJNO, PRJ_ARCHIVE, PRJ_ARCHIVETIME, PRJ_AREA, PRJ_ENDTIME, PRJ_INVEST, PRJ_LEVEL, PRJ_MAP, PRJ_NAME, PRJ_PIC, PRJ_PROGRESS, PRJ_REGION, PRJ_STARTTIME, ROUND((PRJ_ENDTIME-PRJ_STARTTIME)/30,2) PRJ_TIME, PRJ_TYPE, QUALITY_TARGET, VALID, WEEKMEETING, WEEKMEETINGTIME FROM V_PRJ_INFO WHERE ID="
 				+ prjId;
 		String code1 = "DEPT_ID|PRJ_LEVEL|PRJ_TYPE|WEEKMEETING|WEEKMEETINGTIME|PRJ_ARCHIVE|LOCATION1|QUALITY_TARGET";
 		Map a = CodeList.getCodeMap();
@@ -129,7 +129,7 @@ public class PRJAction extends BaseAction {
 			BeanUtils.populate(prj, result.get(0));
 			model.put("prj", prj);
 			// 获取辅助显示信息
-			sql = "SELECT fun_getconstruct(ID) CONSTRUCT_TYPE,fun_getheight(ID) HEIGHT,fun_getfloor(ID) FLOOR, fun_getseclevel(ID) SECURITY_LEVEL ,fun_getactbegin(ID) ACT_BEGIN, fun_getactend(ID) ACT_END, fun_getacttime(ID) ACT_TIME, fun_getdept(ID) DEPT_ID, fun_getimage(ID) IMAGE_PROGRESS FROM V_PRJ_INFO WHERE ID="
+			sql = "SELECT fun_getconstruct(ID) CONSTRUCT_TYPE,fun_getheight(ID) HEIGHT,fun_getfloor(ID) FLOOR, fun_getseclevel(ID) SECURITY_LEVEL ,fun_getactbegin(ID) ACT_BEGIN, fun_getactend(ID) ACT_END, ROUND(fun_getacttime(ID)/30,2) ACT_TIME, fun_getdept(ID) DEPT_ID, fun_getimage(ID) IMAGE_PROGRESS FROM V_PRJ_INFO WHERE ID="
 					+ prjId;
 			List<Map<String, Object>> result1 = JDBCOracleUtil.executeQuery(sql
 					.toUpperCase());

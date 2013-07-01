@@ -238,7 +238,7 @@ var gridOption = {
 			columnObj, grid) {
 		navTab.openTab("xgjbxx", MyURL + "hrs/editEmpBase?empId="
 				+ record.EMP_ID, {
-			title : "修改基本信息",
+			title : "基本信息",
 			fresh : false,
 			data : {}
 		});

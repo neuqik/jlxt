@@ -8,56 +8,64 @@
 			onsubmit="return validateCallback(this, navTabAjaxDone)">
 			<div class="pageFormContent" layoutH="88">
 				<INPUT type="hidden" name="ID" value="${prj.ID}" />
-				<p>
-					<label>项目编号：</label><input type="text" size="30" name="PRJNO"
-						value="${prj.PRJNO}" maxlength="20" class="required" />
-				</p>
-				<p>
-					<label>合同编号：</label><input type="text" size="30" name="CONTRACTNO"
-						value="${prj.CONTRACTNO}" maxlength="20" />
-				</p>
-				<p>
-					<label>项目名称：</label><input type="text" size="30" name="PRJ_NAME"
-						value="${prj.PRJ_NAME}" maxlength="200" class="required" />
-				</p>
-				<p>
-					<label>结构类型：</label><input type="text" size="30"
-						name="CONSTRUCT_TYPE" maxlength="50" readonly="readonly"
-						value="${prjExt.CONSTRUCT_TYPE}" />
-				</p>
-				<p>
-					<label>项目类别：</label> <select name="PRJ_TYPE"
-						class="combox required"><option value="">请选择...</option>
-						<c:forEach var="item" items="${PRJ_TYPE}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == prj.PRJ_TYPE}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
-						</c:forEach></select>
-				</p>
-				<p>
-					<label>项目等级：</label> <select name="PRJ_LEVEL"
-						class="combox required"><option value="">请选择...</option>
-						<c:forEach var="item" items="${PRJ_LEVEL}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == prj.PRJ_LEVEL}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
-						</c:forEach></select>
-				</p>
-				<p>
-					<label>合同面积：</label><input type="text" size="30"
-						name="CONTRACTAREA" value="${prj.CONTRACTAREA}" maxlength="20" />
-				</p>
-				<p>
-					<label>实际面积(计算)：</label><input type="text" size="30"
-						name="PRJ_AREA" value="${prj.PRJ_AREA}" maxlength="20"
-						readonly="readonly" />
-				</p>
-				<p>
-					<label>结构层数：</label><input type="text" size="30"
-						readonly="readonly" value="${prjExt.FLOOR}" />
-				</p>
-				<p>
-					<label>项目高度(米)：</label><input type="text" size="30"
-						readonly="readonly" value="${prjExt.HEIGHT}" />
-				</p>
+				<table>
+					<th>
+						<p>
+							<label>项目编号：</label><input type="text" size="30" name="PRJNO"
+								value="${prj.PRJNO}" maxlength="20" class="required" />
+						</p>
+						<p>
+							<label>合同编号：</label><input type="text" size="30"
+								name="CONTRACTNO" value="${prj.CONTRACTNO}" maxlength="20" />
+						</p>
+						<p>
+							<label>项目名称：</label><input type="text" size="30" name="PRJ_NAME"
+								value="${prj.PRJ_NAME}" maxlength="200" class="required" />
+						</p>
+						<p>
+							<label>结构类型：</label><input type="text" size="30"
+								name="CONSTRUCT_TYPE" maxlength="50" readonly="readonly"
+								value="${prjExt.CONSTRUCT_TYPE}" />
+						</p>
+						<p>
+							<label>项目类别：</label> <select name="PRJ_TYPE"
+								class="combox required"><option value="">请选择...</option>
+								<c:forEach var="item" items="${PRJ_TYPE}">
+									<option value="${item.codeValue}"
+										<c:if test="${item.codeValue == prj.PRJ_TYPE}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+								</c:forEach></select>
+						</p>
+						<p>
+							<label>项目等级：</label> <select name="PRJ_LEVEL"
+								class="combox required"><option value="">请选择...</option>
+								<c:forEach var="item" items="${PRJ_LEVEL}">
+									<option value="${item.codeValue}"
+										<c:if test="${item.codeValue == prj.PRJ_LEVEL}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+								</c:forEach></select>
+						</p>
+						<p>
+							<label>合同面积：</label><input type="text" size="30"
+								name="CONTRACTAREA" value="${prj.CONTRACTAREA}" maxlength="20" />
+						</p>
+						<p>
+							<label>实际面积(计算)：</label><input type="text" size="30"
+								name="PRJ_AREA" value="${prj.PRJ_AREA}" maxlength="20"
+								readonly="readonly" />
+						</p>
+						<p>
+							<label>结构层数：</label><input type="text" size="30"
+								readonly="readonly" value="${prjExt.FLOOR}" />
+						</p>
+						<p>
+							<label>项目高度(米)：</label><input type="text" size="30"
+								readonly="readonly" value="${prjExt.HEIGHT}" />
+						</p>
+					</th>
+					<th align="left"><img alt="项目照片${prj.PRJNO}"
+						src="${BaseURL}pictures/prj/${prj.PRJNO}.jpg" width="200px"
+						height="200px" border="3" /></th>
+				</table>
+				<div class="divider"></div>
 				<p>
 					<label>项目投资：</label><input type="text" size="30" name="PRJ_INVEST"
 						value="${prj.PRJ_INVEST}" maxlength="20" />
@@ -92,19 +100,19 @@
 						href="javascript:;">选择</a>
 				</p>
 				<p>
-					<label>合同工期(天)：</label><input type="text" size="30" name="PRJ_TIME"
-						value="${prj.PRJ_TIME}" maxlength="20"  readonly="readonly"/>
+					<label>合同工期(月)：</label><input type="text" size="30" name="PRJ_TIME"
+						value="${prj.PRJ_TIME}" maxlength="20" readonly="readonly" />
 				</p>
 				<p>
 					<label>实际开工：</label><input type="text" size="30"
 						readonly="readonly" value="${prjExt.ACT_BEGIN}" />
 				</p>
 				<p>
-					<label>实际结束：</label><input type="text" size="30"
+					<label>(计划)结束：</label><input type="text" size="30"
 						readonly="readonly" value="${prjExt.ACT_END}" />
 				</p>
 				<p>
-					<label>实际工期(天)：</label><input type="text" size="30"
+					<label>实际工期(月)：</label><input type="text" size="30"
 						readonly="readonly" value="${prjExt.ACT_TIME}" />
 				</p>
 				<p>
@@ -169,10 +177,12 @@
 					<label>项目地图：</label><input type="text" size="30" name="PRJ_MAP"
 						value="${prj.PRJ_MAP}" maxlength="200" />
 				</p>
+				<!-- 
 				<p>
 					<label>施工区域：</label><input type="text" size="30" name="PRJ_REGION"
 						value="${prj.PRJ_REGION}" maxlength="20" />
 				</p>
+				 -->
 				<p>
 					<label>归档标志：</label> <select name="PRJ_ARCHIVE" class="combox"><option
 							value="">请选择...</option>
@@ -200,6 +210,7 @@
 			<div class="formBar">
 				<ul>
 					<!--<li><a class="buttonActive" href="javascript:;"><span>保存</span></a></li>-->
+
 					<li><div class="buttonActive">
 							<div class="buttonContent">
 								<button type="submit">保存</button>
@@ -209,6 +220,20 @@
 						<div class="button">
 							<div class="buttonContent">
 								<button type="button" class="close">取消</button>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="button">
+							<div class="buttonContent">
+								<button type="button" class="">上一个</button>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="button">
+							<div class="buttonContent">
+								<button type="button" class="">下一个</button>
 							</div>
 						</div>
 					</li>
