@@ -38,7 +38,7 @@
 			}
 		});*/
 		$.pdialog.open("prj/addscorebygroup?CHECKGROUP_NO=${CHECKGROUP_NO}",
-				"tjkf", "添加扣分", {
+				"tjkf", "添加评分", {
 					width : 840,
 					height : 380,
 					max : false,
@@ -75,7 +75,7 @@
 					return true;
 				}
 			});*/
-			$.pdialog.open("prj/editscore?ID=" + id1, "bjkf", "编辑扣分", {
+			$.pdialog.open("prj/editscore?ID=" + id1, "bjkf", "编辑评分", {
 				width : 840,
 				height : 380,
 				max : false,
@@ -124,9 +124,9 @@
 	style="overflow-x: hidden; overflow-y: hidden">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="add" onclick="doAddCheck();" ref="tjkf"><span>添加扣分</span></a></li>
-			<li><a class="edit" onclick="doEditCheck();" rel="bjkf"><span>编辑扣分</span></a></li>
-			<li><a class="delete" onclick="doDelCheck();" rel="sckf"><span>删除扣分</span></a></li>
+			<li><a class="add" onclick="doAddCheck();" ref="tjkf"><span>添加评分</span></a></li>
+			<li><a class="edit" onclick="doEditCheck();" rel="bjkf"><span>编辑评分</span></a></li>
+			<li><a class="delete" onclick="doDelCheck();" rel="sckf"><span>删除评分</span></a></li>
 		</ul>
 	</div>
 	<div>

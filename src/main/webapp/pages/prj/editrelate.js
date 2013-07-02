@@ -25,7 +25,7 @@ var colsOption = [ {
 	id : "DEPT_ID",
 	width : 200,
 	editable : true,
-	header : "部门/分公司",
+	header : "分公司",
 	editor : {
 		type : "select",
 		options : {

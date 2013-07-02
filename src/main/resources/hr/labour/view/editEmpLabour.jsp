@@ -22,7 +22,7 @@
 						size="30" value="${emp.EMP_NAME}" readonly="readonly" />
 				</p>
 				<p>
-					<label>部门/分公司：</label> <select id="DEPT_ID" name="DEPT_ID" class=""
+					<label>分公司：</label> <select id="DEPT_ID" name="DEPT_ID" class=""
 						disabled><option value="">请选择...</option>
 						<c:forEach var="item" items="${DEPT_ID}">
 							<option value="${item.codeValue}"

@@ -54,7 +54,7 @@
 				</p>
 				<p>
 					<!-- class不能选择combox，如果增加，则会添加一个超链接的对象，导致修改value不能实时显示 -->
-					<label>新部门/分公司：</label> <select id="NEWDEPT_ID" name="NEWDEPT_ID"
+					<label>新分公司：</label> <select id="NEWDEPT_ID" name="NEWDEPT_ID"
 						class="combox"><option value="">请选择...</option>
 						<c:forEach var="item" items="${DEPT_ID}">
 							<option value="${item.codeValue}">${item.codeDesc}</option>

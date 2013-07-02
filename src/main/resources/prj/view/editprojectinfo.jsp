@@ -1,6 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script type="text/javascript">
+	function doNextPrj(){
+		alert('xiayige');
+		$.post('${BaseURL}prj/editprojectinfo?PRJ_ID=${prj.ID}', {
+			method : 'next'});
+	}
+	function doUpPrj(){
+		alert('shangyige');
+		$.post('${BaseURL}prj/editprojectinfo?PRJ_ID=${prj.ID}'	, {
+			method : 'up'});
+	}
+</script>
 <div class="page">
 	<div class="pageContent">
 		<form method="post" action="${BaseURL}prj/saveeditproject"
@@ -197,10 +209,10 @@
 						value="${prj.PRJ_ARCHIVETIME}" /><a class="inputDateButton"
 						href="javascript:;">选择</a>
 				</p>
-				<p>
+				<!-- <p>
 					<label>项目图片：</label><input type="text" size="30" name="PRJ_PIC"
 						value="${prj.PRJ_PIC}" maxlength="200" />
-				</p>
+				</p> -->
 				<p>
 					<label>备注：</label><input type="text" size="30" name="MEMO"
 						value="${prj.MEMO}" maxlength="500" />
@@ -226,14 +238,14 @@
 					<li>
 						<div class="button">
 							<div class="buttonContent">
-								<button type="button" class="">上一个</button>
+								<button type="button" onclick="doUpPrj();">上一个</button>
 							</div>
 						</div>
 					</li>
 					<li>
 						<div class="button">
 							<div class="buttonContent">
-								<button type="button" class="">下一个</button>
+								<button type="button" onclick="doNextPrj();">下一个</button>
 							</div>
 						</div>
 					</li>

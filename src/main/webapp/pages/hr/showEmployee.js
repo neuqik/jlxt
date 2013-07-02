@@ -92,7 +92,7 @@ var colsOption = [ {
 	editable : false
 }, {
 	id : 'DEPT_ID',
-	header : "部门/分公司",
+	header : "分公司",
 	width : 100,
 	editable : false
 }, {

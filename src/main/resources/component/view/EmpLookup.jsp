@@ -13,7 +13,7 @@
 					<th><label>姓名：</label></th>
 					<td><input name="EMP_NAME"
 						value="${listPage.searchForm.keyword}" type="text" /></td>
-					<th><label>部门/分公司：</label></th>
+					<th><label>分公司：</label></th>
 					<td><select name="DEPT_ID" class="combox"><option
 								value="">请选择...</option>
 							<c:forEach var="item" items="${DEPT_ID}">
@@ -61,7 +61,7 @@
 				<th width="150" align="center">身份证号码</th>
 				<th width="40" align="center">性别</th>
 				<th width="40" align="center">年龄</th>
-				<th width="120" align="center">部门/分公司</th>
+				<th width="120" align="center">分公司</th>
 				<th width="120" align="center">保险状态</th>
 				<th width="120" align="center">岗位</th>
 				<th width="120" align="center">联系电话</th>

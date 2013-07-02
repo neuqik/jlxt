@@ -1,5 +1,6 @@
 package net.biz.project.web;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -113,12 +114,32 @@ public class PRJAction extends BaseAction {
 	@GET
 	@POST
 	public String toEditProjectInfo(Map<String, Object> model) {
-		String prjId = MVC.ctx().getRequest().getParameter("PRJ_ID");
-		String sql = "SELECT BUILDINGCOUNT, CONTRACTAREA, CONTRACTNO, ID, LOCATION1, LOCATION2, LOCATION3, LOCATION4, MEMO, PRJNO, PRJ_ARCHIVE, PRJ_ARCHIVETIME, PRJ_AREA, PRJ_ENDTIME, PRJ_INVEST, PRJ_LEVEL, PRJ_MAP, PRJ_NAME, PRJ_PIC, PRJ_PROGRESS, PRJ_REGION, PRJ_STARTTIME, ROUND((PRJ_ENDTIME-PRJ_STARTTIME)/30,2) PRJ_TIME, PRJ_TYPE, QUALITY_TARGET, VALID, WEEKMEETING, WEEKMEETINGTIME FROM V_PRJ_INFO WHERE ID="
-				+ prjId;
-		String code1 = "DEPT_ID|PRJ_LEVEL|PRJ_TYPE|WEEKMEETING|WEEKMEETINGTIME|PRJ_ARCHIVE|LOCATION1|QUALITY_TARGET";
-		Map a = CodeList.getCodeMap();
 		try {
+			String prjId = MVC.ctx().getRequest().getParameter("PRJ_ID");
+			String m = MVC.ctx().getRequest().getParameterMap().get("method")[0];
+			// 如果有上一个下一个
+			if ("next".equals(m)) {
+				List<Map<String, Object>> r1 = JDBCOracleUtil
+						.executeQuery("SELECT ID FROM V_PRO_INFO WHERE ID>"
+								+ prjId + " AND ROWNUM =1");
+				if (r1.size() == 1) {
+					prjId = String.valueOf(r1.get(0).get("ID"));
+				}
+			}
+			if ("up".equals(m)) {
+				List<Map<String, Object>> r1 = JDBCOracleUtil
+						.executeQuery("SELECT ID FROM V_PRO_INFO WHERE ID>"
+								+ prjId + " AND ROWNUM =1");
+				if (r1.size() == 1) {
+					prjId = String.valueOf(r1.get(0).get("ID"));
+				}
+			}
+			// 查询内容
+			String sql = "SELECT BUILDINGCOUNT, CONTRACTAREA, CONTRACTNO, ID, LOCATION1, LOCATION2, LOCATION3, LOCATION4, MEMO, PRJNO, PRJ_ARCHIVE, PRJ_ARCHIVETIME, PRJ_AREA, PRJ_ENDTIME, PRJ_INVEST, PRJ_LEVEL, PRJ_MAP, PRJ_NAME, PRJ_PIC, PRJ_PROGRESS, PRJ_REGION, PRJ_STARTTIME, ROUND((PRJ_ENDTIME-PRJ_STARTTIME)/30,2) PRJ_TIME, PRJ_TYPE, QUALITY_TARGET, VALID, WEEKMEETING, WEEKMEETINGTIME FROM V_PRJ_INFO WHERE ID="
+					+ prjId;
+			String code1 = "DEPT_ID|PRJ_LEVEL|PRJ_TYPE|WEEKMEETING|WEEKMEETINGTIME|PRJ_ARCHIVE|LOCATION1|QUALITY_TARGET";
+			Map a = CodeList.getCodeMap();
+
 			String[] codes = code1.split("[|]");
 			for (int i = 0; i < codes.length; i++) {
 				model.put(codes[i], getCodeList(codes[i]));
@@ -796,5 +817,49 @@ public class PRJAction extends BaseAction {
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
 		return "forward:prj/view/addscore.jsp";
+	}
+
+	/**
+	 * 查询下一个项目
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/nextproject")
+	@GET
+	@POST
+	public String toNextProject(Map<String, String> model) {
+		try {
+			HttpServletRequest req = MVC.ctx().getRequest();
+			PRJ_UNIT prjInfo = (PRJ_UNIT) parseRequest(req, new PRJ_UNIT());
+			myservice.saveNewUnit(prjInfo);
+			model.put("PRJ_ID", prjInfo.getPRJ_ID());
+			return successJSON("添加参建单位成功", "dialog", "prj/editunit", "zjcjdw");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 查询上一个项目
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/upproject")
+	@GET
+	@POST
+	public String toUpProject(Map<String, String> model) {
+		try {
+			HttpServletRequest req = MVC.ctx().getRequest();
+			PRJ_UNIT prjInfo = (PRJ_UNIT) parseRequest(req, new PRJ_UNIT());
+			myservice.saveNewUnit(prjInfo);
+			model.put("PRJ_ID", prjInfo.getPRJ_ID());
+			return successJSON("添加参建单位成功", "dialog", "prj/editunit", "zjcjdw");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
 	}
 }

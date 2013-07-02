@@ -107,7 +107,7 @@
 			</p>
 			<div class="divider"></div>
 			<p>
-				<label>部门/分公司：</label> <select name="DEPT_ID" size="30"
+				<label>分公司：</label> <select name="DEPT_ID" size="30"
 					class=" combox"><option value="">请选择...</option>
 					<c:forEach var="item" items="${DEPT_ID}">
 						<option value="${item.codeValue}"

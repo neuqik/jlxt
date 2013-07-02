@@ -63,7 +63,7 @@
 								type="text" size="30" value="${emp.EMP_NAME}" alt="请输入员工姓名" />
 						</p>
 						<p>
-							<label>部门/分公司：</label> <select name="DEPT_ID" size="30"
+							<label>分公司：</label> <select name="DEPT_ID" size="30"
 								class="required combox"><option value="">请选择...</option>
 								<c:forEach var="item" items="${DEPT_ID}">
 									<option value="${item.codeValue}"

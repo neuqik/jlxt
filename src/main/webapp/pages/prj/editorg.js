@@ -59,7 +59,7 @@ var colsOption = [ {
 	id : "DEPT_ID",
 	width : 200,
 	editable : false,
-	header : "部门/分公司"
+	header : "分公司"
 }, {
 	id : "ENTERTIME",
 	width : 150,

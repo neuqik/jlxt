@@ -130,14 +130,16 @@
 					<label>项目地图：</label><input type="text" size="30" name="PRJ_MAP"
 						maxlength="200" />
 				</p>
+				<!-- 
 				<p>
 					<label>施工区域：</label><input type="text" size="30" name="PRJ_REGION"
 						maxlength="20" />
-				</p>
+				</p> -->
+				<!-- 
 				<p>
 					<label>项目图片：</label><input type="text" size="30" name="PRJ_PIC"
 						maxlength="200" />
-				</p>
+				</p> -->
 				<p>
 					<label>备注：</label><input type="text" size="30" name="MEMO"
 						maxlength="500" />

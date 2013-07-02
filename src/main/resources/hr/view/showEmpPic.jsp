@@ -53,7 +53,7 @@
 				<td>&nbsp;&nbsp;身份证号：</td>
 				<td><input name="IDCARD" type="text" size="30"
 					value="${IDCARD}" readonly="readonly" /></td>
-				<td>&nbsp;&nbsp;部门/分公司：</td>
+				<td>&nbsp;&nbsp;分公司：</td>
 				<td><input name="DEPT_ID" type="text" size="30"
 					value="${DEPT_ID}" readonly="readonly" /></td>
 			</tr>
