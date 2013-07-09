@@ -284,7 +284,7 @@ public class CommonAction extends BaseAction {
 	}
 
 	/**
-	 * 打开建设单位查询窗口
+	 * 打开分公司单位查询窗口
 	 * 
 	 * @param model
 	 * @return
@@ -306,16 +306,11 @@ public class CommonAction extends BaseAction {
 		SearchForm searchForm = new SearchForm("common/doJSDWLookupPageQuery",
 				"");
 
-		String sql = "SELECT ID ,UNIT_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,GROUP_NAME,FUN_GETCODEDESC('UNIT_TYPE',UNIT_TYPE) UNIT_TYPE,FUN_GETCODEDESC('QUALI_LEVEL',QUALI_LEVEL) QUALI_LEVEL,CONTRACTOR,MEMO FROM V_PRJ_UNIT WHERE PRJ_ID="
+		String sql = "SELECT ID ,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,PRJ_ID,fun_getcodedesc('DEPT_ID', DEPT_ID) DEPT_NAME,DEPT_ID,MEMO FROM V_PRJ_UNIT_RELATE WHERE PRJ_ID="
 				+ prjId;
 
-		// 1.查询界面的下拉列表框
-		String code1 = "UNIT_TYPE|QUALI_LEVEL";
 		try {
-			String[] codes = code1.split("[|]");
-			for (int i = 0; i < codes.length; i++) {
-				model.put(codes[i], getCodeList(codes[i]));
-			}
+
 			// 2.进行分页查询构成页面
 			// pageMod = service.getListPage(pageNum, numPerPage);
 			RequestInfo request = wrapRequest(sql);
@@ -353,7 +348,7 @@ public class CommonAction extends BaseAction {
 	}
 
 	/**
-	 * 执行施工单位查找带回
+	 * 执行分公司单位查找带回 暂时不用
 	 * 
 	 * @param model
 	 * @return
@@ -364,23 +359,11 @@ public class CommonAction extends BaseAction {
 	public String doSGDWLookupPageQuery(Map<String, Object> model) {
 
 		String prjId = getParam("PRJ_ID");
-		String unitType = getParam("UNIT_TYPE");
-		String unitName = getParam("UNIT_NAME");
-		String quaLevel = getParam("QUALI_LEVEL");
 		String memo = getParam("MEMO");
 
 		String where = "";
 		if (!"".equalsIgnoreCase(prjId)) {
 			where += " AND PRJ_ID = " + prjId + " ";
-		}
-		if (!"".equalsIgnoreCase(unitName)) {
-			where += " AND UNIT_NAME LIKE '" + unitName + "%' ";
-		}
-		if (!"".equalsIgnoreCase(quaLevel)) {
-			where += " AND QUALI_LEVEL = '" + quaLevel + "' ";
-		}
-		if (!"".equalsIgnoreCase(unitType)) {
-			where += " AND UNIT_TYPE = '" + unitType + "'";
 		}
 		if (!"".equalsIgnoreCase(memo)) {
 			where += " AND MEMO LIKE '%" + memo + "%'";
@@ -401,18 +384,14 @@ public class CommonAction extends BaseAction {
 		List<CJDWLOOKUP> pojos = new ArrayList<CJDWLOOKUP>();
 		DivPageComp dpc = null;
 		ListPage listPage = null;
-		SearchForm searchForm = new SearchForm("common/doSGDWLookupPageQuery",
+		SearchForm searchForm = new SearchForm("common/doJSDWLookupPageQuery",
 				"");
 		String sql = "SELECT ID ,UNIT_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,GROUP_NAME,FUN_GETCODEDESC('UNIT_TYPE',UNIT_TYPE) UNIT_TYPE,FUN_GETCODEDESC('QUALI_LEVEL',QUALI_LEVEL) QUALI_LEVEL,CONTRACTOR,MEMO FROM V_PRJ_UNIT "
 				+ where;
 
 		// 1.查询界面的下拉列表框
-		String code1 = "UNIT_TYPE|QUALI_LEVEL";
 		try {
-			String[] codes = code1.split("[|]");
-			for (int i = 0; i < codes.length; i++) {
-				model.put(codes[i], getCodeList(codes[i]));
-			}
+
 			// 2.进行分页查询构成页面
 			// pageMod = service.getListPage(pageNum, numPerPage);
 			RequestInfo request = wrapRequest(sql);
@@ -470,7 +449,7 @@ public class CommonAction extends BaseAction {
 		SearchForm searchForm = new SearchForm("common/doJGLXLookupPageQuery",
 				"");
 
-		String sql = "SELECT DISTINCT (SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,CONSTRUCT_TYPE,FUN_GETCODEDESC('CONSTRUCT_TYPE',CONSTRUCT_TYPE) CONSTRUCT_TYPE_NAME FROM V_PRJ_BUILDING WHERE PRJ_ID="
+		String sql = "SELECT ID,PRJ_ID, (SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,EMP_ID,(SELECT EMP_NAME FROM V_HRD_EMP WHERE EMP_ID = V_PRJ_ORG.EMP_ID) EMP_NAME,FUN_GETCODEDESC('PRJ_ROLE',PRJ_ROLE) PRJ_ROLE,RESPONSBILITY,MEMO FROM V_PRJ_ORG WHERE PRJ_ID="
 				+ prjId;
 
 		try {
@@ -706,7 +685,7 @@ public class CommonAction extends BaseAction {
 		ListPage listPage = null;
 		SearchForm searchForm = new SearchForm("common/doJSDWLookupPageQuery",
 				"");
-		String sql = "SELECT ID ,UNIT_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,GROUP_NAME,FUN_GETCODEDESC('UNIT_TYPE',UNIT_TYPE) UNIT_TYPE,FUN_GETCODEDESC('QUALI_LEVEL',QUALI_LEVEL) QUALI_LEVEL,CONTRACTOR,MEMO FROM V_PRJ_UNIT "
+		String sql = "SELECT ID ,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,PRJ_ID,FUN_GETDEPT(DEPT_ID) DEPT_NAME,DEPT_ID,MEMO FROM V_PRJ_UNIT_RELATE "
 				+ where;
 
 		// 1.查询界面的下拉列表框
@@ -766,7 +745,9 @@ public class CommonAction extends BaseAction {
 			// 查询下属的市
 			List<Map<String, Object>> result = JDBCOracleUtil
 					.executeQuery("select 'CHECKITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent CODE_DESC from t_checklist_prj where UPPER_CODE='"
-							+ value + "' order by check_code".toUpperCase());
+							+ value
+							+ "' and valid='1' order by check_code"
+									.toUpperCase());
 
 			return "out:" + BeanUtil.cascadeComboxList2JSArray(result);
 		} catch (Exception e) {

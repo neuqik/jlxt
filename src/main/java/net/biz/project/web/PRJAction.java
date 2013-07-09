@@ -18,6 +18,7 @@ import net.biz.project.vo.PRJ_BUILDING;
 import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_INFO_EXT;
+import net.biz.project.vo.PRJ_MAJORCHECK;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
@@ -659,19 +660,11 @@ public class PRJAction extends BaseAction {
 	@Path("/addscore")
 	@GET
 	@POST
-	public String toAddScore(Map<String, List> model) {
-		String code1 = "ITEM|";
-		Map a = CodeList.getCodeMap();
-		try {
-			String[] codes = code1.split("[|]");
-			for (int i = 0; i < codes.length; i++) {
-				model.put(codes[i], getCodeList(codes[i]));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return dwz.getFailedJson(e.getMessage()).toString();
-		}
-		return "forward:prj/view/addscore.jsp";
+	public String toAddScore(Map<String, Object> model) {
+		PRJ_MAJORCHECK prj = new PRJ_MAJORCHECK();
+		prj.setCHECK_USER(getCurrentUserName());
+		model.put("prj", prj);
+		return "forward:prj/view/addmajorcheck.jsp";
 	}
 
 	/**
@@ -686,13 +679,14 @@ public class PRJAction extends BaseAction {
 	public String toSaveNewScore(Map<String, Object> model) {
 		try {
 			HttpServletRequest req = MVC.ctx().getRequest();
-			PRJ_CHECK prjInfo = (PRJ_CHECK) parseRequest(req, new PRJ_CHECK());
+			PRJ_MAJORCHECK prjInfo = (PRJ_MAJORCHECK) parseRequest(req,
+					new PRJ_MAJORCHECK());
 			String checkgroup = myservice.saveNewScore(prjInfo);
-			PRJ_CHECK newPrj = new PRJ_CHECK();
+			PRJ_MAJORCHECK newPrj = new PRJ_MAJORCHECK();
 			newPrj.setCHECKGROUP_NO(checkgroup);
 			model.put("prj", newPrj);
-			return successJSONReload("保存评分成功", "dialog", "prj/showcheckgroup",
-					"bjpf");
+			return successJSON("保存检查单成功", "dialog", "prj/showcheckgroup",
+					"aqjc");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();

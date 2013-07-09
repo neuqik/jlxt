@@ -630,7 +630,7 @@ public class JDBCOracleUtil {
 				st = conn.prepareStatement(sql);
 			}
 			for (int i = 0; i < params.length; i++) {
-				System.out.println("正在set："+i);
+				System.out.println("正在set：" + i);
 				st.setObject(i + 1, params[i]);
 
 			}
@@ -716,5 +716,23 @@ public class JDBCOracleUtil {
 			param[i] = params.get(i);
 		}
 		executeDML(sql, param, conn);
+	}
+
+	/**
+	 * 获取数据库级的毫秒
+	 * 
+	 * @return
+	 * @throws SQLException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
+	public static String getSYSDATEMS() throws SQLException,
+			InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
+		List<Map<String, Object>> result = JDBCOracleUtil
+				.executeQuery("SELECT to_char(current_timestamp(5),'YYYYMMDDHH24MISSFF') RESULT FROM DUAL"
+						.toUpperCase());
+		return String.valueOf(result.get(0).get("RESULT"));
 	}
 }

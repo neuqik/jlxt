@@ -1,24 +1,40 @@
 var c = $("#myContent").height();
 var header = $("#projectcheck_head").height();
-var sql = "SELECT ACT_SCORE, PRJNO, PRJ_NAME, CHECKITEM, PRJ_ID,CHECKGROUP_NO, DEPT_COUNT  FROM V_PRJ_CHECK_SUM";
+var sql = "SELECT ID,PRJ_ID,PRJNO,PRJ_NAME,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.TESTER) TESTER,MEMO,VALID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO  FROM V_PRJ_MAJORCHECK";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
-		name : "ACT_SCORE"
-	},{
-		name : "CHECKITEM"
+		name : "ID"
+	}, {
+		name : "PRJ_ID"
 	}, {
 		name : "PRJNO"
 	}, {
 		name : "PRJ_NAME"
 	}, {
-		name : "PRJ_ID"
+		name : "DEPT_ID"
+	}, {
+		name : "PROGRESS"
+	}, {
+		name : "CHECKDATE"
+	}, {
+		name : "CHECK_USER"
+	}, {
+		name : "TESTER"
+	}, {
+		name : "MEMO"
+	}, {
+		name : "EMP_ID"
+	}, {
+		name : "EMP_ID_2"
+	}, {
+		name : "SUM1"
+	}, {
+		name : "RATIO1"
 	}, {
 		name : "CHECKGROUP_NO"
-	}, {
-		name : "DEPT_COUNT"
 	} ],
-	uniqueField : 'PRJ_ID',
+	uniqueField : 'ID',
 	recordType : 'json'
 };
 // 定义列选项
@@ -28,6 +44,11 @@ var colsOption = [ {
 	editable : false,
 	header : "项目ID",
 	hidden : true
+}, {
+	id : "CHECKGROUP_NO",
+	width : 200,
+	editable : false,
+	header : "检查单编号"
 }, {
 	id : "PRJNO",
 	width : 150,
@@ -39,25 +60,45 @@ var colsOption = [ {
 	editable : false,
 	header : "项目名称"
 }, {
-	id : "CHECKGROUP_NO",
-	width : 200,
-	editable : false,
-	header : "检查单编号"
-},{
-	id : "CHECKITEM",
+	id : "CHECKDATE",
 	width : 100,
 	editable : false,
-	header : "检查项目合计"
+	header : "检查时间"
 }, {
-	id : "DEPT_COUNT",
-	width : 150,
+	id : "RATIO1",
+	width : 80,
 	editable : false,
-	header : "扣分分公司数量"
+	header : "得分率"
 }, {
-	id : "ACT_SCORE",
+	id : "EMP_ID",
 	width : 100,
 	editable : false,
-	header : "扣分合计"
+	header : "总监"
+}, {
+	id : "EMP_ID_2",
+	width : 100,
+	editable : false,
+	header : "总代"
+}, {
+	id : "TESTER",
+	width : 100,
+	editable : false,
+	header : "受检人员"
+}, {
+	id : "CHECK_USER",
+	width : 100,
+	editable : false,
+	header : "检查人员"
+}, {
+	id : "PROGRESS",
+	width : 100,
+	editable : false,
+	header : "形象进度"
+}, {
+	id : "MEMO",
+	width : 100,
+	editable : false,
+	header : "备注"
 } ];
 
 var gridOption = {

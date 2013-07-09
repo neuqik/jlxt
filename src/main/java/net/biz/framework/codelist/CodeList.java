@@ -125,7 +125,7 @@ public class CodeList {
 			IllegalAccessException, ClassNotFoundException {
 		// 初始化对象
 		List<Code> codes = new ArrayList<Code>();
-		String sql = "select 'ITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent CODE_DESC from t_checklist_prj where member='0' order by check_code"
+		String sql = "select 'ITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent CODE_DESC from t_checklist_prj where member='0' and valid='1' order by check_code"
 				.toUpperCase();
 		List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql,
 				JDBCOracleUtil.getConnection());

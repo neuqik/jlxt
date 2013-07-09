@@ -1,54 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="pageHeader">
-	<form rel="pagerForm" method="post"
-		action="${BaseURL}${listPage.searchForm.action}"
-		onsubmit="return dwzSearch(this, 'dialog');">
-		<div class="searchBar">
-			<table>
-				<tr>
-					<th><label>项目ID：</label></th>
-					<td><input name="PRJ_ID" value="${PRJ_ID}" type="text"
-						readonly="readonly" /></td>
-				</tr>
-			</table>
-			<div class="subBar">
-				<ul>
-					<li><div class="buttonActive">
-							<div class="buttonContent">
-								<button type="submit">查询</button>
-							</div>
-						</div></li>
-					<li><div class="button">
-							<div class="buttonContent">
-								<button type="button">清空</button>
-							</div>
-						</div></li>
-				</ul>
-			</div>
-		</div>
-	</form>
-</div>
+<div class="pageHeader"></div>
 <div class="pageContent" width="100%">
 	<table class="table" layoutH="140" targetType="dialog">
 		<thead>
 			<tr>
 				<th width="40" align="center">选定</th>
 				<th width="100" align="left">项目编号</th>
-				<th width="100" align="left">结构类型代码</th>
-				<th width="250" align="left">结构类型名称</th>
+				<th width="100" align="left">员工编号</th>
+				<th width="250" align="left">员工名称</th>
+				<th width="250" align="left">角色</th>
+				<th width="250" align="left">职责</th>
+				<th width="250" align="left">备注</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach var="pojo" items="${listPage.pojos}">
 				<tr>
 					<td align="center"><a class="btnSelect"
-						href="javascript:$.bringBack({CONSTRUCT_TYPE:${pojo.CONSTRUCT_TYPE},CONSTRUCT_TYPE_NAME:'${pojo.CONSTRUCT_TYPE_NAME}'})"
+						href="javascript:$.bringBack({TESTER:'${pojo.EMP_ID}',TESTER_NAME:'${pojo.EMP_NAME}'})"
 						title="查找带回">选择</a></td>
 					<td>${pojo.PRJNO}</td>
-					<td>${pojo.CONSTRUCT_TYPE}</td>
-					<td>${pojo.CONSTRUCT_TYPE_NAME}</td>
+					<td>${pojo.EMP_ID}</td>
+					<td>${pojo.EMP_NAME}</td>
+					<td>${pojo.PRJ_ROLE}</td>
+					<td>${pojo.RESPONSBILITY}</td>
+					<td>${pojo.MEMO}</td>
 				</tr>
 			</c:forEach>
 		</tbody>

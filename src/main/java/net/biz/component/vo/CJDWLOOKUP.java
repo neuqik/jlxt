@@ -129,5 +129,23 @@ public class CJDWLOOKUP {
 	public void setPRJNO(String pRJNO) {
 		PRJNO = pRJNO;
 	}
+	private String DEPT_ID;
+	private String DEPT_NAME;
+
+	public String getDEPT_ID() {
+		return DEPT_ID;
+	}
+
+	public void setDEPT_ID(String dEPT_ID) {
+		DEPT_ID = dEPT_ID;
+	}
+
+	public String getDEPT_NAME() {
+		return DEPT_NAME;
+	}
+
+	public void setDEPT_NAME(String dEPT_NAME) {
+		DEPT_NAME = dEPT_NAME;
+	}
 	
 }

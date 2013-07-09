@@ -2,8 +2,8 @@ package net.biz.project.model;
 
 import java.util.List;
 
-import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
+import net.biz.project.vo.PRJ_MAJORCHECK;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.ProjectQueryParam;
@@ -115,10 +115,10 @@ public interface IPRJService {
 	 * 保存新的评分记录
 	 * 
 	 * @param prjInfo
-	 * @return 返回检查表编号
+	 * @return 返回检查单编号
 	 * @throws Exception
 	 */
-	public String saveNewScore(PRJ_CHECK prjInfo) throws Exception;
+	public String saveNewScore(PRJ_MAJORCHECK prjInfo) throws Exception;
 
 	/**
 	 * 删除评分记录

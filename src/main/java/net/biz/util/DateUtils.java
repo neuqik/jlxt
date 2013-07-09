@@ -1,5 +1,6 @@
 package net.biz.util;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -440,8 +441,10 @@ public class DateUtils {
 		Date d = parseDate(dateString, pattern);
 		return d == null ? null : new java.sql.Date(d.getTime());
 	}
+
 	/**
 	 * 解析yyyy-MM-dd格式的字符串，返回SQL使用的Date
+	 * 
 	 * @param dateString
 	 * @return java.sql.Date
 	 */

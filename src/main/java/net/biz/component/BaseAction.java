@@ -24,6 +24,8 @@ import org.eweb4j.config.ConfigConstant;
 import org.eweb4j.ioc.IOC;
 import org.eweb4j.mvc.MVC;
 import org.eweb4j.mvc.view.CallBackJson;
+import org.eweb4j.solidbase.user.model.User;
+import org.eweb4j.solidbase.user.model.UserCons;
 
 public abstract class BaseAction {
 	protected GridServerHandler handler = new GridServerHandler(MVC.ctx()
@@ -213,5 +215,16 @@ public abstract class BaseAction {
 	 */
 	protected String getParam(String key) {
 		return MVC.ctx().getRequest().getParameter(key);
+	}
+
+	/**
+	 * 获取当前登录的用户名
+	 * 
+	 * @return
+	 */
+	protected String getCurrentUserName() {
+		User user = (User) MVC.ctx().getSession()
+				.getAttribute(UserCons.LOGIN_USER_ATTR_NAME());
+		return user.getAccount();
 	}
 }

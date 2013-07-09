@@ -12,6 +12,7 @@ import net.biz.framework.exception.AppException;
 import net.biz.project.vo.PRJ_BUILDING;
 import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
+import net.biz.project.vo.PRJ_MAJORCHECK;
 import net.biz.project.vo.PRJ_ORG;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
@@ -582,5 +583,54 @@ public class PRJServiceImpl implements IPRJService {
 		List<Object> params = new ArrayList<Object>();
 		params.add(id);
 		JDBCOracleUtil.ExecuteDML(sql, params);
+	}
+
+	/**
+	 * 保存
+	 */
+	public String saveNewScore(PRJ_MAJORCHECK prjInfo) throws Exception {
+		// 查询总代、总监
+		List<Map<String, Object>> result;
+		result = JDBCOracleUtil
+				.executeQuery("SELECT EMP_ID FROM V_PRJ_ORG WHERE PRJ_ID="
+						+ prjInfo.getPRJ_ID() + " AND PRJ_ROLE='1'");
+		if (result.size() != 1) {
+			throw new AppException("查询工程" + prjInfo.getPRJNO()
+					+ "总监信息出错。查询到的总监数量为：" + result.size());
+		} else {
+			prjInfo.setEMP_ID(String.valueOf(result.get(0).get("EMP_ID")));
+		}
+		result.clear();
+		result = JDBCOracleUtil
+				.executeQuery("SELECT EMP_ID FROM V_PRJ_ORG WHERE PRJ_ID="
+						+ prjInfo.getPRJ_ID() + " AND PRJ_ROLE='2'");
+		if (result.size() != 1) {
+			throw new AppException("查询工程" + prjInfo.getPRJNO()
+					+ "总代信息出错。查询到的总代数量为：" + result.size());
+		} else {
+			prjInfo.setEMP_ID_2(String.valueOf(result.get(0).get("EMP_ID")));
+		}
+		// 执行插入
+		String sql = "INSERT INTO V_PRJ_MAJORCHECK(SUM3,ID,PRJ_ID,DEPT_ID,PROGRESS,CHECKDATE,CHECK_USER,TESTER,EMP_ID,EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,MEMO,VALID,SUM2) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+		List<Object> params = new ArrayList<Object>();
+		params.add(0, prjInfo.getSUM3());
+		params.add(1, JDBCOracleUtil.getID());
+		params.add(2, prjInfo.getPRJ_ID());
+		params.add(3, prjInfo.getDEPT_ID());
+		params.add(4, prjInfo.getPROGRESS());
+		params.add(5, prjInfo.getCHECKDATEForSqlDate());
+		params.add(6, prjInfo.getCHECK_USER());
+		params.add(7, prjInfo.getTESTER());
+		params.add(8, prjInfo.getEMP_ID());
+		params.add(9, prjInfo.getEMP_ID_2());
+		params.add(10, prjInfo.getSUM1());
+		params.add(11, prjInfo.getRATIO1());
+		params.add(12, prjInfo.getCHECKGROUP_NO());
+		params.add(13, prjInfo.getMEMO());
+		params.add(14, prjInfo.getVALID());
+		params.add(15, prjInfo.getSUM2());
+		JDBCOracleUtil.ExecuteDML(sql, params);
+		return prjInfo.getCHECKGROUP_NO();
 	}
 }

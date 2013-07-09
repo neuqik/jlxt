@@ -30,4 +30,60 @@ public class JGLXLOOKUP {
 		CONSTRUCT_TYPE_NAME = cONSTRUCT_TYPE_NAME;
 	}
 
+	private String EMP_ID;
+	private String EMP_NAME;
+	private String RESPONSBILITY;
+	private String MEMO;
+
+	public String getEMP_ID() {
+		return EMP_ID;
+	}
+
+	public void setEMP_ID(String eMP_ID) {
+		EMP_ID = eMP_ID;
+	}
+
+	public String getEMP_NAME() {
+		return EMP_NAME;
+	}
+
+	public void setEMP_NAME(String eMP_NAME) {
+		EMP_NAME = eMP_NAME;
+	}
+
+	public String getRESPONSBILITY() {
+		return RESPONSBILITY;
+	}
+
+	public void setRESPONSBILITY(String rESPONSBILITY) {
+		RESPONSBILITY = rESPONSBILITY;
+	}
+
+	public String getMEMO() {
+		return MEMO;
+	}
+
+	public void setMEMO(String mEMO) {
+		MEMO = mEMO;
+	}
+
+	private String PRJ_ROLE;
+	private String ID;
+
+	public String getPRJ_ROLE() {
+		return PRJ_ROLE;
+	}
+
+	public void setPRJ_ROLE(String pRJ_ROLE) {
+		PRJ_ROLE = pRJ_ROLE;
+	}
+
+	public String getID() {
+		return ID;
+	}
+
+	public void setID(String iD) {
+		ID = iD;
+	}
+
 }
