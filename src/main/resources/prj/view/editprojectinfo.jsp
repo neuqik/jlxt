@@ -2,15 +2,28 @@
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript">
-	function doNextPrj(){
-		alert('xiayige');
-		$.post('${BaseURL}prj/editprojectinfo?PRJ_ID=${prj.ID}', {
-			method : 'next'});
+	function doNextPrj() {
+		//$.post('${BaseURL}prj/editprojectinfo?PRJ_ID=${prj.ID}', {
+		//	method : 'next'
+		//});
+		navTab.openTab("xgxm",
+				'${BaseURL}prj/editprojectinfo?PRJ_ID=${PRJ_ID}', {
+					title : "编辑项目",
+					data : {
+						method : 'next',
+						prjno : '${prj.PRJNO}'
+					}
+				});
 	}
-	function doUpPrj(){
-		alert('shangyige');
-		$.post('${BaseURL}prj/editprojectinfo?PRJ_ID=${prj.ID}'	, {
-			method : 'up'});
+	function doUpPrj() {
+		navTab.openTab("xgxm",
+				'${BaseURL}prj/editprojectinfo?PRJ_ID=${PRJ_ID}', {
+					title : "编辑项目",
+					data : {
+						method : 'up',
+						prjno : '${prj.PRJNO}'
+					}
+				});
 	}
 </script>
 <div class="page">
@@ -235,13 +248,11 @@
 							</div>
 						</div>
 					</li>
-					<li>
-						<div class="button">
+					<li><div class="button">
 							<div class="buttonContent">
 								<button type="button" onclick="doUpPrj();">上一个</button>
 							</div>
-						</div>
-					</li>
+						</div></li>
 					<li>
 						<div class="button">
 							<div class="buttonContent">

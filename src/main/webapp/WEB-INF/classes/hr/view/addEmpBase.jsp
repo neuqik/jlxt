@@ -61,7 +61,7 @@
 						type="text" size="30" value="" alt="请输入员工姓名" />
 				</p>
 				<p>
-					<label>部门/分公司：</label> <select name="DEPT_ID" size="30"
+					<label>分公司：</label> <select name="DEPT_ID" size="30"
 						class="required combox"><option value="">请选择...</option>
 						<c:forEach var="item" items="${DEPT_ID}">
 							<option value="${item.codeValue}">${item.codeDesc}</option>
@@ -196,7 +196,7 @@
 						maxlength="20" />
 				</p>
 				<p>
-					<label>紧急联系人：</label> <input type="text" size="30" name="EMERGENCY"
+					<label>紧急联系人电话：</label> <input type="text" size="30" name="EMERGENCY"
 						maxlength="20" />
 				</p>
 				<p>

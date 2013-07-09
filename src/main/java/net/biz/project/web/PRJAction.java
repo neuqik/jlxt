@@ -114,24 +114,32 @@ public class PRJAction extends BaseAction {
 	@GET
 	@POST
 	public String toEditProjectInfo(Map<String, Object> model) {
+		String[] ms = null;
+		String prjId = MVC.ctx().getRequest().getParameter("PRJ_ID");
 		try {
-			String prjId = MVC.ctx().getRequest().getParameter("PRJ_ID");
-			String m = MVC.ctx().getRequest().getParameterMap().get("method")[0];
+			ms = MVC.ctx().getRequest().getParameterMap().get("method");
 			// 如果有上一个下一个
-			if ("next".equals(m)) {
-				List<Map<String, Object>> r1 = JDBCOracleUtil
-						.executeQuery("SELECT ID FROM V_PRO_INFO WHERE ID>"
-								+ prjId + " AND ROWNUM =1");
-				if (r1.size() == 1) {
-					prjId = String.valueOf(r1.get(0).get("ID"));
+			if (ms != null && ms.length > 0) {
+				String m = ms[0];
+				if ("next".equals(m)) {
+					String[] prjno = MVC.ctx().getRequest().getParameterMap()
+							.get("prjno");
+					List<Map<String, Object>> r1 = JDBCOracleUtil
+							.executeQuery("SELECT ID FROM V_PRJ_INFO WHERE PRJNO>'"
+									+ prjno[0] + "' AND ROWNUM=1 ");
+					if (r1.size() == 1) {
+						prjId = String.valueOf(r1.get(0).get("ID"));
+					}
 				}
-			}
-			if ("up".equals(m)) {
-				List<Map<String, Object>> r1 = JDBCOracleUtil
-						.executeQuery("SELECT ID FROM V_PRO_INFO WHERE ID>"
-								+ prjId + " AND ROWNUM =1");
-				if (r1.size() == 1) {
-					prjId = String.valueOf(r1.get(0).get("ID"));
+				if ("up".equals(m)) {
+					String[] prjno = MVC.ctx().getRequest().getParameterMap()
+							.get("prjno");
+					List<Map<String, Object>> r1 = JDBCOracleUtil
+							.executeQuery("SELECT ID FROM V_PRJ_INFO WHERE PRJNO<'"
+									+ prjno[0] + "' AND ROWNUM=1 ORDER BY PRJNO DESC");
+					if (r1.size() == 1) {
+						prjId = String.valueOf(r1.get(0).get("ID"));
+					}
 				}
 			}
 			// 查询内容
@@ -160,11 +168,16 @@ public class PRJAction extends BaseAction {
 			// 获取LOCATION2和LOCATION3的CodeList值
 			model.put("LOCATION2", CodeList.getLocation2(prj.getLOCATION1()));
 			model.put("LOCATION3", CodeList.getLocation3(prj.getLOCATION2()));
+			model.put("PRJ_ID", prjId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
-		return "forward:prj/view/editprojectinfo.jsp";
+		if (ms != null && ms.length > 0) {
+			return "forward:prj/view/editprojectall.jsp";
+		} else {
+			return "forward:prj/view/editprojectinfo.jsp";
+		}
 	}
 
 	/**

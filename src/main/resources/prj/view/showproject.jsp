@@ -46,7 +46,7 @@
 		} else {
 			// 如果只有一条)
 			navTab.openTab("xgxm", MyURL + "prj/editproject?PRJ_ID=" + id1, {
-				title : "维护项目",
+				title : "编辑项目",
 				fresh : false,
 				data : {},
 				close : function() {

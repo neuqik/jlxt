@@ -41,7 +41,7 @@
 		} else {
 			// 如果只有一条
 			navTab.openTab("xgjbxx", "${BaseURL}hrs/editEmpBase?empId=" + id, {
-				title : "修改基本信息",
+				title : "基本信息",
 				fresh : false,
 				data : {}
 			});

@@ -63,7 +63,7 @@
 								type="text" size="30" value="${emp.EMP_NAME}" alt="请输入员工姓名" />
 						</p>
 						<p>
-							<label>部门/分公司：</label> <select name="DEPT_ID" size="30"
+							<label>分公司：</label> <select name="DEPT_ID" size="30"
 								class="required combox"><option value="">请选择...</option>
 								<c:forEach var="item" items="${DEPT_ID}">
 									<option value="${item.codeValue}"
@@ -74,17 +74,21 @@
 							</select>
 						</p>
 						<p>
-							<label>身份证号码：</label> <input name="IDCARD" class="required"
-								type="text" size="30" minlength="15" maxlength="18"
-								alt="请输入身份证号码" value="${emp.IDCARD}"
-								remote="${BaseURL}hrs/validIDCardUpdate"
-								onChange="showBirthday(this.value);" />
+							<label>岗位：</label> <select name="ROLENAME"
+								class="required combox"><option value="">请选择...</option>
+								<c:forEach var="item" items="${ROLENAME}">
+									<option value="${item.codeValue}"
+										<c:if test="${item.codeValue == emp.ROLENAME}">
+								selected="selected"
+							</c:if>>${item.codeDesc}</option>
+								</c:forEach>
+							</select>
 						</p>
 						<p>
-							<label>出生日期：</label> <input id="BIRTH" type="text" name="BIRTH"
-								class="date required" size="30" yearstart="-80" yearend="5"
-								value="${emp.BIRTH}" /><a class="inputDateButton"
-								href="javascript:;">选择</a>
+							<label>进入本单位日期：</label> <input type="text" name="JOINDATE"
+								id="JOINDATE" class="date required" size="30" yearstart="-80"
+								value="${emp.JOINDATE}" yearend="5" /><a
+								class="inputDateButton" href="javascript:;">选择</a>
 						</p>
 						<p>
 							<label>年龄：</label> <input type="text" size="30" name="AGE"
@@ -102,6 +106,25 @@
 								</c:forEach>
 							</select>
 						</p>
+						<p>
+							<label>联系电话：</label> <input type="text" size="30" name="TEL"
+								value="${emp.TEL}" class="required" maxlength="20" />
+						</p>
+						<p>
+							<label>身份证号码：</label> <input name="IDCARD" class="required"
+								type="text" size="30" minlength="15" maxlength="18"
+								alt="请输入身份证号码" value="${emp.IDCARD}"
+								remote="${BaseURL}hrs/validIDCardUpdate"
+								onChange="showBirthday(this.value);" />
+						</p>
+						<p>
+							<label>出生日期：</label> <input id="BIRTH" type="text" name="BIRTH"
+								class="date required" size="30" yearstart="-80" yearend="5"
+								value="${emp.BIRTH}" /><a class="inputDateButton"
+								href="javascript:;">选择</a>
+						</p>
+
+
 						<p>
 							<!-- class不能选择combox，如果增加，则会添加一个超链接的对象，导致修改value不能实时显示 -->
 							<label>民族：</label> <select id="NATION" name="NATION"
@@ -138,8 +161,8 @@
 						</p>
 					</th>
 					<th align="left"><img alt="员工照片"
-						src="${BaseURL}pictures/emp/${EMP_ID}.jpg" width="200px"
-						height="200px" border="3" /></th>
+						src="${BaseURL}pictures/emp/${EMP_ID}.jpg" width="150px"
+						height="220px" border="3" /></th>
 				</table>
 				<div class="divider"></div>
 				<p>
@@ -153,28 +176,13 @@
 						</c:forEach>
 					</select>
 				</p>
-				<p>
-					<label>进入本单位日期：</label> <input type="text" name="JOINDATE"
-						id="JOINDATE" class="date required" size="30" yearstart="-80"
-						value="${emp.JOINDATE}" yearend="5" /><a class="inputDateButton"
-						href="javascript:;">选择</a>
-				</p>
+
 				<p>
 					<label>本单位工龄(年)：</label> <input type="text" size="30"
 						name="JOINAGE" id="JOINAGE" maxlength="3" onFocus="showJoinAge();"
 						value="${emp.JOINAGE}" />
 				</p>
-				<p>
-					<label>岗位：</label> <select name="ROLENAME" class="required combox"><option
-							value="">请选择...</option>
-						<c:forEach var="item" items="${ROLENAME}">
-							<option value="${item.codeValue}"
-								<c:if test="${item.codeValue == emp.ROLENAME}">
-								selected="selected"
-							</c:if>>${item.codeDesc}</option>
-						</c:forEach>
-					</select>
-				</p>
+
 				<p>
 					<label>职称：</label> <select name="TITLE_ID" class="required combox"><option
 							value="">请选择...</option>
@@ -235,17 +243,14 @@
 					<label>工龄：</label> <input type="text" size="30" name="WORKAGE"
 						value="${emp.WORKAGE}" maxlength="3" />
 				</p>
-				<p>
-					<label>联系电话：</label> <input type="text" size="30" name="TEL"
-						value="${emp.TEL}" class="required" maxlength="20" />
-				</p>
+
 				<p>
 					<label>家庭电话：</label> <input type="text" size="30" name="TELEHOME"
 						value="${emp.TELEHOME}" maxlength="20" />
 				</p>
 				<p>
-					<label>紧急联系人：</label> <input type="text" size="30" name="EMERGENCY"
-						value="${emp.EMERGENCY}" maxlength="20" />
+					<label>紧急联系人电话：</label> <input type="text" size="30"
+						name="EMERGENCY" value="${emp.EMERGENCY}" maxlength="20" />
 				</p>
 				<p>
 					<label>档案保管机构：</label> <select name="ARCHIVEKEEP" class="combox">
