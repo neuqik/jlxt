@@ -1,6 +1,6 @@
 package net.biz.project.web;
 
-import java.sql.SQLException;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,10 @@ import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.eweb4j.config.ConfigConstant;
 import org.eweb4j.mvc.MVC;
+import org.eweb4j.mvc.upload.UploadFile;
+import org.eweb4j.util.FileUtil;
 
 @Path("/prj")
 public class PRJAction extends BaseAction {
@@ -136,7 +139,8 @@ public class PRJAction extends BaseAction {
 							.get("prjno");
 					List<Map<String, Object>> r1 = JDBCOracleUtil
 							.executeQuery("SELECT ID FROM V_PRJ_INFO WHERE PRJNO<'"
-									+ prjno[0] + "' AND ROWNUM=1 ORDER BY PRJNO DESC");
+									+ prjno[0]
+									+ "' AND ROWNUM=1 ORDER BY PRJNO DESC");
 					if (r1.size() == 1) {
 						prjId = String.valueOf(r1.get(0).get("ID"));
 					}
@@ -870,6 +874,71 @@ public class PRJAction extends BaseAction {
 			myservice.saveNewUnit(prjInfo);
 			model.put("PRJ_ID", prjInfo.getPRJ_ID());
 			return successJSON("添加参建单位成功", "dialog", "prj/editunit", "zjcjdw");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 编辑项目照片
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/editprojectphoto")
+	@GET
+	@POST
+	public String toEditProjectPhoto(Map<String, Object> model) {
+		try {
+			String prjId = getParam("PRJ_ID");
+			List<Map<String, Object>> rs = JDBCOracleUtil
+					.executeQuery("SELECT PRJNO,PRJ_NAME FROM V_PRJ_INFO WHERE ID="
+							+ prjId);
+			model.put("PRJ_ID", prjId);
+			model.put("PRJ_NAME", rs.get(0).get("PRJ_NAME"));
+			model.put("PRJNO", rs.get(0).get("PRJNO"));
+			return "forward:prj/view/editprojectphoto.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 保存项目照片
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveprojectphoto")
+	@POST
+	@GET
+	public String toSaveProjectPhoto(Map<String, String> model) {
+
+		try {
+
+			String prjId = getParam("PRJ_ID");
+			String prjNo = String.valueOf(JDBCOracleUtil
+					.executeQuery(
+							"SELECT PRJNO FROM V_PRJ_INFO WHERE ID=" + prjId)
+					.get(0).get("PRJNO"));
+			String path = ConfigConstant.ROOT_PATH + "pictures/prj/" + prjNo
+					+ ".jpg";
+			model.put("PRJNO", prjNo);
+			String randFileName = prjNo + "_"
+					+ String.valueOf(Math.round(Math.random() * 10000));
+			model.put("RANDOMFILE", randFileName);
+			Map<String, List<UploadFile>> result = MVC.ctx().getUploadMap();
+			if (result.size() <= 0)
+				return dwz.getFailedJson("没有上传文件").toString();
+			UploadFile file = result.get("file1").get(0);
+			FileUtil.copy(file.getTmpFile(), new File(path));
+			// FileUtil.copy(file.getTmpFile(), new
+			// File(ConfigConstant.ROOT_PATH
+			// + "pictures/emp/tmp/" + randFileName));
+			return successJSONReload("保存项目照片成功，项目编号：" + prjNo, "navTab",
+					"prj/editprojectphoto", "xmtp");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();

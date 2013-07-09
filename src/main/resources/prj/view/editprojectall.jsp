@@ -16,12 +16,15 @@
 						class="j-ajax" rel="zzxx"><span>监理机构</span></a></li>
 					<li><a href="${BaseURL}prj/editrelate?PRJ_ID=${PRJ_ID}"
 						class="j-ajax" rel="bmfgs"><span>分公司</span></a></li>
+					<li><a href="${BaseURL}prj/editprojectphoto?PRJ_ID=${PRJ_ID}"
+						class="j-ajax" rel="xmtp"><span>项目图片</span></a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="tabsContent" style="height: 100%;"
 			id="addprojectall_tabcontent">
 			<!-- 要有空的DIV对应tab页的放在下面 -->
+			<div></div>
 			<div></div>
 			<div></div>
 			<div></div>

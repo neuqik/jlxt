@@ -1,0 +1,105 @@
+<%@ page language="java" contentType="text/html; charset=utf-8; "
+	pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<script type="text/javascript">
+	//得到图片的完整路径  
+	function getFullPath(obj) {
+		if (obj) { //ie  
+			if (window.navigator.userAgent.indexOf("MSIE") >= 1) {
+				obj.select();
+				return document.selection.createRange().text;
+			} //firefox  
+			else if (window.navigator.userAgent.indexOf("Firefox") >= 1) {
+				if (obj.files) {
+					return obj.files.item(0).getAsDataURL();
+				}
+				return obj.value;
+			}
+			return obj.value;
+		}
+	}
+	$("#file1").change(function() {
+		var strSrc = $("#file1").val();
+		img = new Image();
+		var pos = strSrc.lastIndexOf(".");
+		var lastname = strSrc.substring(pos, strSrc.length);
+		if (lastname.toLowerCase() != ".jpg") {
+			alertMsg.error("您上传的文件类型为" + lastname + "，图片必须为 JPG 类型");
+			return false;
+		}
+		//验证上传文件是否超出了大小  
+		if (img.fileSize / 1024 > 500) {
+			alertMsg.error("您上传的文件大小超出了500K限制！");
+			return false;
+		}
+	});
+	function reloadThis() {
+		//document.getElementById("empic").src = "${BaseURL}pictures/emp/tmp/${RANDOMFILE}.jpg";
+		//alert("${BaseURL}pictures/emp/tmp/${RANDOMFILE}.jpg");
+		navTab.reload("${BaseURL}prj/editprojectphoto?PRJ_ID=${PRJ_ID}");
+	}
+</script>
+<div class="page">
+	<div class="pageHeader">
+		<table>
+			<tr>
+				<td>&nbsp;&nbsp;ID：</td>
+				<td><input id="ID" name="ID" type="text" size="30"
+					value="${PRJ_ID}" readonly="readonly" /></td>
+				<td>&nbsp;&nbsp;项目编号：</td>
+				<td><input id="PRJNO" name="PRJNO" type="text" size="30"
+					value="${PRJNO}" readonly="readonly" /></td>
+				<td>&nbsp;&nbsp;项目名称：</td>
+				<td><input name="PRJ_NAME" type="text" size="30"
+					value="${PRJ_NAME}" readonly="readonly" /></td>
+			</tr>
+		</table>
+	</div>
+	<div class="pageContent">
+		<form enctype="multipart/form-data" method="post"
+			action="${BaseURL}prj/saveprojectphoto?PRJ_ID=${PRJ_ID}"
+			class="pageForm required-validate" name="upload"
+			onsubmit="return iframeCallback(this);">
+			<div class="formBar">
+				<ul>
+					<li><div class="buttonActive">
+							<div class="buttonContent">
+								<button type="submit"
+									<c:if test="${READONLY}">
+								disabled="disabled"
+							</c:if>>提交</button>
+							</div>
+						</div></li>
+					<li><div class="button">
+							<div class="buttonContent">
+								<button type="button" onClick="reloadThis();"
+									<c:if test="${READONLY}">
+								disabled="disabled"
+							</c:if>>刷新</button>
+							</div>
+						</div></li>
+					<li><div class="button">
+							<div class="buttonContent">
+								<button type="button" class="close">关闭</button>
+							</div>
+						</div></li>
+				</ul>
+			</div>
+			<div class="pageFormContent">
+				<c:if test="${READONLY!=true}">
+					<p>
+						<label>选择照片：</label> <input id="file1" name="file1" type="file" />
+					</p>
+				</c:if>
+				<div id="pic_img">
+					<img alt="项目照片" src="${BaseURL}pictures/prj/${PRJNO}.jpg"
+						width="150px" height="220px" id="projectphoto" name="pic"
+						border="2" />
+				</div>
+				<font color="red">图片大小不能超过100k，提交后请点击刷新按钮查看</font>
+			</div>
+		</form>
+
+	</div>
+</div>

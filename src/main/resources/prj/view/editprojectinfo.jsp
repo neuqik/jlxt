@@ -86,9 +86,11 @@
 								readonly="readonly" value="${prjExt.HEIGHT}" />
 						</p>
 					</th>
-					<th align="left"><img alt="项目照片${prj.PRJNO}"
-						src="${BaseURL}pictures/prj/${prj.PRJNO}.jpg" width="200px"
-						height="200px" border="3" /></th>
+					<th align="left"><a
+						href="${BaseURL}pictures/prj/${prj.PRJNO}.jpg" target="_blank"><img
+							alt="项目照片${prj.PRJNO}"
+							src="${BaseURL}pictures/prj/${prj.PRJNO}.jpg" width="200px"
+							height="200px" border="3" /></a></th>
 				</table>
 				<div class="divider"></div>
 				<p>
