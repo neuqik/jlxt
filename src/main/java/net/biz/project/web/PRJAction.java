@@ -1,6 +1,7 @@
 package net.biz.project.web;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -664,6 +665,8 @@ public class PRJAction extends BaseAction {
 		PRJ_MAJORCHECK prj = new PRJ_MAJORCHECK();
 		prj.setCHECK_USER(getCurrentUserName());
 		model.put("prj", prj);
+		model.put("SaveForm", "savenewscore"); // 保存的url
+		model.put("WRITE", true);
 		return "forward:prj/view/addmajorcheck.jsp";
 	}
 
@@ -682,6 +685,54 @@ public class PRJAction extends BaseAction {
 			PRJ_MAJORCHECK prjInfo = (PRJ_MAJORCHECK) parseRequest(req,
 					new PRJ_MAJORCHECK());
 			String checkgroup = myservice.saveNewScore(prjInfo);
+			PRJ_MAJORCHECK newPrj = new PRJ_MAJORCHECK();
+			newPrj.setCHECKGROUP_NO(checkgroup);
+			model.put("prj", newPrj);
+			return successJSON("保存检查单成功", "dialog", "prj/showcheckgroup",
+					"aqjc");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 保存扣分项
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/savecheckitem")
+	@GET
+	@POST
+	public String toSaveCheckItem(Map<String, Object> model) {
+		try {
+			HttpServletRequest req = MVC.ctx().getRequest();
+			PRJ_CHECK prjInfo = (PRJ_CHECK) parseRequest(req, new PRJ_CHECK());
+			String checkgroup = myservice.saveCheckItem(prjInfo);
+			return successJSON("保存评分成功", "dialog", "prj/showcheckgroup",
+					"bjjcx");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 保存新评分结果
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/saveeditscore")
+	@GET
+	@POST
+	public String toSaveEditScore(Map<String, Object> model) {
+		try {
+			HttpServletRequest req = MVC.ctx().getRequest();
+			PRJ_MAJORCHECK prjInfo = (PRJ_MAJORCHECK) parseRequest(req,
+					new PRJ_MAJORCHECK());
+			String checkgroup = myservice.saveEditScore(prjInfo);
 			PRJ_MAJORCHECK newPrj = new PRJ_MAJORCHECK();
 			newPrj.setCHECKGROUP_NO(checkgroup);
 			model.put("prj", newPrj);
@@ -737,18 +788,27 @@ public class PRJAction extends BaseAction {
 	}
 
 	/**
-	 * 显示检查单信息
+	 * 显示检查项目信息
 	 * 
 	 * @return
 	 */
-	@Path("/showcheckgroup")
+	@Path("/editcheckitem")
 	@GET
 	@POST
-	public String toShowCheckGroup(Map<String, String> model) {
-		String prjId = getParam("PRJ_ID");
-		String checkgroupNo = getParam("CHECKGROUP_NO");
-		model.put("PRJ_ID", prjId);
-		model.put("CHECKGROUP_NO", checkgroupNo);
+	public String toEditCheckItem(Map<String, Object> model) {
+		String id = getParam("ID");
+		String sql = "select ID,PRJ_ID,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,DEPT_ID,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_NAME,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,TESTER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=TESTER) TESTER_NAME,MEMO,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,SUM2,SUM3 FROM V_PRJ_MAJORCHECK WHERE ID="
+				+ id;
+		try {
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql);
+			PRJ_MAJORCHECK prj = new PRJ_MAJORCHECK();
+			BeanUtils.populate(prj, result.get(0));
+			model.put("prj", prj);
+			model.put("CHECKGROUP_NO", prj.getCHECKGROUP_NO());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
 		return "forward:prj/view/showcheckgroup.jsp";
 	}
 
@@ -776,7 +836,7 @@ public class PRJAction extends BaseAction {
 			}
 			// 获取项目编号
 			List<Map<String, Object>> result = JDBCOracleUtil
-					.executeQuery("SELECT PRJ_ID,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME FROM V_PRJ_CHECK WHERE CHECKGROUP_NO='"
+					.executeQuery("SELECT PRJ_ID,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE FROM V_PRJ_MAJORCHECK WHERE CHECKGROUP_NO='"
 							+ checkgroupNo + "' AND ROWNUM = 1");
 
 			PRJ_CHECK prjCheck = new PRJ_CHECK();
@@ -784,6 +844,8 @@ public class PRJAction extends BaseAction {
 			prjCheck.setPRJ_ID(String.valueOf(result.get(0).get("PRJ_ID")));
 			prjCheck.setPRJNO(String.valueOf(result.get(0).get("PRJNO")));
 			prjCheck.setPRJ_NAME(String.valueOf(result.get(0).get("PRJ_NAME")));
+			prjCheck.setCHECKDATE(String
+					.valueOf(result.get(0).get("CHECKDATE")));
 			model.put("CHECKGROUP_NO", checkgroupNo);
 			model.put("prj", prjCheck);
 		} catch (Exception e) {
@@ -806,28 +868,22 @@ public class PRJAction extends BaseAction {
 		// 获取检查单编号
 		String id = getParam("ID");
 
-		String sql = "SELECT ACT_SCORE, TO_CHAR(BEGINDATE,'YYYY-MM-DD') BEGINDATE, TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE, CHECKGROUP_NO, (SELECT UPPER_CODE FROM T_CHECKLIST_PRJ WHERE CHECK_CODE = CHECKITEM) ITEM, CHECKITEM, CONSTRUCT_TYPE,FUN_GETCODEDESC('CONSTRUCT_TYPE',CONSTRUCT_TYPE) CONSTRUCT_TYPE_NAME, FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID, (SELECT EMP_NAME FROM HRD_EMP A WHERE A.EMP_ID=C.EMP_ID) EMP_ID, TO_CHAR(ENDDATE,'YYYY-MM-DD') ENDDATE, ID, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=JSDW_ID) UNIT_NAME, JSDW_ID, MEMO, (SELECT PRJNO FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJNO,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJ_NAME, PRJ_ID, PRJ_PROGRESS, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=SGDW_ID) SGDW_NAME, SGDW_ID, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_CHECK C WHERE  ID="
+		String sql = "select ID,PRJ_ID,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,DEPT_ID,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_NAME,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,TESTER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=TESTER) TESTER_NAME,MEMO,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,SUM2,SUM3 FROM V_PRJ_MAJORCHECK WHERE ID="
 				+ id;
 		// 获取对应的PRJ_ID
-		String code1 = "ITEM|";
-		Map a = CodeList.getCodeMap();
 		try {
-			String[] codes = code1.split("[|]");
-			for (int i = 0; i < codes.length; i++) {
-				model.put(codes[i], getCodeList(codes[i]));
-			}
-			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql);
-			PRJ_CHECK prj = new PRJ_CHECK();
-			BeanUtils.populate(prj, result.get(0));
 
-			model.put("CHECKGROUP_NO", prj.getCHECKGROUP_NO());
-			model.put("CHECKITEM", CodeList.getCheckItem(prj.getITEM()));
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql);
+			PRJ_MAJORCHECK prj = new PRJ_MAJORCHECK();
+			BeanUtils.populate(prj, result.get(0));
 			model.put("prj", prj);
+			model.put("SaveForm", "saveeditscore");
+			model.put("WRITE", false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
-		return "forward:prj/view/addscore.jsp";
+		return "forward:prj/view/addmajorcheck.jsp";
 	}
 
 	/**

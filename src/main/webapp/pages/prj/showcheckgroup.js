@@ -1,5 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showcheckgroup_head").height();
+var panel = $("#showcheckgroup_panel").height();
 var sql = "SELECT ACT_SCORE, TO_CHAR(BEGINDATE,'YYYY-MM-DD') BEGINDATE, TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE, CHECKGROUP_NO, FUN_GETCHECKITEM(CHECKITEM) CHECKITEM, FUN_GETCODEDESC('CONSTRUCT_TYPE',CONSTRUCT_TYPE) CONSTRUCT_TYPE, FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID, (SELECT EMP_NAME FROM HRD_EMP A WHERE A.EMP_ID=C.EMP_ID) EMP_ID, TO_CHAR(ENDDATE,'YYYY-MM-DD') ENDDATE, ID, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=JSDW_ID) JSDW_ID, MEMO, (SELECT PRJNO FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJNO,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJ_NAME, PRJ_ID, PRJ_PROGRESS, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=SGDW_ID) SGDW_ID, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_CHECK C WHERE  CHECKGROUP_NO='"
 		+ checkgroupNo + "'";
 // 定义数据类型
@@ -157,7 +158,7 @@ var gridOption = {
 	id : "showcheckgroup_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
 	width : "100%", // "100%", // 700,
-	height : c - header, // "100%", // 330,
+	height : c - header - panel+150,// 245, // "100%", // 330,
 	container : "gridbox_showcheckgroup",
 	toolbarPosition : 'bottom',
 	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',

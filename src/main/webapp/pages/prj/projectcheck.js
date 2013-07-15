@@ -39,6 +39,17 @@ var dsOption = {
 };
 // 定义列选项
 var colsOption = [ {
+	id : "chk",
+	isCheckColumn : true,
+	frozen : true
+}, {
+	id : "ID",
+	width : 100,
+	editable : false,
+	header : "",
+	hidden : true,
+	frozen : true
+}, {
 	id : "PRJ_ID",
 	width : 100,
 	editable : false,
@@ -146,14 +157,11 @@ var gridOption = {
 	},
 	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
 			columnObj, grid) {
-		// TODO:双击行事件
-		navTab.openTab("bjjcd", MyURL + "prj/showcheckgroup?CHECKGROUP_NO="
-				+ record.CHECKGROUP_NO, {
-			title : "查看检查单",
+		// 如果只有一条
+		navTab.openTab("bjjcd", MyURL + "prj/editscore?ID=" + record.ID, {
+			title : "编辑检查单",
 			fresh : false,
-			data : {
-				PRJ_ID : record.ID
-			}
+			data : {}
 		});
 	}
 };

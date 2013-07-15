@@ -517,7 +517,7 @@ public class PRJServiceImpl implements IPRJService {
 	/**
 	 * 保存新的评分记录
 	 */
-	public String saveNewScore(PRJ_CHECK prjInfo) throws Exception {
+	public String saveCheckItem(PRJ_CHECK prjInfo) throws Exception {
 		if (!"".equals(prjInfo.getID())) {
 			// 如果是编辑
 			String sql = "UPDATE V_PRJ_CHECK SET CHECKITEM=?,CHECKDATE=?,ACT_SCORE=?,MEMO=?,JSDW_ID=?,SGDW_ID=?,PRJ_PROGRESS=?,CONSTRUCT_TYPE=?,CHECKGROUP_NO=? WHERE ID="
@@ -630,6 +630,25 @@ public class PRJServiceImpl implements IPRJService {
 		params.add(13, prjInfo.getMEMO());
 		params.add(14, prjInfo.getVALID());
 		params.add(15, prjInfo.getSUM2());
+		JDBCOracleUtil.ExecuteDML(sql, params);
+		return prjInfo.getCHECKGROUP_NO();
+
+	}
+
+	@Override
+	public String saveEditScore(PRJ_MAJORCHECK prjInfo) throws Exception {
+
+		String sql = "UPDATE V_PRJ_MAJORCHECK SET DEPT_ID=?,PROGRESS=?,CHECKDATE=?,CHECK_USER=?,TESTER=?,MEMO=? WHERE ID=?";
+
+		List<Object> params = new ArrayList<Object>();
+
+		params.add(prjInfo.getDEPT_ID());
+		params.add(prjInfo.getPROGRESS());
+		params.add(prjInfo.getCHECKDATEForSqlDate());
+		params.add(prjInfo.getCHECK_USER());
+		params.add(prjInfo.getTESTER());
+		params.add(prjInfo.getMEMO());
+		params.add(prjInfo.getID());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 		return prjInfo.getCHECKGROUP_NO();
 	}

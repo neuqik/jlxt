@@ -121,15 +121,82 @@
 </script>
 
 <div class="pageContent" id="showcheckgroup_head"
-	style="overflow-x: hidden; overflow-y: hidden">
-	<div class="panelBar">
-		<ul class="toolBar">
-			<li><a class="add" onclick="doAddCheck();" ref="tjkf"><span>添加评分</span></a></li>
-			<li><a class="edit" onclick="doEditCheck();" rel="bjkf"><span>编辑评分</span></a></li>
-			<li><a class="delete" onclick="doDelCheck();" rel="sckf"><span>删除评分</span></a></li>
-		</ul>
+	style="overflow-x: hidden; overflow-y: auto">
+	<div class="panel" id="showcheckgroup_panel">
+		<h1>检查单信息</h1>
+		<div class="pageFormContent">
+			<input size="30" name="ID" value="${prj.ID}" maxlength="22"
+				type="hidden" /> <input size="30" name="PRJ_ID" id="PRJ_ID"
+				value="${prj.PRJ_ID}" maxlength="22" type="hidden" />
+			<!-- 查找带回需要指定id属性 -->
+			<p>
+				<label>评分表编号：</label> <input id="CHECKGROUP_NO" name="CHECKGROUP_NO"
+					id="CHECKGROUP_NO" type="text" size="30" readonly="readonly"
+					value="${prj.CHECKGROUP_NO}" />
+			</p>
+			<p>
+				<label>检查时间：</label> <input type="text" name="CHECKDATE"
+					class="date readonly" size="30" yearstart="-80" yearend="5"
+					value="${prj.CHECKDATE}" />
+			</p>
+			<p>
+				<label>项目名称：</label> <input id="PRJ_NAME" name="PRJ_NAME"
+					type="text" size="30" readonly="readonly" value="${prj.PRJ_NAME}" />
+			</p>
+			<p>
+				<label>分公司名称：</label> <input id="DEPT_NAME" name="DEPT_NAME"
+					type="text" size="30" readonly="readonly" value="${prj.DEPT_NAME}" />
+			</p>
+			<p>
+				<label>受检人员：</label> <input id="TESTER_NAME" name="TESTER"
+					type="text" size="30" readonly="readonly" value="${prj.TESTER}" />
+			</p>
+			<p>
+				<label>项目总监：</label><input type="text" size="30" name="EMP_ID"
+					value="${prj.EMP_ID}" maxlength="20" readonly="readonly" />
+			</p>
+			<p>
+				<label>项目总代：</label><input type="text" size="30" name="EMP_ID_2"
+					value="${prj.EMP_ID_2}" maxlength="20" readonly="readonly" />
+			</p>
+			<p>
+				<label>检查人员：</label><input type="text" size="30" name="CHECK_USER"
+					value="${prj.CHECK_USER}" maxlength="20" 
+					readonly="readonly" />
+			</p>
+			<p>
+				<label>项目进展情况：</label><input type="text" size="30" name="PROGRESS"
+					value="${prj.PROGRESS}" maxlength="1000" readonly="readonly" />
+			</p>
+			<p>
+				<label>备注：</label><input type="text" size="30" name="MEMO"
+					value="${prj.MEMO}" maxlength="500" readonly="readonly" />
+			</p>
+		</div>
 	</div>
-	<div>
-		<div id="gridbox_showcheckgroup"></div>
+	<div class="panel">
+		<h1>评分信息</h1>
+		<div>
+
+			<div class="button">
+				<div class="buttonContent">
+					<button class="add" onclick="doAddCheck();">添加评分</button>
+				</div>
+			</div>
+			<div class="button">
+				<div class="buttonContent">
+					<button class="edit" onclick="doEditCheck();">编辑评分</button>
+				</div>
+			</div>
+			<div class="button">
+				<div class="buttonContent">
+					<button class="delete" onclick="doDelCheck();">删除评分</button>
+				</div>
+			</div>
+
+		</div>
+		<div>
+			<div id="gridbox_showcheckgroup"></div>
+		</div>
 	</div>
 </div>

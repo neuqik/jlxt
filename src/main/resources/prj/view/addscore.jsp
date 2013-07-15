@@ -33,7 +33,7 @@
 </script>
 <div class="page">
 	<div class="pageContent">
-		<form method="post" action="${BaseURL}prj/savenewscore"
+		<form method="post" action="${BaseURL}prj/savecheckitem"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this, navTabAjaxDone)">
 			<div class="pageFormContent" layoutH="58">
@@ -43,9 +43,7 @@
 				<p>
 					<label>项目编号：</label><input class="required" id="PRJNO"
 						value="${prj.PRJNO}" name="PRJNO" size="30" type="text" alt=""
-						lookupGroup="" lookupName="PRJNO" onBlur="initVar();" /> <a
-						class="btnLook" href="${BaseURL}common/doProjectLookup"
-						lookupGroup="" lookupName="PRJNO" lookupPk="PRJ_ID">查找</a>
+						lookupGroup="" lookupName="PRJNO" onBlur="initVar();" readonly="readonly"/> 
 				</p>
 				<!-- 查找带回需要指定id属性 -->
 				<p>
@@ -53,7 +51,7 @@
 						type="text" size="30" readonly="readonly" value="${prj.PRJ_NAME}" />
 				</p>
 				<p>
-					<label>建设单位编号：</label><input class="required" id="JSDW_ID"
+					<label>建设单位编号：</label><input id="JSDW_ID"
 						value="${prj.JSDW_ID}" name="JSDW_ID" size="30" type="text" alt=""
 						lookupGroup="" lookupName="JSDW_ID" readonly="readonly" /> <a
 						class="btnLook" id="JSDW_LOOKUP"
@@ -67,7 +65,7 @@
 				</p>
 
 				<p>
-					<label>施工单位编号：</label><input class="required" id="SGDW_ID"
+					<label>施工单位编号：</label><input id="SGDW_ID"
 						value="${prj.SGDW_ID}" name="SGDW_ID" size="30" type="text" alt=""
 						lookupGroup="" lookupName="SGDW_ID" readonly="readonly" /> <a
 						class="btnLook" id="SGDW_LOOKUP"
@@ -80,7 +78,7 @@
 						type="text" size="30" readonly="readonly" value="${prj.SGDW_NAME}" />
 				</p>
 				<p>
-					<label>结构类型：</label><input class="required" id="CONSTRUCT_TYPE"
+					<label>结构类型：</label><input id="CONSTRUCT_TYPE"
 						value="${prj.CONSTRUCT_TYPE}" name="CONSTRUCT_TYPE" size="30"
 						type="text" alt="" lookupGroup="" lookupName="CONSTRUCT_TYPE"
 						readonly="readonly" /> <a class="btnLook" id="CONSTRUCT_LOOKUP"

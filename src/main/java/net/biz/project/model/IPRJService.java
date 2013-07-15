@@ -2,6 +2,7 @@ package net.biz.project.model;
 
 import java.util.List;
 
+import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_MAJORCHECK;
 import net.biz.project.vo.PRJ_ORG;
@@ -112,14 +113,20 @@ public interface IPRJService {
 	public String saveMap(String pRJNO, String pRJMAP) throws Exception;
 
 	/**
-	 * 保存新的评分记录
+	 * 保存新的检查单
 	 * 
 	 * @param prjInfo
 	 * @return 返回检查单编号
 	 * @throws Exception
 	 */
 	public String saveNewScore(PRJ_MAJORCHECK prjInfo) throws Exception;
-
+	/**
+	 * 保存评分记录
+	 * @param prjInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public String saveCheckItem(PRJ_CHECK prjInfo) throws Exception;
 	/**
 	 * 删除评分记录
 	 * 
@@ -127,5 +134,12 @@ public interface IPRJService {
 	 * @throws Exception
 	 */
 	public void delScore(String id) throws Exception;
+	/**
+	 * 保存编辑检查表
+	 * @param prjInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public String saveEditScore(PRJ_MAJORCHECK prjInfo) throws Exception;
 
 }

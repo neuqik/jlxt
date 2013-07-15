@@ -744,7 +744,7 @@ public class CommonAction extends BaseAction {
 			String value = getParam("item");
 			// 查询下属的市
 			List<Map<String, Object>> result = JDBCOracleUtil
-					.executeQuery("select 'CHECKITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent CODE_DESC from t_checklist_prj where UPPER_CODE='"
+					.executeQuery("select 'CHECKITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent||'('||point||'分)' CODE_DESC from t_checklist_prj where UPPER_CODE='"
 							+ value
 							+ "' and valid='1' order by check_code"
 									.toUpperCase());

@@ -28,7 +28,7 @@
 </script>
 <div class="page">
 	<div class="pageContent">
-		<form method="post" action="${BaseURL}prj/savenewscore"
+		<form method="post" action="${BaseURL}prj/${SaveForm}"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this, navTabAjaxDone)">
 			<div class="pageFormContent" layoutH="58">
@@ -42,11 +42,14 @@
 				</p>
 				<div class="divider"></div>
 				<p>
-					<label>项目编号：</label><input class="required" id="PRJNO"
+					<label>项目编号：</label><input class="required readonly" id="PRJNO"
 						value="${prj.PRJNO}" name="PRJNO" size="30" type="text" alt=""
-						lookupGroup="" lookupName="PRJNO" onBlur="initVar();" /> <a
-						class="btnLook" href="${BaseURL}common/doProjectLookup"
-						lookupGroup="" lookupName="PRJNO" lookupPk="PRJ_ID">查找</a>
+						lookupGroup="" lookupName="PRJNO"
+						<c:if test="${WRITE}"> onBlur="initVar();" </c:if> />
+					<c:if test="${WRITE}">
+						<a class="btnLook" href="${BaseURL}common/doProjectLookup"
+							lookupGroup="" lookupName="PRJNO" lookupPk="PRJ_ID">查找</a>
+					</c:if>
 				</p>
 				<!-- 查找带回需要指定id属性 -->
 				<p>
@@ -75,14 +78,14 @@
 						lookupName="CONSTRUCT_TYPE" lookupPk="CONSTRUCT_TYPE">查找</a>
 				</p>
 				<p>
+					<label>受检人员名称：</label> <input id="TESTER_NAME" name="TESTER"
+						type="text" size="30" readonly="readonly" value="${prj.TESTER}" />
+				</p>
+				<p>
 					<label>检查时间：</label> <input type="text" name="CHECKDATE"
 						class="date required" size="30" yearstart="-80" yearend="5"
 						value="${prj.CHECKDATE}" /><a class="inputDateButton"
 						href="javascript:;">选择</a>
-				</p>
-				<p>
-					<label>受检人员名称：</label> <input id="TESTER_NAME" name="TESTER"
-						type="text" size="30" readonly="readonly" value="${prj.TESTER}" />
 				</p>
 				<p>
 					<label>形象进度：</label><input type="text" size="30" name="PROGRESS"

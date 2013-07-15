@@ -124,8 +124,8 @@ public class GenerateJava {
 //			 .generateVO("PRJ_MAJORCHECK",
 //			 "D:\\eclipse\\workspace\\building\\src\\main\\java\\net\\biz\\project\\vo\\");
 			// 2.生成service中保存新对象的代码
-			 GenerateJava.generateINSERTMethod("PRJ_MAJORCHECK", "prjInfo");
-//			GenerateJava.generateUPDATEMethod("PRJ_CHECK", "prjInfo");
+//			 GenerateJava.generateINSERTMethod("PRJ_MAJORCHECK", "prjInfo");
+			GenerateJava.generateUPDATEMethod("PRJ_MAJORCHECK", "prjInfo");
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
