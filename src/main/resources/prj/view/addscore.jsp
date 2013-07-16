@@ -109,7 +109,7 @@
 						value="${prj.ACT_SCORE}" maxlength="22" class="required" />
 				</p>
 				<p>
-					<label>项目进展情况：</label><input type="text" size="30"
+					<label>存在问题：</label><input type="text" size="30"
 						name="PRJ_PROGRESS" value="${prj.PRJ_PROGRESS}" maxlength="1000" />
 				</p>
 				<p>

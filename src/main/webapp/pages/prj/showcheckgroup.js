@@ -37,7 +37,7 @@ var dsOption = {
 		name : "SGDW_ID"
 	}, {
 		name : "VALID"
-	} , {
+	}, {
 		name : "POINT"
 	} ],
 	uniqueField : 'ID',
@@ -83,6 +83,13 @@ var colsOption = [ {
 	width : 80,
 	editable : false,
 	header : "实际得分"
+}, {
+	id : "PRJ_PROGRESS",
+	width : 150,
+	editable : false,
+	header : "存在问题",
+	toolTip : true,
+	toolTipWidth : 550
 }, {
 	id : "POINT",
 	width : 80,
@@ -180,23 +187,6 @@ var gridOption = {
 	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
 			columnObj, grid) {
 		// TODO:双击行事件
-		$.pdialog.open("prj/editscore?ID=" + record.ID, "bjkf", "编辑扣分", {
-			width : 840,
-			height : 380,
-			max : false,
-			mask : true,
-			mixable : true,
-			minable : true,
-			resizable : true,
-			drawable : true,
-			fresh : true,
-			close : function() {
-				// 对话框关闭时执行刷新
-				showcheckgroup_grid.reload();
-				showcheckgroup_grid.checkedRows = {};
-				return true;
-			}
-		});
 	}
 };
 

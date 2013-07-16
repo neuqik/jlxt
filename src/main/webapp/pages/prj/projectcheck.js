@@ -121,7 +121,7 @@ var gridOption = {
 	id : "projectcheck_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
 	width : "100%", // "100%", // 700,
-	height : c - header, // "100%", // 330,
+	height : c - header - 40, // "100%", // 330,
 	container : "gridbox_projectcheck",
 	toolbarPosition : 'bottom',
 	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',

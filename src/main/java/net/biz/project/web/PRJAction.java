@@ -645,6 +645,18 @@ public class PRJAction extends BaseAction {
 	 * 
 	 * @return
 	 */
+	@Path("/projectcheckall")
+	@GET
+	@POST
+	public String toProjectCheckAll() {
+		return "forward:prj/view/projectcheckall.jsp";
+	}
+
+	/**
+	 * 项目评分检查
+	 * 
+	 * @return
+	 */
 	@Path("/projectcheck")
 	@GET
 	@POST
@@ -758,6 +770,26 @@ public class PRJAction extends BaseAction {
 			String Id = getParam("ID");
 			myservice.delScore(Id);
 			return successJSON("删除评分成功", "dialog", "prj/showcheckgroup", "sckf");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 删除检查单
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/delcheckgroup")
+	@GET
+	@POST
+	public String toDelCheckgroup(Map<String, String> model) {
+		try {
+			String Id = getParam("ID");
+			myservice.delCheckgroup(Id);
+			return successJSON("删除检查单成功", "dialog", "prj/projectcheck", "aqjc");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();

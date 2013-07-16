@@ -652,4 +652,21 @@ public class PRJServiceImpl implements IPRJService {
 		JDBCOracleUtil.ExecuteDML(sql, params);
 		return prjInfo.getCHECKGROUP_NO();
 	}
+
+	/**
+	 * 删除检查单及检查项
+	 */
+	public void delCheckgroup(String id) throws Exception {
+		Connection conn = JDBCOracleUtil.getConnection();
+		String sql = "UPDATE V_PRJ_CHECK SET VALID='0' WHERE CHECKGROUP_NO=(SELECT CHECKGROUP_NO FROM V_PRJ_MAJORCHECK WHERE ID=?)";
+		List<Object> params = new ArrayList<Object>();
+		params.add(id);
+		JDBCOracleUtil.ExecuteDML(sql, params, conn);
+		params.clear();
+		sql = "UPDATE V_PRJ_MAJORCHECK SET VALID='0' WHERE ID=?";
+		params.add(id);
+		JDBCOracleUtil.ExecuteDML(sql, params, conn);
+		conn.commit();
+		conn.close();
+	}
 }

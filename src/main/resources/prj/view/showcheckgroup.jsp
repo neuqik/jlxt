@@ -56,45 +56,7 @@
 					}
 				});
 	}
-	//checkbox编辑扣分
-	function doEditCheck() {
-
-		var id1 = doCheckIsOnlyRowForPrjCheck();
-		if (id1 < 0) {
-			alertMsg.error("请选择一条信息编辑！");
-		} else {
-			/*
-			navTab.openTab("bjkf", MyURL + "prj/editscore?ID=" + id1, {
-				title : "编辑扣分",
-				fresh : false,
-				data : {},
-				close : function() {
-					// 对话框关闭时执行刷新
-					showcheckgroup_grid.reload();
-					showcheckgroup_grid.checkedRows = {};
-					return true;
-				}
-			});*/
-			$.pdialog.open("prj/editscore?ID=" + id1, "bjkf", "编辑评分", {
-				width : 840,
-				height : 380,
-				max : false,
-				mask : true,
-				mixable : true,
-				minable : true,
-				resizable : true,
-				drawable : true,
-				fresh : true,
-				close : function() {
-					// 对话框关闭时执行刷新
-					showcheckgroup_grid.reload();
-					showcheckgroup_grid.checkedRows = {};
-					return true;
-				}
-			});
-
-		}
-	}
+	
 	//checkbox删除扣分
 	function doDelCheck() {
 		var id1 = doCheckIsOnlyRowForPrjCheck();
@@ -161,8 +123,7 @@
 			</p>
 			<p>
 				<label>检查人员：</label><input type="text" size="30" name="CHECK_USER"
-					value="${prj.CHECK_USER}" maxlength="20" 
-					readonly="readonly" />
+					value="${prj.CHECK_USER}" maxlength="20" readonly="readonly" />
 			</p>
 			<p>
 				<label>项目进展情况：</label><input type="text" size="30" name="PROGRESS"
@@ -181,11 +142,6 @@
 			<div class="button">
 				<div class="buttonContent">
 					<button class="add" onclick="doAddCheck();">添加评分</button>
-				</div>
-			</div>
-			<div class="button">
-				<div class="buttonContent">
-					<button class="edit" onclick="doEditCheck();">编辑评分</button>
 				</div>
 			</div>
 			<div class="button">

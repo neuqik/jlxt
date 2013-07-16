@@ -71,10 +71,31 @@
 			});
 		}
 	}
+	//删除检查单
+	function doDelScore() {
+		var id1 = doCheckIsOnlyRowForPrjChk();
+		if (id1 < 0) {
+			alertMsg.error("请选择一条信息删除，删除前请确认信息可删除！");
+		} else {
+			// 如果只有一条
+			alertMsg.confirm("是否确定删除该信息？", {
+				okCall : function() {
+					$.post('${BaseURL}prj/delcheckgroup?ID=' + id1, {
+						empId : ''
+					}, function() {
+						DWZ.ajaxDone;
+						projectcheck_grid.reload();
+						projectcheck_grid.checkedRows = {};
+					}, "json");
+				}
+			});
+		}
+	}
 </script>
 
 <div class="pageContent" id="projectcheck_head"
 	style="overflow-x: hidden; overflow-y: hidden">
+
 	<div class="panelBar">
 		<ul class="toolBar">
 			<li><a class="add" onclick="doAddScore();" rel="tjjcd"><span>添加新检查单</span></a></li>
@@ -82,7 +103,9 @@
 			<li><a class="edit" onclick="doEditCheckItem();" rel="bjjcx"><span>编辑检查项</span></a></li>
 			<li><a class="delete" onclick="doDelScore();" rel="scjcd"><span>删除检查单</span></a></li>
 		</ul>
+
 	</div>
+
 	<div>
 		<div id="gridbox_projectcheck"></div>
 	</div>

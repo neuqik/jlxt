@@ -120,13 +120,16 @@ public interface IPRJService {
 	 * @throws Exception
 	 */
 	public String saveNewScore(PRJ_MAJORCHECK prjInfo) throws Exception;
+
 	/**
 	 * 保存评分记录
+	 * 
 	 * @param prjInfo
 	 * @return
 	 * @throws Exception
 	 */
 	public String saveCheckItem(PRJ_CHECK prjInfo) throws Exception;
+
 	/**
 	 * 删除评分记录
 	 * 
@@ -134,12 +137,20 @@ public interface IPRJService {
 	 * @throws Exception
 	 */
 	public void delScore(String id) throws Exception;
+
 	/**
 	 * 保存编辑检查表
+	 * 
 	 * @param prjInfo
 	 * @return
 	 * @throws Exception
 	 */
 	public String saveEditScore(PRJ_MAJORCHECK prjInfo) throws Exception;
+	/**
+	 * 删除检查单信息，包括下面的检查项
+	 * @param id
+	 * @throws Exception
+	 */
+	public void delCheckgroup(String id) throws Exception;
 
 }
