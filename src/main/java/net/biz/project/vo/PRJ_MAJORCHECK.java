@@ -213,14 +213,15 @@ public class PRJ_MAJORCHECK {
 	public void setDEPT_NAME(String dEPT_NAME) {
 		DEPT_NAME = dEPT_NAME;
 	}
-	private String TESTER_ID;
 
-	public String getTESTER_ID() {
-		return TESTER_ID;
+	private String TESTER_NAME;
+
+	public String getTESTER_NAME() {
+		return TESTER_NAME;
 	}
 
-	public void setTESTER_ID(String tESTER_ID) {
-		TESTER_ID = tESTER_ID;
+	public void setTESTER_NAME(String tESTER_NAME) {
+		TESTER_NAME = tESTER_NAME;
 	}
 
 }

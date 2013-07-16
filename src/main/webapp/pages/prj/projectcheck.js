@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#projectcheck_head").height();
-var sql = "SELECT ID,PRJ_ID,PRJNO,PRJ_NAME,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.TESTER) TESTER,MEMO,VALID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO  FROM V_PRJ_MAJORCHECK";
+var sql = "SELECT ID,PRJ_ID,PRJNO,PRJ_NAME,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.TESTER) TESTER,MEMO,VALID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID_2) EMP_ID_2,SUM1,RATIO1*100 RATIO1,CHECKGROUP_NO  FROM V_PRJ_MAJORCHECK";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
@@ -76,10 +76,15 @@ var colsOption = [ {
 	editable : false,
 	header : "检查时间"
 }, {
+	id : "SUM1",
+	width : 80,
+	editable : false,
+	header : "实得"
+},{
 	id : "RATIO1",
 	width : 80,
 	editable : false,
-	header : "得分率"
+	header : "得分率％"
 }, {
 	id : "EMP_ID",
 	width : 100,
@@ -158,8 +163,8 @@ var gridOption = {
 	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
 			columnObj, grid) {
 		// 如果只有一条
-		navTab.openTab("bjjcd", MyURL + "prj/editscore?ID=" + record.ID, {
-			title : "编辑检查单",
+		navTab.openTab("bjjcx", MyURL + "prj/editcheckitem?ID=" + record.ID, {
+			title : "编辑检查项",
 			fresh : false,
 			data : {}
 		});

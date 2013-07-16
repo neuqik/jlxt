@@ -1,7 +1,7 @@
 var c = $("#myContent").height();
 var header = $("#showcheckgroup_head").height();
 var panel = $("#showcheckgroup_panel").height();
-var sql = "SELECT ACT_SCORE, TO_CHAR(BEGINDATE,'YYYY-MM-DD') BEGINDATE, TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE, CHECKGROUP_NO, FUN_GETCHECKITEM(CHECKITEM) CHECKITEM, FUN_GETCODEDESC('CONSTRUCT_TYPE',CONSTRUCT_TYPE) CONSTRUCT_TYPE, FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID, (SELECT EMP_NAME FROM HRD_EMP A WHERE A.EMP_ID=C.EMP_ID) EMP_ID, TO_CHAR(ENDDATE,'YYYY-MM-DD') ENDDATE, ID, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=JSDW_ID) JSDW_ID, MEMO, (SELECT PRJNO FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJNO,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJ_NAME, PRJ_ID, PRJ_PROGRESS, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=SGDW_ID) SGDW_ID, FUN_GETCODEDESC('VALID',VALID) VALID FROM V_PRJ_CHECK C WHERE  CHECKGROUP_NO='"
+var sql = "SELECT ACT_SCORE, TO_CHAR(BEGINDATE,'YYYY-MM-DD') BEGINDATE, TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE, CHECKGROUP_NO, FUN_GETCHECKITEM(CHECKITEM) CHECKITEM, FUN_GETCODEDESC('CONSTRUCT_TYPE',CONSTRUCT_TYPE) CONSTRUCT_TYPE, FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID, (SELECT EMP_NAME FROM HRD_EMP A WHERE A.EMP_ID=C.EMP_ID) EMP_ID, TO_CHAR(ENDDATE,'YYYY-MM-DD') ENDDATE, ID, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=JSDW_ID) JSDW_ID, MEMO, (SELECT PRJNO FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJNO,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = C.PRJ_ID) PRJ_NAME, PRJ_ID, PRJ_PROGRESS, (SELECT UNIT_NAME FROM PRJ_UNIT B WHERE B.ID=SGDW_ID) SGDW_ID, FUN_GETCODEDESC('VALID',VALID) VALID,POINT FROM V_PRJ_CHECK C WHERE  CHECKGROUP_NO='"
 		+ checkgroupNo + "'";
 // 定义数据类型
 var dsOption = {
@@ -37,6 +37,8 @@ var dsOption = {
 		name : "SGDW_ID"
 	}, {
 		name : "VALID"
+	} , {
+		name : "POINT"
 	} ],
 	uniqueField : 'ID',
 	recordType : 'json'
@@ -78,25 +80,20 @@ var colsOption = [ {
 	toolTipWidth : 550
 }, {
 	id : "ACT_SCORE",
-	width : 40,
+	width : 80,
 	editable : false,
-	header : "扣分"
+	header : "实际得分"
+}, {
+	id : "POINT",
+	width : 80,
+	editable : false,
+	header : "应得"
 }, {
 	id : "PRJ_ID",
 	width : 100,
 	editable : false,
 	header : "项目ID",
 	hidden : true
-}, {
-	id : "DEPT_ID",
-	width : 100,
-	editable : false,
-	header : "部门分公司"
-}, {
-	id : "EMP_ID",
-	width : 80,
-	editable : false,
-	header : "项目总监"
 }, {
 	id : "JSDW_ID",
 	width : 150,
@@ -116,23 +113,6 @@ var colsOption = [ {
 	width : 70,
 	editable : false,
 	header : "结构类型"
-}, {
-	id : "BEGINDATE",
-	width : 100,
-	editable : false,
-	header : "开工时间"
-}, {
-	id : "ENDDATE",
-	width : 100,
-	editable : false,
-	header : "竣工日期"
-}, {
-	id : "PRJ_PROGRESS",
-	width : 150,
-	editable : false,
-	header : "项目进展情况",
-	toolTip : true,
-	toolTipWidth : 350
 }, {
 	id : "ID",
 	width : 150,
@@ -158,7 +138,7 @@ var gridOption = {
 	id : "showcheckgroup_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
 	width : "100%", // "100%", // 700,
-	height : c - header - panel+150,// 245, // "100%", // 330,
+	height : c - header - panel + 150,// 245, // "100%", // 330,
 	container : "gridbox_showcheckgroup",
 	toolbarPosition : 'bottom',
 	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',

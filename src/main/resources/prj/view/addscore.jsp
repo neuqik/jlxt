@@ -105,7 +105,7 @@
 
 
 				<p>
-					<label>扣分：</label><input type="text" size="30" name="ACT_SCORE"
+					<label>实际得分：</label><input type="text" size="30" name="ACT_SCORE"
 						value="${prj.ACT_SCORE}" maxlength="22" class="required" />
 				</p>
 				<p>

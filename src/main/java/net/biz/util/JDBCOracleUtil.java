@@ -191,7 +191,9 @@ public class JDBCOracleUtil {
 				cstat.registerOutParameter(i, OracleTypes.VARCHAR);
 			}
 		}
-
+		// TODO: 替换
+		System.out.println("调用过程过程:"+procName);
+		System.out.println("输入参数:"+inList);
 		cstat.executeUpdate();
 		OracleCallableStatement ocstat = (OracleCallableStatement) cstat;
 

@@ -4,12 +4,17 @@
 
 <script type="text/javascript">
 	$("#PRJNO").select();
+	// 老的值
+	var PRJNO_OLD = $("#PRJNO").val();
 	function initVar() {
 		var PRJ_ID = $("#PRJ_ID").val();
+		// 新的值
 		var PRJNO = $("#PRJNO").val();
-		// 建设单位
-		$("#DEPT_ID").val("");
-		$("#TESTER").val("");
+		// 如果换了项目编号
+		if (PRJNO != PRJNO_OLD) {
+			$("#DEPT_ID").val("");
+			$("#TESTER").val("");
+		}
 		var obj1 = document.getElementById('JSDW_LOOKUP');
 		var h = obj1.getAttribute('href');
 
@@ -34,7 +39,7 @@
 			<div class="pageFormContent" layoutH="58">
 				<input size="30" name="ID" value="${prj.ID}" maxlength="22"
 					type="hidden" /> <input size="30" name="PRJ_ID" id="PRJ_ID"
-					value="${prj.ID}" maxlength="22" type="hidden" />
+					value="${prj.PRJ_ID}" maxlength="22" type="hidden" />
 				<p>
 					<label>评分单编号：</label><input type="text" size="30"
 						name="CHECKGROUP_NO" value="${prj.CHECKGROUP_NO}" maxlength="20"
@@ -44,8 +49,7 @@
 				<p>
 					<label>项目编号：</label><input class="required readonly" id="PRJNO"
 						value="${prj.PRJNO}" name="PRJNO" size="30" type="text" alt=""
-						lookupGroup="" lookupName="PRJNO"
-						<c:if test="${WRITE}"> onBlur="initVar();" </c:if> />
+						lookupGroup="" lookupName="PRJNO" onBlur="initVar();" />
 					<c:if test="${WRITE}">
 						<a class="btnLook" href="${BaseURL}common/doProjectLookup"
 							lookupGroup="" lookupName="PRJNO" lookupPk="PRJ_ID">查找</a>
@@ -79,7 +83,8 @@
 				</p>
 				<p>
 					<label>受检人员名称：</label> <input id="TESTER_NAME" name="TESTER"
-						type="text" size="30" readonly="readonly" value="${prj.TESTER}" />
+						type="text" size="30" readonly="readonly"
+						value="${prj.TESTER_NAME}" />
 				</p>
 				<p>
 					<label>检查时间：</label> <input type="text" name="CHECKDATE"
@@ -119,8 +124,8 @@
 						value="${prj.SUM2}" maxlength="22" readonly="readonly" />
 				</p>
 				<p>
-					<label>得分率：</label><input type="text" size="30" name="RATIO1"
-						value="${prj.RATIO1}" maxlength="22" readonly="readonly" />
+					<label>得分率(%)：</label><input type="text" size="30" name="RATIO1"
+						value="${prj.RATIO1*100}" maxlength="22" readonly="readonly" />
 				</p>
 			</div>
 			<div class="formBar">
