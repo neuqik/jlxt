@@ -223,5 +223,15 @@ public class PRJ_MAJORCHECK {
 	public void setTESTER_NAME(String tESTER_NAME) {
 		TESTER_NAME = tESTER_NAME;
 	}
+	private String CHECK_TYPE;
+
+	public String getCHECK_TYPE() {
+		return CHECK_TYPE;
+	}
+
+	public void setCHECK_TYPE(String cHECK_TYPE) {
+		CHECK_TYPE = cHECK_TYPE;
+	}
+	
 
 }

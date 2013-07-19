@@ -611,7 +611,7 @@ public class PRJServiceImpl implements IPRJService {
 			prjInfo.setEMP_ID_2(String.valueOf(result.get(0).get("EMP_ID")));
 		}
 		// 执行插入
-		String sql = "INSERT INTO V_PRJ_MAJORCHECK(SUM3,ID,PRJ_ID,DEPT_ID,PROGRESS,CHECKDATE,CHECK_USER,TESTER,EMP_ID,EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,MEMO,VALID,SUM2) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO V_PRJ_MAJORCHECK(SUM3,ID,PRJ_ID,DEPT_ID,PROGRESS,CHECKDATE,CHECK_USER,TESTER,EMP_ID,EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,MEMO,VALID,SUM2,CHECK_TYPE) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		List<Object> params = new ArrayList<Object>();
 		params.add(0, prjInfo.getSUM3());
@@ -630,6 +630,7 @@ public class PRJServiceImpl implements IPRJService {
 		params.add(13, prjInfo.getMEMO());
 		params.add(14, prjInfo.getVALID());
 		params.add(15, prjInfo.getSUM2());
+		params.add(16, prjInfo.getCHECK_TYPE());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 		return prjInfo.getCHECKGROUP_NO();
 

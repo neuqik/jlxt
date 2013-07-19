@@ -62,7 +62,10 @@ public class CodeList {
 			}
 		}
 		initLocation();
-		initItem();
+		initItem("01");
+		initItem("02");
+		initItem("03");
+		initItem("04");
 	}
 
 	/**
@@ -116,17 +119,21 @@ public class CodeList {
 	/**
 	 * 初始化检查扣分大项
 	 * 
+	 * @param checkType
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	private void initItem() throws SQLException, InstantiationException,
-			IllegalAccessException, ClassNotFoundException {
+	private void initItem(String checkType) throws SQLException,
+			InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
 		// 初始化对象
 		List<Code> codes = new ArrayList<Code>();
-		String sql = "select 'ITEM' CODE_TYPE,check_code CODE_VALUE,checkcontent||'('||point||'分)' CODE_DESC from t_checklist_prj where member='0' and valid='1' order by check_code"
-				.toUpperCase();
+		String sql = "select 'ITEM_"
+				+ checkType
+				+ "' CODE_TYPE,check_code CODE_VALUE,checkcontent||'('||point||'分)' CODE_DESC from t_checklist_prj where member='0' and valid='1' and check_type='"
+				+ checkType + "' order by check_code".toUpperCase();
 		List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql,
 				JDBCOracleUtil.getConnection());
 		String lastCodeType = "";

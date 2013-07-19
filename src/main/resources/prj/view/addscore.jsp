@@ -43,7 +43,8 @@
 				<p>
 					<label>项目编号：</label><input class="required" id="PRJNO"
 						value="${prj.PRJNO}" name="PRJNO" size="30" type="text" alt=""
-						lookupGroup="" lookupName="PRJNO" onBlur="initVar();" readonly="readonly"/> 
+						lookupGroup="" lookupName="PRJNO" onBlur="initVar();"
+						readonly="readonly" />
 				</p>
 				<!-- 查找带回需要指定id属性 -->
 				<p>
@@ -51,12 +52,11 @@
 						type="text" size="30" readonly="readonly" value="${prj.PRJ_NAME}" />
 				</p>
 				<p>
-					<label>建设单位编号：</label><input id="JSDW_ID"
-						value="${prj.JSDW_ID}" name="JSDW_ID" size="30" type="text" alt=""
-						lookupGroup="" lookupName="JSDW_ID" readonly="readonly" /> <a
-						class="btnLook" id="JSDW_LOOKUP"
-						href="${BaseURL}common/doJSDWLookup" lookupGroup=""
-						lookupName="JSDW_ID" lookupPk="JSDW_ID">查找</a>
+					<label>建设单位编号：</label><input id="JSDW_ID" value="${prj.JSDW_ID}"
+						name="JSDW_ID" size="30" type="text" alt="" lookupGroup=""
+						lookupName="JSDW_ID" readonly="readonly" /> <a class="btnLook"
+						id="JSDW_LOOKUP" href="${BaseURL}common/doJSDWLookup"
+						lookupGroup="" lookupName="JSDW_ID" lookupPk="JSDW_ID">查找</a>
 				</p>
 				<!-- 查找带回需要指定id属性 -->
 				<p>
@@ -65,12 +65,11 @@
 				</p>
 
 				<p>
-					<label>施工单位编号：</label><input id="SGDW_ID"
-						value="${prj.SGDW_ID}" name="SGDW_ID" size="30" type="text" alt=""
-						lookupGroup="" lookupName="SGDW_ID" readonly="readonly" /> <a
-						class="btnLook" id="SGDW_LOOKUP"
-						href="${BaseURL}common/doSGDWLookup" lookupGroup=""
-						lookupName="SGDW_ID" lookupPk="SGDW_ID">查找</a>
+					<label>施工单位编号：</label><input id="SGDW_ID" value="${prj.SGDW_ID}"
+						name="SGDW_ID" size="30" type="text" alt="" lookupGroup=""
+						lookupName="SGDW_ID" readonly="readonly" /> <a class="btnLook"
+						id="SGDW_LOOKUP" href="${BaseURL}common/doSGDWLookup"
+						lookupGroup="" lookupName="SGDW_ID" lookupPk="SGDW_ID">查找</a>
 				</p>
 				<!-- 查找带回需要指定id属性 -->
 				<p>

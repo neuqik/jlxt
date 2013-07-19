@@ -145,7 +145,7 @@ var gridOption = {
 	id : "showcheckgroup_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
 	width : "100%", // "100%", // 700,
-	height : c - header - panel + 150,// 245, // "100%", // 330,
+	height : c - header - panel + 185,// 245, // "100%", // 330,
 	container : "gridbox_showcheckgroup",
 	toolbarPosition : 'bottom',
 	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',

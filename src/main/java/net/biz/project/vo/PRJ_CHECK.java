@@ -235,4 +235,13 @@ public class PRJ_CHECK {
 		ITEM = iTEM;
 	}
 
+	private String CHECK_TYPE;
+
+	public String getCHECK_TYPE() {
+		return CHECK_TYPE;
+	}
+
+	public void setCHECK_TYPE(String cHECK_TYPE) {
+		CHECK_TYPE = cHECK_TYPE;
+	}
 }

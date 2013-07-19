@@ -665,6 +665,42 @@ public class PRJAction extends BaseAction {
 	}
 
 	/**
+	 * 土建检查
+	 * 
+	 * @return
+	 */
+	@Path("/projectcheck_building")
+	@GET
+	@POST
+	public String toProjectCheck_Building() {
+		return "forward:prj/view/projectcheck_building.jsp";
+	}
+
+	/**
+	 * 水暖检查
+	 * 
+	 * @return
+	 */
+	@Path("/projectcheck_water")
+	@GET
+	@POST
+	public String toProjectCheck_Water() {
+		return "forward:prj/view/projectcheck_water.jsp";
+	}
+
+	/**
+	 * 水暖检查
+	 * 
+	 * @return
+	 */
+	@Path("/projectcheck_electric")
+	@GET
+	@POST
+	public String toProjectCheck_Electric() {
+		return "forward:prj/view/projectcheck_electric.jsp";
+	}
+
+	/**
 	 * 增加检查单
 	 * 
 	 * @param model
@@ -674,12 +710,29 @@ public class PRJAction extends BaseAction {
 	@GET
 	@POST
 	public String toAddScore(Map<String, Object> model) {
-		PRJ_MAJORCHECK prj = new PRJ_MAJORCHECK();
-		prj.setCHECK_USER(getCurrentUserName());
-		model.put("prj", prj);
-		model.put("SaveForm", "savenewscore"); // 保存的url
-		model.put("WRITE", true);
-		return "forward:prj/view/addmajorcheck.jsp";
+		String checkType = getParamByData("CHECK_TYPE")[0];
+		String code1 = "CHECK_TYPE|";
+
+		// 获取对应的PRJ_ID
+
+		Map a = CodeList.getCodeMap();
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			PRJ_MAJORCHECK prj = new PRJ_MAJORCHECK();
+			prj.setCHECK_USER(getCurrentUserName());
+			prj.setCHECK_TYPE(checkType);
+			model.put("prj", prj);
+			model.put("SaveForm", "savenewscore"); // 保存的url
+			model.put("WRITE", true);
+			return "forward:prj/view/addmajorcheck.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+
 	}
 
 	/**
@@ -829,9 +882,18 @@ public class PRJAction extends BaseAction {
 	@POST
 	public String toEditCheckItem(Map<String, Object> model) {
 		String id = getParam("ID");
-		String sql = "select ID,PRJ_ID,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,DEPT_ID,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_NAME,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,TESTER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=TESTER) TESTER_NAME,MEMO,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,SUM2,SUM3 FROM V_PRJ_MAJORCHECK WHERE ID="
+		String sql = "select ID,PRJ_ID,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,DEPT_ID,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_NAME,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,TESTER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=TESTER) TESTER_NAME,MEMO,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,SUM2,SUM3,CHECK_TYPE FROM V_PRJ_MAJORCHECK WHERE ID="
 				+ id;
+		String code1 = "CHECK_TYPE|";
+
+		// 获取对应的PRJ_ID
+
+		Map a = CodeList.getCodeMap();
 		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
 			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql);
 			PRJ_MAJORCHECK prj = new PRJ_MAJORCHECK();
 			BeanUtils.populate(prj, result.get(0));
@@ -856,7 +918,8 @@ public class PRJAction extends BaseAction {
 	public String toAddScoreByGroup(Map<String, Object> model) {
 		// 获取检查单编号
 		String checkgroupNo = getParam("CHECKGROUP_NO");
-		String code1 = "ITEM|";
+		String checkType = getParamByData("CHECK_TYPE")[0];
+		String code1 = "ITEM_" + checkType + "|CHECK_TYPE";
 
 		// 获取对应的PRJ_ID
 
@@ -866,6 +929,7 @@ public class PRJAction extends BaseAction {
 			for (int i = 0; i < codes.length; i++) {
 				model.put(codes[i], getCodeList(codes[i]));
 			}
+			model.put("ITEM", getCodeList("ITEM_" + checkType));
 			// 获取项目编号
 			List<Map<String, Object>> result = JDBCOracleUtil
 					.executeQuery("SELECT PRJ_ID,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE FROM V_PRJ_MAJORCHECK WHERE CHECKGROUP_NO='"
@@ -900,11 +964,19 @@ public class PRJAction extends BaseAction {
 		// 获取检查单编号
 		String id = getParam("ID");
 
-		String sql = "select ID,PRJ_ID,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,DEPT_ID,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_NAME,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,TESTER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=TESTER) TESTER_NAME,MEMO,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,SUM2,SUM3 FROM V_PRJ_MAJORCHECK WHERE ID="
+		String sql = "select ID,PRJ_ID,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,DEPT_ID,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_NAME,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,TESTER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=TESTER) TESTER_NAME,MEMO,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,SUM2,SUM3,CHECK_TYPE FROM V_PRJ_MAJORCHECK WHERE ID="
 				+ id;
-		// 获取对应的PRJ_ID
-		try {
+		String code1 = "CHECK_TYPE|";
 
+		// 获取对应的PRJ_ID
+
+		Map a = CodeList.getCodeMap();
+		try {
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			// 获取对应的PRJ_ID
 			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql);
 			PRJ_MAJORCHECK prj = new PRJ_MAJORCHECK();
 			BeanUtils.populate(prj, result.get(0));

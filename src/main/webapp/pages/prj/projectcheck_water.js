@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#projectcheck_head").height();
-var sql = "SELECT ID,PRJ_ID,PRJNO,PRJ_NAME,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.TESTER) TESTER,MEMO,VALID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID_2) EMP_ID_2,SUM1,RATIO1*100 RATIO1,CHECKGROUP_NO  FROM V_PRJ_MAJORCHECK WHERE CHECK_TYPE='01'";
+var sql = "SELECT ID,PRJ_ID,PRJNO,PRJ_NAME,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.TESTER) TESTER,MEMO,VALID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID_2) EMP_ID_2,SUM1,RATIO1*100 RATIO1,CHECKGROUP_NO  FROM V_PRJ_MAJORCHECK WHERE CHECK_TYPE='03'";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
@@ -118,11 +118,11 @@ var colsOption = [ {
 } ];
 
 var gridOption = {
-	id : "projectcheck_grid",
+	id : "projectcheck_water_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
 	width : "100%", // "100%", // 700,
-	height : c - header, // "100%", // 330,
-	container : "gridbox_projectcheck",
+	height : c - header - 67, // "100%", // 330,
+	container : "gridbox_projectcheck_water",
 	toolbarPosition : 'bottom',
 	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',
 	pageSizeList : [ 15, 25, 40, 60, 100, 200 ],
@@ -171,5 +171,5 @@ var gridOption = {
 	}
 };
 
-var projectcheck_grid = new Sigma.Grid(gridOption);
-projectcheck_grid.render();
+var projectcheck_water_grid = new Sigma.Grid(gridOption);
+projectcheck_water_grid.render();

@@ -6,13 +6,11 @@
 		<div class="tabsHeader" id="projectcheckall_tabheader">
 			<div class="tabsHeaderContent">
 				<ul>
-					<li><a href="${BaseURL}prj/projectcheck?CHECK_TYPE=1"
-						class="j-ajax" rel="xmxx"><span>安全检查</span></a></li>
-					<li><a href="${BaseURL}prj/projectcheck?CHECK_TYPE=2"
+					<li><a href="${BaseURL}prj/projectcheck_building"
 						class="j-ajax" rel="gcxx"><span>土建检查</span></a></li>
-					<li><a href="${BaseURL}prj/projectcheck?CHECK_TYPE=3"
-						class="j-ajax" rel="cjdw"><span>水暖检查</span></a></li>
-					<li><a href="${BaseURL}prj/projectcheck?CHECK_TYPE=4"
+					<li><a href="${BaseURL}prj/projectcheck_water" class="j-ajax"
+						rel="cjdw"><span>水暖检查</span></a></li>
+					<li><a href="${BaseURL}prj/projectcheck_electric"
 						class="j-ajax" rel="zzxx"><span>电气检查</span></a></li>
 				</ul>
 			</div>
@@ -20,7 +18,6 @@
 		<div class="tabsContent" style="height: 100%;"
 			id="projectcheckall_tabcontent">
 			<!-- 要有空的DIV对应tab页的放在下面 -->
-			<div></div>
 			<div></div>
 			<div></div>
 			<div></div>

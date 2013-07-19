@@ -37,26 +37,28 @@
 				return true;
 			}
 		});*/
-		$.pdialog.open("prj/addscorebygroup?CHECKGROUP_NO=${CHECKGROUP_NO}",
-				"tjkf", "添加评分", {
-					width : 840,
-					height : 380,
-					max : false,
-					mask : true,
-					mixable : true,
-					minable : true,
-					resizable : true,
-					drawable : true,
-					fresh : true,
-					close : function() {
-						// 对话框关闭时执行刷新
-						showcheckgroup_grid.reload();
-						showcheckgroup_grid.checkedRows = {};
-						return true;
-					}
-				});
+		$.pdialog
+				.open(
+						"prj/addscorebygroup?CHECKGROUP_NO=${CHECKGROUP_NO}&CHECK_TYPE=${prj.CHECK_TYPE}",
+						"tjkf", "添加评分", {
+							width : 840,
+							height : 380,
+							max : false,
+							mask : true,
+							mixable : true,
+							minable : true,
+							resizable : true,
+							drawable : true,
+							fresh : true,
+							close : function() {
+								// 对话框关闭时执行刷新
+								showcheckgroup_grid.reload();
+								showcheckgroup_grid.checkedRows = {};
+								return true;
+							}
+						});
 	}
-	
+
 	//checkbox删除扣分
 	function doDelCheck() {
 		var id1 = doCheckIsOnlyRowForPrjCheck();
@@ -95,6 +97,14 @@
 				<label>评分表编号：</label> <input id="CHECKGROUP_NO" name="CHECKGROUP_NO"
 					id="CHECKGROUP_NO" type="text" size="30" readonly="readonly"
 					value="${prj.CHECKGROUP_NO}" />
+			</p>
+			<p>
+				<label>检查类型：</label> <select name="CHECK_TYPE" id="CHECK_TYPE"><option
+						value="">请选择...</option>
+					<c:forEach var="item" items="${CHECK_TYPE}">
+						<option value="${item.codeValue}"
+							<c:if test="${item.codeValue == prj.CHECK_TYPE}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+					</c:forEach></select>
 			</p>
 			<p>
 				<label>检查时间：</label> <input type="text" name="CHECKDATE"

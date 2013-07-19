@@ -45,6 +45,15 @@
 						name="CHECKGROUP_NO" value="${prj.CHECKGROUP_NO}" maxlength="20"
 						readonly="readonly" class="required" />
 				</p>
+				<p>
+					<label>检查类型：</label> <select name="CHECK_TYPE" id="CHECK_TYPE"
+						class="required" ><option
+							value="">请选择...</option>
+						<c:forEach var="item" items="${CHECK_TYPE}">
+							<option value="${item.codeValue}"
+								<c:if test="${item.codeValue == prj.CHECK_TYPE}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+						</c:forEach></select>
+				</p>
 				<div class="divider"></div>
 				<p>
 					<label>项目编号：</label><input class="required readonly" id="PRJNO"

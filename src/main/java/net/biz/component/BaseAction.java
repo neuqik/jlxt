@@ -114,7 +114,7 @@ public abstract class BaseAction {
 			Class cls;
 			try {
 				// TODO:用log替代
-				// System.out.println("现在映射:" + obj.toString());
+				System.out.println("现在映射:" + obj.toString());
 				cls = PropertyUtils.getPropertyType(bean, obj.toString());
 				// 把相应的数据转换成对应的数据类型
 				Object reqVal = request.getParameterMap().get(obj.toString());
@@ -215,6 +215,16 @@ public abstract class BaseAction {
 	 */
 	protected String getParam(String key) {
 		return MVC.ctx().getRequest().getParameter(key);
+	}
+
+	/**
+	 * 从request请求中的data中获得参数
+	 * 
+	 * @param key
+	 * @return
+	 */
+	protected String[] getParamByData(String key) {
+		return MVC.ctx().getRequest().getParameterMap().get(key);
 	}
 
 	/**

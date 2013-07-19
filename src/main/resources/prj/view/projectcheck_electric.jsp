@@ -4,14 +4,15 @@
 <script type="text/javascript">
 	var prjId = "${PRJ_ID}";
 </script>
-<script type="text/javascript" src="${BaseURL}pages/prj/projectcheck.js"></script>
+<script type="text/javascript"
+	src="${BaseURL}pages/prj/projectcheck_electric.js"></script>
 
 <script type="text/javascript">
 	//检查是否只有一条记录
 	function doCheckIsOnlyRowForPrjChk() {
 		var empIdsForPrj = new Array();
 		var i = 0;
-		$.each(projectcheck_grid.checkedRows, function(key, value) {
+		$.each(projectcheck_electric_grid.checkedRows, function(key, value) {
 			empIdsForPrj[i] = key;
 			i++;
 		});
@@ -29,12 +30,12 @@
 			title : "添加新检查单",
 			fresh : false,
 			data : {
-				CHECK_TYPE : '01'
+				CHECK_TYPE : '04'
 			},
 			close : function() {
 				// 对话框关闭时执行刷新
-				projectcheck_grid.reload();
-				projectcheck_grid.checkedRows = {};
+				projectcheck_electric_grid.reload();
+				projectcheck_electric_grid.checkedRows = {};
 				return true;
 			}
 		});
@@ -52,8 +53,8 @@
 				data : {},
 				close : function() {
 					// 对话框关闭时执行刷新
-					projectcheck_grid.reload();
-					projectcheck_grid.checkedRows = {};
+					projectcheck_electric_grid.reload();
+					projectcheck_electric_grid.checkedRows = {};
 					return true;
 				}
 			});
@@ -86,8 +87,8 @@
 						empId : ''
 					}, function() {
 						DWZ.ajaxDone;
-						projectcheck_grid.reload();
-						projectcheck_grid.checkedRows = {};
+						projectcheck_electric_grid.reload();
+						projectcheck_electric_grid.checkedRows = {};
 					}, "json");
 				}
 			});
@@ -109,6 +110,6 @@
 	</div>
 
 	<div>
-		<div id="gridbox_projectcheck"></div>
+		<div id="gridbox_projectcheck_electric"></div>
 	</div>
 </div>
