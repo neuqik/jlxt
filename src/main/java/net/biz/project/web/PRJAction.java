@@ -1,13 +1,15 @@
 package net.biz.project.web;
 
 import java.io.File;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -775,8 +777,8 @@ public class PRJAction extends BaseAction {
 			HttpServletRequest req = MVC.ctx().getRequest();
 			PRJ_CHECK prjInfo = (PRJ_CHECK) parseRequest(req, new PRJ_CHECK());
 			String checkgroup = myservice.saveCheckItem(prjInfo);
-			return successJSON("保存评分成功", "dialog", "prj/showcheckgroup",
-					"bjjcx");
+			return successJSONReload("保存评分成功", "dialog", "prj/projectcheckall",
+					"zljc");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
@@ -1094,6 +1096,38 @@ public class PRJAction extends BaseAction {
 			return successJSONReload("保存项目照片成功，项目编号：" + prjNo, "navTab",
 					"prj/editprojectphoto", "xmtp");
 		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 检查员工的甘特图
+	 * 
+	 * @return
+	 */
+	@Path("/empgantt")
+	@GET
+	@POST
+	public String toEmpGantt() {
+		return "forward:prj/view/empgantt.jsp";
+	}
+
+	/**
+	 * 查询员工的甘特图
+	 * 
+	 * @return
+	 */
+	@Path("/querygantt")
+	@GET
+	@POST
+	public String toQueryGantt() {
+		try {
+			String beginDate = getParam("BEGINDATE");
+			String endDate = getParam("ENDDATE");
+			successXML("<projects><project id ='1' name= 'Project 1' startdate = '2006,6,11'><task id ='1'><name>Project1 task1</name><est>2006,6,11</est><duration>100</duration><percentcompleted>50</percentcompleted><predecessortasks></predecessortasks><childtasks><task id='13'><name>Project1 task13</name><est>2006,6,11</est><duration>90</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='4'><name>Project1 task4</name><est>2006,6,11</est><duration>80</duration><percentcompleted>46</percentcompleted><predecessortasks></predecessortasks><childtasks><task id='21'><name>Project2 task2_1</name><est>2006,6,11</est><duration>70</duration><percentcompleted>30</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='22'><name>Project2 task2_2</name><est>2006,6,11</est><duration>70</duration><percentcompleted>30</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='23'><name>Project2 task2_3</name><est>2006,6,11</est><duration>70</duration><percentcompleted>30</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='24'><name>Project2 task2_4</name><est>2006,6,11</est><duration>70</duration><percentcompleted>30</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task><task id='2'><name>Project1 task2</name><est>2006,6,12</est><duration>78</duration><percentcompleted>40</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task><task id ='3'><name>Project1 task3</name><est>2006,6,24</est><duration>160</duration><percentcompleted>80</percentcompleted><predecessortasks>1</predecessortasks><childtasks><task id='5'><name>Project1 task5</name><est>2006,6,24</est><duration>60</duration><percentcompleted>70</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='6'><name>Project1 task6</name><est>2006,6,24</est><duration>130</duration><percentcompleted>80</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='11'><name>Project1 task11</name><est>2006,6,24</est><duration>60</duration><percentcompleted>100</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='12'><name>Project1 task12</name><est>2006,6,24</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='14'><name>Project1 task14</name><est>2006,6,24</est><duration>60</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='15'><name>Project1 task 15</name><est>2006,6,24</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='7'><name>Project1 task7</name><est>2006,6,25</est><duration>130</duration><percentcompleted>80</percentcompleted><predecessortasks></predecessortasks><childtasks><task id='8'><name>Project1 task8</name><est>2006,6,25</est><duration>100</duration><percentcompleted>10</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='9'><name>Project1 task9</name><est>2006,6,25</est><duration>80</duration><percentcompleted>50</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='10'><name>Project1 task10</name><est>2006,6,25</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task></childtasks></task><task id ='35'><name>Project1 task 35</name><est>2006,7,15</est><duration>130</duration><percentcompleted>80</percentcompleted><predecessortasks>3</predecessortasks><childtasks><task id='36'><name>Project1 task 36</name><est>2006,7,15</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='37'><name>Project1 task 37</name><est>2006,7,15</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task></project><project id ='2' name= 'Project 2' startdate = '2006,6,21'><task id ='62'><name>Project1 task 62</name><est>2006,6,21</est><duration>100</duration><percentcompleted>50</percentcompleted><predecessortasks></predecessortasks><childtasks><task id='64'><name>Project1 task 64</name><est>2006,6,21</est><duration>90</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='63'><name>Project1 task 63</name><est>2006,6,22</est><duration>78</duration><percentcompleted>40</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task></project></projects>");
+			return null;
+		} catch (IOException e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}

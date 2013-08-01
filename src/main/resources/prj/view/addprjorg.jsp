@@ -37,7 +37,7 @@
 				</p>
 				<p>
 					<label>离场时间：</label> <input type="text" name="LEAVETIME"
-						class="date" size="30" yearstart="-80" yearend="5"
+						class="date required" size="30" yearstart="-80" yearend="5"
 						value="${prj.LEAVETIME}" /><a class="inputDateButton"
 						href="javascript:;">选择</a>
 				</p>

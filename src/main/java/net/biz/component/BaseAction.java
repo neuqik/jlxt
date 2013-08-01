@@ -1,11 +1,14 @@
 package net.biz.component;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
@@ -218,6 +221,15 @@ public abstract class BaseAction {
 	}
 
 	/**
+	 * 获取Response
+	 * 
+	 * @return
+	 */
+	protected HttpServletResponse getResponse() {
+		return MVC.ctx().getResponse();
+	}
+
+	/**
 	 * 从request请求中的data中获得参数
 	 * 
 	 * @param key
@@ -236,5 +248,25 @@ public abstract class BaseAction {
 		User user = (User) MVC.ctx().getSession()
 				.getAttribute(UserCons.LOGIN_USER_ATTR_NAME());
 		return user.getAccount();
+	}
+
+	/**
+	 * 返回XML
+	 * @throws IOException
+	 * 
+	 */
+	protected void successXML(String xml) throws IOException {
+		HttpServletResponse response = getResponse();
+		response.setContentType("text/xml;charset=utf-8"); // （1）一定要在（2）的前面，不然会乱码
+		response.setCharacterEncoding("UTF-8"); // （2）
+		response.setHeader("Cache-Control", "no-cache");
+		PrintWriter out;
+		out = response.getWriter();
+		StringBuilder sb = new StringBuilder();
+		sb.append("<?xml version='1.0' encoding='UTF-8'?>");// 最外层节点唯一，不然报错
+		sb.append(xml);
+		out.print(sb.toString());
+		out.flush();
+		out.close();
 	}
 }
