@@ -192,8 +192,8 @@ public class JDBCOracleUtil {
 			}
 		}
 		// TODO: 替换
-		System.out.println("调用过程过程:"+procName);
-		System.out.println("输入参数:"+inList);
+		System.out.println("调用过程过程:" + procName);
+		System.out.println("输入参数:" + inList);
 		cstat.executeUpdate();
 		OracleCallableStatement ocstat = (OracleCallableStatement) cstat;
 
@@ -251,6 +251,24 @@ public class JDBCOracleUtil {
 			throws SQLException, InstantiationException,
 			IllegalAccessException, ClassNotFoundException {
 		return executeQuery(sql, getConnection());
+	}
+
+	/**
+	 * 查询语句，返回Map，使用绑定变量
+	 * 
+	 * @param sql
+	 * @param params
+	 *            参数绑定变量
+	 * @return
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 */
+	public static List<Map<String, Object>> executeQuery(String sql,
+			List<Object> param) throws SQLException, InstantiationException,
+			IllegalAccessException, ClassNotFoundException {
+		return executeQuery(sql, getConnection(), param);
 	}
 
 	/**
@@ -380,6 +398,42 @@ public class JDBCOracleUtil {
 		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(sql);
+		try {
+			LogUtil.debug("执行sql:" + sql.toUpperCase());
+			ResultSetMetaData rsmd = rs.getMetaData();
+			while (rs.next()) {
+				Map<String, Object> row = new HashMap<String, Object>();
+				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+					row.put(rsmd.getColumnName(i), rs.getObject(i) == null ? ""
+							: rs.getObject(i));
+				}
+				data.add(row);
+			}
+		} finally {
+			rs.close();
+			stmt.close();
+			conn.close();
+		}
+		return data;
+	}
+
+	/**
+	 * 查询结果，不使用prepare的方式 从0开始 如果是null，设置为空字符
+	 * 
+	 * @param sql
+	 * @param conn
+	 * @param 绑定变量
+	 * @return
+	 * @throws SQLException
+	 */
+	public static List<Map<String, Object>> executeQuery(String sql,
+			Connection conn, List<Object> param) throws SQLException {
+		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		for (int i = 0; i < param.size(); i++) {
+			stmt.setObject(i + 1, param.get(i));
+		}
+		ResultSet rs = stmt.executeQuery();
 		try {
 			LogUtil.debug("执行sql:" + sql.toUpperCase());
 			ResultSetMetaData rsmd = rs.getMetaData();

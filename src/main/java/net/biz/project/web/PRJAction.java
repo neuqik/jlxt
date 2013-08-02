@@ -713,7 +713,7 @@ public class PRJAction extends BaseAction {
 	@POST
 	public String toAddScore(Map<String, Object> model) {
 		String checkType = getParamByData("CHECK_TYPE")[0];
-		String code1 = "CHECK_TYPE|";
+		String code1 = "CHECK_TYPE|JOIN_TYPE";
 
 		// 获取对应的PRJ_ID
 
@@ -726,6 +726,8 @@ public class PRJAction extends BaseAction {
 			PRJ_MAJORCHECK prj = new PRJ_MAJORCHECK();
 			prj.setCHECK_USER(getCurrentUserName());
 			prj.setCHECK_TYPE(checkType);
+			prj.setJOIN_TYPE("1"); // 默认参加
+
 			model.put("prj", prj);
 			model.put("SaveForm", "savenewscore"); // 保存的url
 			model.put("WRITE", true);
@@ -966,9 +968,9 @@ public class PRJAction extends BaseAction {
 		// 获取检查单编号
 		String id = getParam("ID");
 
-		String sql = "select ID,PRJ_ID,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,DEPT_ID,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_NAME,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,TESTER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=TESTER) TESTER_NAME,MEMO,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,SUM2,SUM3,CHECK_TYPE FROM V_PRJ_MAJORCHECK WHERE ID="
+		String sql = "select ID,PRJ_ID,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,DEPT_ID,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_NAME,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,TESTER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=TESTER) TESTER_NAME,MEMO,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID=EMP_ID_2) EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,SUM2,SUM3,CHECK_TYPE,JOIN_TYPE,BATCHNO FROM V_PRJ_MAJORCHECK WHERE ID="
 				+ id;
-		String code1 = "CHECK_TYPE|";
+		String code1 = "CHECK_TYPE|JOIN_TYPE";
 
 		// 获取对应的PRJ_ID
 
@@ -1125,9 +1127,11 @@ public class PRJAction extends BaseAction {
 		try {
 			String beginDate = getParam("BEGINDATE");
 			String endDate = getParam("ENDDATE");
-			successXML("<projects><project id ='1' name= 'Project 1' startdate = '2006,6,11'><task id ='1'><name>Project1 task1</name><est>2006,6,11</est><duration>100</duration><percentcompleted>50</percentcompleted><predecessortasks></predecessortasks><childtasks><task id='13'><name>Project1 task13</name><est>2006,6,11</est><duration>90</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='4'><name>Project1 task4</name><est>2006,6,11</est><duration>80</duration><percentcompleted>46</percentcompleted><predecessortasks></predecessortasks><childtasks><task id='21'><name>Project2 task2_1</name><est>2006,6,11</est><duration>70</duration><percentcompleted>30</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='22'><name>Project2 task2_2</name><est>2006,6,11</est><duration>70</duration><percentcompleted>30</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='23'><name>Project2 task2_3</name><est>2006,6,11</est><duration>70</duration><percentcompleted>30</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='24'><name>Project2 task2_4</name><est>2006,6,11</est><duration>70</duration><percentcompleted>30</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task><task id='2'><name>Project1 task2</name><est>2006,6,12</est><duration>78</duration><percentcompleted>40</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task><task id ='3'><name>Project1 task3</name><est>2006,6,24</est><duration>160</duration><percentcompleted>80</percentcompleted><predecessortasks>1</predecessortasks><childtasks><task id='5'><name>Project1 task5</name><est>2006,6,24</est><duration>60</duration><percentcompleted>70</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='6'><name>Project1 task6</name><est>2006,6,24</est><duration>130</duration><percentcompleted>80</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='11'><name>Project1 task11</name><est>2006,6,24</est><duration>60</duration><percentcompleted>100</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='12'><name>Project1 task12</name><est>2006,6,24</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='14'><name>Project1 task14</name><est>2006,6,24</est><duration>60</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='15'><name>Project1 task 15</name><est>2006,6,24</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='7'><name>Project1 task7</name><est>2006,6,25</est><duration>130</duration><percentcompleted>80</percentcompleted><predecessortasks></predecessortasks><childtasks><task id='8'><name>Project1 task8</name><est>2006,6,25</est><duration>100</duration><percentcompleted>10</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='9'><name>Project1 task9</name><est>2006,6,25</est><duration>80</duration><percentcompleted>50</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='10'><name>Project1 task10</name><est>2006,6,25</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task></childtasks></task><task id ='35'><name>Project1 task 35</name><est>2006,7,15</est><duration>130</duration><percentcompleted>80</percentcompleted><predecessortasks>3</predecessortasks><childtasks><task id='36'><name>Project1 task 36</name><est>2006,7,15</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='37'><name>Project1 task 37</name><est>2006,7,15</est><duration>110</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task></project><project id ='2' name= 'Project 2' startdate = '2006,6,21'><task id ='62'><name>Project1 task 62</name><est>2006,6,21</est><duration>100</duration><percentcompleted>50</percentcompleted><predecessortasks></predecessortasks><childtasks><task id='64'><name>Project1 task 64</name><est>2006,6,21</est><duration>90</duration><percentcompleted>90</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task><task id='63'><name>Project1 task 63</name><est>2006,6,22</est><duration>78</duration><percentcompleted>40</percentcompleted><predecessortasks></predecessortasks><childtasks></childtasks></task></childtasks></task></project></projects>");
+			String empId = getParam("EMPNO");
+			String xml = myservice.generateGantt(beginDate, endDate, empId);
+			successXML(xml);
 			return null;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}

@@ -96,7 +96,7 @@
 	}
 </script>
 
-<div class="pageContent" id="projectcheck_head"
+<div class="pageContent" id="projectcheck_building_head"
 	style="overflow-x: hidden; overflow-y: hidden">
 
 	<div class="panelBar">

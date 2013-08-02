@@ -18,9 +18,11 @@
 	function doQueryGantt() {
 		var begin = $("#BEGINDATE").val();
 		var end = $("#ENDDATE").val();
+		var empId = $("#EMPNO").val();
 		if (begin.length > 0) {
 			ganttChartControl.loadData(MyURL + "prj/querygantt?BEGINDATE="
-					+ begin + "&ENDDATE=" + end, true, true);
+					+ begin + "&ENDDATE=" + end + "&EMPNO=" + empId + "&A=1",
+					true, true);
 		} else {
 			alertMsg.error("请输入开始日期");
 		}
@@ -31,13 +33,17 @@
 	<div class="panelBar">
 		<div class="button">
 			<div class="buttonContent">
+				<button class="print" onclick="ganttChartControl.printToWindow();">打印</button>
+			</div>
+			<div class="buttonContent">
 				<button class="add" onclick="doQueryGantt();">查询</button>
 			</div>
 		</div>
-		<label>开始日期：</label> <input type="text" name="" id="BEGINDATE"
-			class="date required" size="30" yearstart="-80" yearend="5" /> <label>结束日期：</label>
+		<label>入场开始日期：</label> <input type="text" name="" id="BEGINDATE"
+			class="date required" size="30" yearstart="-80" yearend="5" /> <label>入场结束日期：</label>
 		<input type="text" name="" id="ENDDATE" class="date" size="30"
-			yearstart="-80" yearend="5" />
+			yearstart="-80" yearend="5" /><label>员工编号：</label> <input
+			type="text" name="" id="EMPNO" class="" size="30" />
 	</div>
 
 

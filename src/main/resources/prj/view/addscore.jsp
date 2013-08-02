@@ -52,18 +52,17 @@
 						type="text" size="30" readonly="readonly" value="${prj.PRJ_NAME}" />
 				</p>
 				<p>
-					<label>建设单位编号：</label><input id="JSDW_ID" value="${prj.JSDW_ID}"
+					<label>分公司编号：</label><input id="JSDW_ID" value="${prj.JSDW_ID}"
 						name="JSDW_ID" size="30" type="text" alt="" lookupGroup=""
 						lookupName="JSDW_ID" readonly="readonly" /> <a class="btnLook"
 						id="JSDW_LOOKUP" href="${BaseURL}common/doJSDWLookup"
 						lookupGroup="" lookupName="JSDW_ID" lookupPk="JSDW_ID">查找</a>
 				</p>
-				<!-- 查找带回需要指定id属性 -->
+
 				<p>
-					<label>建设单位名称：</label> <input id="UNIT_NAME" name="UNIT_NAME"
+					<label>分公司名称：</label> <input id="UNIT_NAME" name="UNIT_NAME"
 						type="text" size="30" readonly="readonly" value="${prj.UNIT_NAME}" />
 				</p>
-
 				<p>
 					<label>施工单位编号：</label><input id="SGDW_ID" value="${prj.SGDW_ID}"
 						name="SGDW_ID" size="30" type="text" alt="" lookupGroup=""
@@ -75,9 +74,8 @@
 				<p>
 					<label>施工单位名称：</label> <input id="SGDW_NAME" name="SGDW_NAME"
 						type="text" size="30" readonly="readonly" value="${prj.SGDW_NAME}" />
-				</p>
 				<p>
-					<label>结构类型：</label><input id="CONSTRUCT_TYPE"
+					<label>监理机构：</label><input id="CONSTRUCT_TYPE"
 						value="${prj.CONSTRUCT_TYPE}" name="CONSTRUCT_TYPE" size="30"
 						type="text" alt="" lookupGroup="" lookupName="CONSTRUCT_TYPE"
 						readonly="readonly" /> <a class="btnLook" id="CONSTRUCT_LOOKUP"
@@ -85,10 +83,11 @@
 						lookupName="CONSTRUCT_TYPE" lookupPk="CONSTRUCT_TYPE">查找</a>
 				</p>
 				<p>
-					<label>结构类型名称：</label> <input id="CONSTRUCT_TYPE_NAME"
+					<label>监理机构名称：</label> <input id="CONSTRUCT_TYPE_NAME"
 						name="CONSTRUCT_TYPE_NAME" type="text" size="30"
 						readonly="readonly" value="${prj.CONSTRUCT_TYPE_NAME}" />
 				</p>
+
 				<div class="divider"></div>
 				<p>
 					<label>评分表编号：</label> <input id="CHECKGROUP_NO"

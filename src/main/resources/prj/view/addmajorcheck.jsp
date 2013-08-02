@@ -47,11 +47,23 @@
 				</p>
 				<p>
 					<label>检查类型：</label> <select name="CHECK_TYPE" id="CHECK_TYPE"
-						class="required" ><option
-							value="">请选择...</option>
+						class="required"><option value="">请选择...</option>
 						<c:forEach var="item" items="${CHECK_TYPE}">
 							<option value="${item.codeValue}"
 								<c:if test="${item.codeValue == prj.CHECK_TYPE}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
+						</c:forEach></select>
+				</p>
+				<p></p>
+				<p>
+					<label>轮次：</label><input id="BATCHNO" name="BATCHNO" type="text"
+						size="30" value="${prj.BATCHNO}" alt="自动生成无需填写" />
+				</p>
+				<p>
+					<label>参与评比：</label> <select name="JOIN_TYPE" id="JOIN_TYPE"
+						class="combox required"><option value="">请选择</option>
+						<c:forEach var="item" items="${JOIN_TYPE}">
+							<option value="${item.codeValue}"
+								<c:if test="${item.codeValue == prj.JOIN_TYPE}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
 						</c:forEach></select>
 				</p>
 				<div class="divider"></div>

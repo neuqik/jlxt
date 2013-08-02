@@ -223,6 +223,7 @@ public class PRJ_MAJORCHECK {
 	public void setTESTER_NAME(String tESTER_NAME) {
 		TESTER_NAME = tESTER_NAME;
 	}
+
 	private String CHECK_TYPE;
 
 	public String getCHECK_TYPE() {
@@ -232,6 +233,24 @@ public class PRJ_MAJORCHECK {
 	public void setCHECK_TYPE(String cHECK_TYPE) {
 		CHECK_TYPE = cHECK_TYPE;
 	}
-	
+
+	private String JOIN_TYPE;
+	private String BATCHNO;
+
+	public String getJOIN_TYPE() {
+		return JOIN_TYPE;
+	}
+
+	public void setJOIN_TYPE(String jOIN_TYPE) {
+		JOIN_TYPE = jOIN_TYPE;
+	}
+
+	public String getBATCHNO() {
+		return BATCHNO;
+	}
+
+	public void setBATCHNO(String bATCH) {
+		BATCHNO = bATCH;
+	}
 
 }

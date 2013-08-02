@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#projectcheck_head").height();
-var sql = "SELECT ID,PRJ_ID,PRJNO,PRJ_NAME,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.TESTER) TESTER,MEMO,VALID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID_2) EMP_ID_2,SUM1,RATIO1*100 RATIO1,CHECKGROUP_NO  FROM V_PRJ_MAJORCHECK WHERE CHECK_TYPE='01'";
+var sql = "SELECT ID,PRJ_ID,PRJNO,PRJ_NAME,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,CHECK_USER,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.TESTER) TESTER,MEMO,VALID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID) EMP_ID,(SELECT EMP_NAME FROM HRD_EMP WHERE EMP_ID = V_PRJ_MAJORCHECK.EMP_ID_2) EMP_ID_2,SUM1,RATIO1*100 RATIO1,CHECKGROUP_NO,FUN_GETCODEDESC('JOIN_TYPE',JOIN_TYPE) JOIN_TYPE,BATCHNO  FROM V_PRJ_MAJORCHECK WHERE CHECK_TYPE='01'";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
@@ -33,6 +33,10 @@ var dsOption = {
 		name : "RATIO1"
 	}, {
 		name : "CHECKGROUP_NO"
+	}, {
+		name : "JOIN_TYPE"
+	}, {
+		name : "BATCHNO"
 	} ],
 	uniqueField : 'ID',
 	recordType : 'json'
@@ -80,7 +84,7 @@ var colsOption = [ {
 	width : 80,
 	editable : false,
 	header : "实得"
-},{
+}, {
 	id : "RATIO1",
 	width : 80,
 	editable : false,
@@ -110,6 +114,16 @@ var colsOption = [ {
 	width : 100,
 	editable : false,
 	header : "形象进度"
+}, {
+	id : "JOIN_TYPE",
+	width : 80,
+	editable : false,
+	header : "参与评比"
+}, {
+	id : "BATCHNO",
+	width : 100,
+	editable : false,
+	header : "轮次"
 }, {
 	id : "MEMO",
 	width : 100,
@@ -168,6 +182,11 @@ var gridOption = {
 			fresh : false,
 			data : {}
 		});
+	},
+	customRowAttribute : function(record, rn, grid) {
+		if (record['JOIN_TYPE'] == '不参与') {
+			return 'style="color:#ff0000"';
+		}
 	}
 };
 

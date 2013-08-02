@@ -610,8 +610,24 @@ public class PRJServiceImpl implements IPRJService {
 		} else {
 			prjInfo.setEMP_ID_2(String.valueOf(result.get(0).get("EMP_ID")));
 		}
+		// 自动生成轮次号，以自然年为标准
+		// 根据输入的项目ID和检查类型，检查当前年的最早的批次，如果没有，则生成当前年01的数值，如果有则当前年批次加1
+		String sql1 = "select nvl(min(batchno),0) BATCHNO,to_char(sysdate,'YYYY') YEAR from v_prj_majorcheck a where a.PRJ_ID = "
+				+ prjInfo.getPRJ_ID()
+				+ " and a.CHECK_TYPE='"
+				+ prjInfo.getCHECK_TYPE()
+				+ "' AND batchno > to_number(to_char(SYSDATE, 'YYYY') || '00')";
+		List<Map<String, Object>> res1 = JDBCOracleUtil.executeQuery(sql1
+				.toUpperCase());
+		String batchNo = String.valueOf(res1.get(0).get("BATCHNO"));
+		String year = String.valueOf(res1.get(0).get("YEAR"));
+		if ("0".equals(batchNo)) {
+			prjInfo.setBATCHNO(year + "01");
+		} else {
+			prjInfo.setBATCHNO(String.valueOf(Integer.parseInt(batchNo) + 1));
+		}
 		// 执行插入
-		String sql = "INSERT INTO V_PRJ_MAJORCHECK(SUM3,ID,PRJ_ID,DEPT_ID,PROGRESS,CHECKDATE,CHECK_USER,TESTER,EMP_ID,EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,MEMO,VALID,SUM2,CHECK_TYPE) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO V_PRJ_MAJORCHECK(SUM3,ID,PRJ_ID,DEPT_ID,PROGRESS,CHECKDATE,CHECK_USER,TESTER,EMP_ID,EMP_ID_2,SUM1,RATIO1,CHECKGROUP_NO,MEMO,VALID,SUM2,CHECK_TYPE,JOIN_TYPE,BATCHNO) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		List<Object> params = new ArrayList<Object>();
 		params.add(0, prjInfo.getSUM3());
@@ -631,6 +647,8 @@ public class PRJServiceImpl implements IPRJService {
 		params.add(14, prjInfo.getVALID());
 		params.add(15, prjInfo.getSUM2());
 		params.add(16, prjInfo.getCHECK_TYPE());
+		params.add(17, prjInfo.getJOIN_TYPE());
+		params.add(18, prjInfo.getBATCHNO());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 		return prjInfo.getCHECKGROUP_NO();
 
@@ -639,7 +657,7 @@ public class PRJServiceImpl implements IPRJService {
 	@Override
 	public String saveEditScore(PRJ_MAJORCHECK prjInfo) throws Exception {
 
-		String sql = "UPDATE V_PRJ_MAJORCHECK SET DEPT_ID=?,PROGRESS=?,CHECKDATE=?,CHECK_USER=?,TESTER=?,MEMO=? WHERE ID=?";
+		String sql = "UPDATE V_PRJ_MAJORCHECK SET DEPT_ID=?,PROGRESS=?,CHECKDATE=?,CHECK_USER=?,TESTER=?,MEMO=?,JOIN_TYPE=?,BATCHNO=? WHERE ID=?";
 
 		List<Object> params = new ArrayList<Object>();
 
@@ -649,6 +667,8 @@ public class PRJServiceImpl implements IPRJService {
 		params.add(prjInfo.getCHECK_USER());
 		params.add(prjInfo.getTESTER());
 		params.add(prjInfo.getMEMO());
+		params.add(prjInfo.getJOIN_TYPE());
+		params.add(prjInfo.getBATCHNO());
 		params.add(prjInfo.getID());
 		JDBCOracleUtil.ExecuteDML(sql, params);
 		return prjInfo.getCHECKGROUP_NO();
@@ -669,5 +689,108 @@ public class PRJServiceImpl implements IPRJService {
 		JDBCOracleUtil.ExecuteDML(sql, params, conn);
 		conn.commit();
 		conn.close();
+	}
+
+	/**
+	 * 生成人员使用情况的甘特图xml数据
+	 */
+	public String generateGantt(String beginDate, String endDate, String empNo)
+			throws Exception {
+		String projects = "<projects>";
+		String sql = "";
+		String sql2 = "";
+		if ("".equals(endDate) || endDate == null) {
+			sql = "SELECT distinct row_number() over(ORDER BY emp_id) ID, emp_id, (SELECT emp_name FROM v_hrd_emp WHERE emp_id = v_prj_org.emp_id) emp_name, min(entertime) entertime, (MAX(leavetime) - MIN(entertime)) * 8 hours FROM v_prj_org WHERE entertime >= to_date('"
+					+ beginDate
+					+ "', 'YYYY-MM-DD') group by emp_id ORDER BY entertime";
+			sql2 = "SELECT a.id, a.entertime,  (a.leavetime - a.entertime) * 8 hours, b.prjno || ' ' || b.prj_name || '(' ||fun_getcodedesc('PRJ_ROLE', prj_role) || ')' TASK  FROM v_prj_org a, v_prj_info b WHERE a.prj_id = b.id AND emp_id = ?  AND entertime >= to_date('"
+					+ beginDate + "', 'YYYY-MM-DD') ORDER BY entertime";
+			if (!"".equals(empNo)) {
+				// 如果有员工编号
+				sql = "SELECT distinct row_number() over(ORDER BY emp_id) ID, emp_id, (SELECT emp_name FROM v_hrd_emp WHERE emp_id = v_prj_org.emp_id) emp_name, min(entertime) entertime, (MAX(leavetime) - MIN(entertime)) * 8 hours FROM v_prj_org WHERE emp_id ='"
+						+ empNo
+						+ "' AND entertime >= to_date('"
+						+ beginDate
+						+ "', 'YYYY-MM-DD') group by emp_id ORDER BY entertime";
+			}
+		} else {
+			sql = "SELECT distinct row_number() over(ORDER BY emp_id) ID, emp_id, (SELECT emp_name FROM v_hrd_emp WHERE emp_id = v_prj_org.emp_id) emp_name, min(entertime) entertime, (MAX(leavetime) - MIN(entertime)) * 8 hours  FROM v_prj_org WHERE entertime >= to_date('"
+					+ beginDate
+					+ "', 'YYYY-MM-DD') AND entertime <= to_date('"
+					+ endDate
+					+ "','YYYY-MM-DD') group by emp_id ORDER BY entertime, emp_id";
+			sql2 = "SELECT a.id, a.entertime,  (a.leavetime - a.entertime) * 8 hours, b.prjno || ' ' || b.prj_name || '(' ||fun_getcodedesc('PRJ_ROLE', prj_role) || ')' TASK  FROM v_prj_org a, v_prj_info b WHERE a.prj_id = b.id AND emp_id = ?  AND entertime >= to_date('"
+					+ beginDate
+					+ "', 'YYYY-MM-DD') AND entertime <= to_date('"
+					+ endDate + "','YYYY-MM-DD') ORDER BY entertime";
+			if (!"".equals(empNo)) {
+				// 如果有员工编号
+				sql = "SELECT distinct row_number() over(ORDER BY emp_id) ID, emp_id, (SELECT emp_name FROM v_hrd_emp WHERE emp_id = v_prj_org.emp_id) emp_name, min(entertime) entertime, (MAX(leavetime) - MIN(entertime)) * 8 hours FROM v_prj_org WHERE emp_id ='"
+						+ empNo
+						+ "' AND entertime >= to_date('"
+						+ beginDate
+						+ "', 'YYYY-MM-DD') AND entertime <= to_date('"
+						+ endDate
+						+ "','YYYY-MM-DD') group by emp_id ORDER BY entertime, emp_id";
+			}
+		}
+		// 1.根据时间范围获取有效的人v_prj_org，根据个人编号排序
+		List<Map<String, Object>> result1 = JDBCOracleUtil.executeQuery(sql
+				.toUpperCase());
+		// 2.根据每个人循环，按照enter时间升序排列
+		Iterator<Map<String, Object>> it = result1.iterator();
+		while (it.hasNext()) {
+			Map<String, Object> row = it.next();
+			String empId = String.valueOf(row.get("EMP_ID"));
+			String empName = String.valueOf(row.get("EMP_NAME"));
+			String startTime = String.valueOf(row.get("ENTERTIME"));
+			String id = String.valueOf(row.get("ID"));
+			String duration = String.valueOf(row.get("HOURS"));
+			String project = "<project id=\""
+					+ id
+					+ "\" name=\""
+					+ empName
+					+ "\" startdate=\""
+					+ startTime.replaceAll("-", ",")
+					+ "\"><task id=\""
+					+ id
+					+ "\"><name>"
+					+ empName
+					+ "("
+					+ empId
+					+ ")"
+					+ "</name><est>"
+					+ startTime.replaceAll("-", ",")
+					+ "</est><duration>"
+					+ duration
+					+ "</duration><percentcompleted>100</percentcompleted><predecessortasks></predecessortasks><childtasks>";
+			// 查此人的项目情况
+			List<Object> params = new ArrayList<Object>();
+			params.add(empId);
+			List<Map<String, Object>> result2 = JDBCOracleUtil.executeQuery(
+					sql2.toUpperCase(), params);
+			Iterator<Map<String, Object>> it2 = result2.iterator();
+			while (it2.hasNext()) {
+				Map<String, Object> row2 = it2.next();
+				id = String.valueOf(row2.get("ID"));
+				String enterTime = String.valueOf(row2.get("ENTERTIME"));
+				String hours = String.valueOf(row2.get("HOURS"));
+				String taskName = String.valueOf(row2.get("TASK"));
+				String task = "<task id=\""
+						+ id
+						+ "\"><name>"
+						+ taskName
+						+ "</name><est>"
+						+ enterTime.replaceAll("-", ",")
+						+ "</est><duration>"
+						+ hours
+						+ "</duration><percentcompleted>100</percentcompleted><predecessortasks></predecessortasks></task>";
+				project = project + task;
+			}
+			project = project + "</childtasks></task></project>";
+			projects = projects + project;
+		}
+		projects = projects + "</projects>";
+		return projects;
 	}
 }

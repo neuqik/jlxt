@@ -146,11 +146,25 @@ public interface IPRJService {
 	 * @throws Exception
 	 */
 	public String saveEditScore(PRJ_MAJORCHECK prjInfo) throws Exception;
+
 	/**
 	 * 删除检查单信息，包括下面的检查项
+	 * 
 	 * @param id
 	 * @throws Exception
 	 */
 	public void delCheckgroup(String id) throws Exception;
+
+	/**
+	 * 生成人员使用情况甘特图的XML数据
+	 * 
+	 * @param beginDate
+	 * @param endDate
+	 * @param empNo 
+	 * @return
+	 * @throws Exception
+	 */
+	public String generateGantt(String beginDate, String endDate, String empNo)
+			throws Exception;
 
 }

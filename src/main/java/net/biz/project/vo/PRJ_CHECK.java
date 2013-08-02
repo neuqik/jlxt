@@ -244,4 +244,6 @@ public class PRJ_CHECK {
 	public void setCHECK_TYPE(String cHECK_TYPE) {
 		CHECK_TYPE = cHECK_TYPE;
 	}
+
+
 }
