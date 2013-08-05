@@ -1,6 +1,9 @@
 package net.biz.project.web;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -16,6 +19,7 @@ import javax.ws.rs.Path;
 
 import net.biz.component.BaseAction;
 import net.biz.framework.codelist.CodeList;
+import net.biz.grid.gt.util.StringUtils;
 import net.biz.project.model.IPRJService;
 import net.biz.project.vo.PRJ_BUILDING;
 import net.biz.project.vo.PRJ_CHECK;
@@ -31,6 +35,8 @@ import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.math.RandomUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.eweb4j.config.ConfigConstant;
 import org.eweb4j.mvc.MVC;
 import org.eweb4j.mvc.upload.UploadFile;
@@ -1131,6 +1137,43 @@ public class PRJAction extends BaseAction {
 			String xml = myservice.generateGantt(beginDate, endDate, empId);
 			successXML(xml);
 			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 打印检查单
+	 * 
+	 * @return
+	 */
+	@Path("/printcheckgroup")
+	@GET
+	@POST
+	public String toPrintCheckgroup(Map<String, String> model) {
+		try {
+
+			String id = getParam("ID");
+			HttpServletResponse response = getResponse();
+			String temp = System.getProperty("java.io.tmpdir");
+			String last = temp.substring(temp.length() - 1);
+			if ("/".equals(last) || "\\".equals(last)) {
+			} else {
+				temp = temp + "/";
+			}
+			String path = ConfigConstant.ROOT_PATH + "files/report/";
+			String filename = RandomUtils.nextLong() + ".xls";
+			System.out.println(filename);
+			HSSFWorkbook wb = myservice.exportCheckReport(id);
+
+			FileOutputStream fileOutputStream = null;
+			fileOutputStream = new FileOutputStream(path + filename);
+			wb.write(fileOutputStream);
+			fileOutputStream.flush();
+			fileOutputStream.close();
+			model.put("FILENAME", filename);
+			return "forward:component/view/FileDownload.jsp";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();

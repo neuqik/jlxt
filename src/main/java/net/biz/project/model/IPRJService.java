@@ -2,6 +2,8 @@ package net.biz.project.model;
 
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_MAJORCHECK;
@@ -160,11 +162,20 @@ public interface IPRJService {
 	 * 
 	 * @param beginDate
 	 * @param endDate
-	 * @param empNo 
+	 * @param empNo
 	 * @return
 	 * @throws Exception
 	 */
 	public String generateGantt(String beginDate, String endDate, String empNo)
 			throws Exception;
+
+	/**
+	 * 生成检查单导出
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public HSSFWorkbook exportCheckReport(String id) throws Exception;
 
 }

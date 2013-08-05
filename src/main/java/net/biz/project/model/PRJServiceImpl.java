@@ -20,6 +20,10 @@ import net.biz.project.vo.ProjectQueryParam;
 import net.biz.util.DateUtils;
 import net.biz.util.JDBCOracleUtil;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 @Service("prjServiceImpl")
@@ -792,5 +796,162 @@ public class PRJServiceImpl implements IPRJService {
 		}
 		projects = projects + "</projects>";
 		return projects;
+	}
+
+	/**
+	 * 生成检查单
+	 */
+	public HSSFWorkbook exportCheckReport(String id) throws Exception {
+		// 1.取工程名称，取分公司，取总监，取总代，取形象进度，取检查时间，取受检人员，取检查人员
+		String reportID = "";
+		// 执行存储过程，生成对应的报告形式
+		Connection conn = null;
+		HSSFWorkbook wb = null;
+		try {
+			String sql = "SELECT PRJ_NAME,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_ID,fun_getempname(EMP_ID) EMP_ID,fun_getempname(EMP_ID_2) EMP_ID_2,PROGRESS,TO_CHAR(CHECKDATE,'YYYY-MM-DD') CHECKDATE,fun_getempname(TESTER) TESTER,CHECK_USER,BATCHNO FROM V_PRJ_MAJORCHECK WHERE ID=?"
+					.toUpperCase();
+			List<Object> param = new ArrayList<Object>();
+			param.add(id);
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql,
+					param);
+			conn = JDBCOracleUtil.getConnection();
+			List<String> inList = new ArrayList<String>();
+			List<String> outList = new ArrayList<String>();
+			inList.add(id);
+
+			// 输出参数
+			outList.add("");
+			outList.add("");
+			outList.add("");
+			List<String> resultList = JDBCOracleUtil.callProc(inList, outList,
+					"pkg_prjcheck.prc_checkreport", conn);
+			// 如果保存成功
+			if ("1".equals(resultList.get(0))) {
+				conn.commit();
+				reportID = resultList.get(2);
+			} else {
+				conn.rollback();
+				throw new AppException("生成报告失败，" + resultList.get(1));
+			}
+			sql = "SELECT * FROM PRJ_CHECKREPORT WHERE REPORT_ID=? ORDER BY SORT_NUMBER";
+			param.clear();
+			param.add(reportID);
+			List<Map<String, Object>> report = JDBCOracleUtil.executeQuery(sql,
+					param);
+			// 使用poi生成excel
+			wb = new HSSFWorkbook();
+			HSSFSheet sheet = wb.createSheet();
+			HSSFRow row1 = sheet.createRow((int) 0);
+			// 0,1
+			HSSFCell cell01 = row1.createCell(1);
+			cell01.setCellValue("监理检查评分表");
+			// ///////////////////第二行
+			HSSFRow row2 = sheet.createRow((int) 1);
+			// 1,1
+			HSSFCell cell11 = row2.createCell(1);
+			cell11.setCellValue("工程名称:");
+			HSSFCell cell12 = row2.createCell(2);
+			cell12.setCellValue(String.valueOf(result.get(0).get("PRJ_NAME")));
+			// 1,3
+			HSSFCell cell13 = row2.createCell(3);
+			cell13.setCellValue("分公司:");
+			// 1,4
+			HSSFCell cell14 = row2.createCell(4);
+			cell14.setCellValue(String.valueOf(result.get(0).get("DEPT_ID")));
+			// 1,5
+			HSSFCell cell15 = row2.createCell(5);
+			cell15.setCellValue("总监:");
+			// 1,6
+			HSSFCell cell16 = row2.createCell(6);
+			cell16.setCellValue(String.valueOf(result.get(0).get("EMP_ID")));
+			// 3
+			HSSFRow row3 = sheet.createRow((int) 2);
+			// 3,1
+			HSSFCell cell31 = row3.createCell(1);
+			cell31.setCellValue("形象进度:");
+			// 3,2
+			HSSFCell cell32 = row3.createCell(2);
+			cell32.setCellValue(String.valueOf(result.get(0).get("PROGRESS")));
+			// 3,3
+			HSSFCell cell33 = row3.createCell(3);
+			cell33.setCellValue("检查时间:");
+			// 3,4
+			HSSFCell cell34 = row3.createCell(4);
+			cell34.setCellValue(String.valueOf(result.get(0).get("CHECKDATE")));
+			// 3,5
+			HSSFCell cell35 = row3.createCell(5);
+			cell35.setCellValue("总代:");
+			// 3,6
+			HSSFCell cell36 = row3.createCell(6);
+			cell36.setCellValue(String.valueOf(result.get(0).get("EMP_ID_2")));
+			// 4
+			HSSFRow row4 = sheet.createRow((int) 3);
+			// 4,1
+			HSSFCell cell41 = row4.createCell(1);
+			cell41.setCellValue("序号");
+			// 4,2-4,7
+			HSSFCell cell42 = row4.createCell(2);
+			cell42.setCellValue("检查项目");
+			HSSFCell cell43 = row4.createCell(3);
+			cell43.setCellValue("检查子项");
+			HSSFCell cell44 = row4.createCell(4);
+			cell44.setCellValue("满分");
+			HSSFCell cell45 = row4.createCell(5);
+			cell45.setCellValue("应得");
+			HSSFCell cell46 = row4.createCell(6);
+			cell46.setCellValue("实得");
+			HSSFCell cell47 = row4.createCell(7);
+			cell47.setCellValue("存在问题");
+			// /////////////////////生成下面的行/////////////////////
+			int i = 4;
+			int j = 1;
+			Iterator<Map<String, Object>> it = report.iterator();
+			while (it.hasNext()) {
+				Map<String, Object> data = it.next();
+				HSSFRow row = sheet.createRow(i);
+				i++;
+				HSSFCell cell1 = row.createCell(j);
+				cell1.setCellValue(String.valueOf(data.get("SORT_NUMBER")));
+				j++;
+				HSSFCell cell2 = row.createCell(j);
+				cell2.setCellValue(String.valueOf(data.get("CHECKCONTENT_UP")));
+				j++;
+				HSSFCell cell3 = row.createCell(j);
+				cell3.setCellValue(String.valueOf(data.get("CHECKCONTENT")));
+				j++;
+				HSSFCell cell4 = row.createCell(j);
+				cell4.setCellValue(String.valueOf(data.get("POINT")));
+				j++;
+				HSSFCell cell5 = row.createCell(j);
+				cell5.setCellValue(String.valueOf(data.get("DESERVE_POINT")));
+				j++;
+				HSSFCell cell6 = row.createCell(j);
+				cell6.setCellValue(String.valueOf(data.get("ACT_SCORE")));
+				j++;
+				HSSFCell cell7 = row.createCell(j);
+				cell7.setCellValue(String.valueOf(data.get("PRJ_PROGRESS")));
+				j = 1;
+			}
+
+			HSSFRow rowx = sheet.createRow(i);
+			HSSFCell cellx1 = rowx.createCell(1);
+			cellx1.setCellValue("检查人员:");
+			HSSFCell cellx2 = rowx.createCell(2);
+			cellx2.setCellValue(String.valueOf(result.get(0).get("CHECK_USER")));
+			HSSFCell cellx3 = rowx.createCell(3);
+			cellx3.setCellValue("轮次:");
+			HSSFCell cellx4 = rowx.createCell(4);
+			cellx4.setCellValue(String.valueOf(result.get(0).get("BATCHNO")));
+			HSSFCell cellx6 = rowx.createCell(6);
+			cellx6.setCellValue("受检人员:");
+			HSSFCell cellx7 = rowx.createCell(7);
+			cellx7.setCellValue(String.valueOf(result.get(0).get("TESTER")));
+
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
+		return wb;
 	}
 }

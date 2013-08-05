@@ -185,7 +185,7 @@ var gridOption = {
 	},
 	customRowAttribute : function(record, rn, grid) {
 		if (record['JOIN_TYPE'] == '不参与') {
-			return 'style="color:#ff0000"';
+			return 'style="color:#0000ff"';
 		}
 	}
 };

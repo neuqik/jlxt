@@ -94,6 +94,30 @@
 			});
 		}
 	}
+	//打印检查单
+	function doPrintScore() {
+		var id1 = doCheckIsOnlyRowForPrjChk();
+		if (id1 < 0) {
+			alertMsg.error("请选择一条信息打印！");
+		} else {
+			// 如果只有一条
+			$.pdialog.open('${BaseURL}prj/printcheckgroup?ID=' + id1, 'dyjcd',
+					"导出文件", {
+						width : 400,
+						height : 300,
+						max : false,
+						mask : true,
+						mixable : true,
+						minable : true,
+						resizable : true,
+						drawable : true,
+						fresh : true,
+						close : function() {
+							return true;
+						}
+					});
+		}
+	}
 </script>
 
 <div class="pageContent" id="projectcheck_head"
@@ -105,6 +129,8 @@
 			<li><a class="edit" onclick="doEditScore();" rel="bjjcd"><span>编辑检查单</span></a></li>
 			<li><a class="edit" onclick="doEditCheckItem();" rel="bjjcx"><span>编辑检查项</span></a></li>
 			<li><a class="delete" onclick="doDelScore();" rel="scjcd"><span>删除检查单</span></a></li>
+			<li class="line">line</li>
+			<li><a class="agree" onclick="doPrintScore();" rel="dyjcd"><span>打印检查单</span></a></li>
 		</ul>
 
 	</div>

@@ -1,6 +1,9 @@
 package net.biz.component;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
@@ -21,6 +24,7 @@ import net.biz.util.BeanUtil;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.eweb4j.component.dwz.DWZ;
 import org.eweb4j.component.dwz.DWZCons;
 import org.eweb4j.config.ConfigConstant;
@@ -252,6 +256,7 @@ public abstract class BaseAction {
 
 	/**
 	 * 返回XML
+	 * 
 	 * @throws IOException
 	 * 
 	 */
@@ -268,5 +273,6 @@ public abstract class BaseAction {
 		out.print(sb.toString());
 		out.flush();
 		out.close();
+
 	}
 }

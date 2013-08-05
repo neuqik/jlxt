@@ -8,7 +8,7 @@
 
 <script type="text/javascript">
 	//检查是否只有一条记录
-	function doCheckIsOnlyRowForPrjChk() {
+	function doCheckIsOnlyRowForPrjChkSafe() {
 		var empIdsForPrj = new Array();
 		var i = 0;
 		$.each(projectcheck_grid.checkedRows, function(key, value) {
@@ -41,7 +41,7 @@
 	}
 	//编辑评分
 	function doEditScore() {
-		var id1 = doCheckIsOnlyRowForPrjChk();
+		var id1 = doCheckIsOnlyRowForPrjChkSafe();
 		if (id1 < 0) {
 			alertMsg.error("请选择一条信息编辑！");
 		} else {
@@ -61,7 +61,7 @@
 	}
 	//编辑评分
 	function doEditCheckItem() {
-		var id1 = doCheckIsOnlyRowForPrjChk();
+		var id1 = doCheckIsOnlyRowForPrjChkSafe();
 		if (id1 < 0) {
 			alertMsg.error("请选择一条信息编辑！");
 		} else {
@@ -75,7 +75,7 @@
 	}
 	//删除检查单
 	function doDelScore() {
-		var id1 = doCheckIsOnlyRowForPrjChk();
+		var id1 = doCheckIsOnlyRowForPrjChkSafe();
 		if (id1 < 0) {
 			alertMsg.error("请选择一条信息删除，删除前请确认信息可删除！");
 		} else {
@@ -93,6 +93,30 @@
 			});
 		}
 	}
+	//打印检查单
+	function doPrintScoreSafe() {
+		var id1 = doCheckIsOnlyRowForPrjChkSafe();
+		if (id1 < 0) {
+			alertMsg.error("请选择一条信息打印！");
+		} else {
+			// 如果只有一条
+			$.pdialog.open('${BaseURL}prj/printcheckgroup?ID=' + id1, 'dyjcd',
+					"导出文件", {
+						width : 400,
+						height : 300,
+						max : false,
+						mask : true,
+						mixable : true,
+						minable : true,
+						resizable : true,
+						drawable : true,
+						fresh : true,
+						close : function() {
+							return true;
+						}
+					});
+		}
+	}
 </script>
 
 <div class="pageContent" id="projectcheck_head"
@@ -104,6 +128,8 @@
 			<li><a class="edit" onclick="doEditScore();" rel="bjjcd"><span>编辑检查单</span></a></li>
 			<li><a class="edit" onclick="doEditCheckItem();" rel="bjjcx"><span>编辑检查项</span></a></li>
 			<li><a class="delete" onclick="doDelScore();" rel="scjcd"><span>删除检查单</span></a></li>
+			<li class="line">line</li>
+			<li><a class="agree" onclick="doPrintScoreSafe();" rel="dyjcd"><span>打印检查单</span></a></li>
 		</ul>
 
 	</div>

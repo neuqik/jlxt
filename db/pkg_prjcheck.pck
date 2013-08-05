@@ -13,6 +13,11 @@ CREATE OR REPLACE PACKAGE pkg_prjcheck IS
                           prm_appcode        OUT VARCHAR2,
                           prm_errmsg         OUT VARCHAR2,
                           prm_checkgroup_out OUT VARCHAR2);
+  -- 生成检查报告
+  PROCEDURE prc_checkreport(prm_majorcheck_id IN VARCHAR2,
+                            prm_appcode       OUT VARCHAR2,
+                            prm_errmsg        OUT VARCHAR2,
+                            prm_reportid      OUT VARCHAR2);
 END pkg_prjcheck;
 /
 CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
@@ -43,7 +48,8 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
     n_sum1      NUMBER(10, 2) := 0; -- 得分总计
     n_sum2      NUMBER(10, 2) := 0; -- 应得分总计
     n_sum3      NUMBER(10, 2) := 0; -- 实得分总计
-    n_ratio     NUMBER(10, 2) := 0; -- 得分率
+    n_ratio     NUMBER(10, 2) := 0; -- 
+    v_checktype VARCHAR2(3) := ''; -- 检查类型
   BEGIN
     prm_appcode := '1';
     -- 1.获取项目编号，检查项目编号是否已经结束，根据竣工日期
@@ -177,20 +183,22 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
     -- 3.1.处理多个单位的情况
     -- 如果没有检查表编码，则认为是第一个，然后返回编码
     IF prm_checkgroup IS NULL OR nvl(prm_checkdate, '') = '' THEN
-      SELECT to_char(SYSDATE, 'YYYYMMDDHH24MISS')
-        INTO prm_checkgroup_out
-        FROM dual;
+      prm_appcode := '-1';
+      prm_errmsg  := '编号' || v_prjno || '没有有效的检查单号。';
+      RETURN;
     ELSE
       prm_checkgroup_out := prm_checkgroup;
     END IF;
-  
+    SELECT check_type
+      INTO v_checktype
+      FROM v_prj_majorcheck
+     WHERE checkgroup_no = prm_checkgroup;
     INSERT INTO v_prj_check
       (id,
        prj_id,
        checkitem,
        checkdate,
        act_score,
-       
        jsdw_id,
        sgdw_id,
        prj_progress,
@@ -201,7 +209,8 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
        memo,
        valid,
        checkgroup_no,
-       point)
+       point,
+       check_type)
     VALUES
       (seq_id.nextval,
        n_prjid,
@@ -218,7 +227,8 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
        prm_memo,
        '1',
        prm_checkgroup_out,
-       n_point);
+       n_point,
+       v_checktype);
   
     -- 4.更新prj_majorcheck的汇总
     SELECT nvl(SUM(act_score), 0),
@@ -236,6 +246,122 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
     UPDATE v_prj_majorcheck
        SET sum1 = n_sum1, sum2 = n_sum2, sum3 = n_sum3, ratio1 = n_ratio
      WHERE checkgroup_no = prm_checkgroup;
+  EXCEPTION
+    WHEN OTHERS THEN
+      prm_appcode := '-1';
+      prm_errmsg  := SQLERRM;
+  END;
+  -- 生成检查报告
+  PROCEDURE prc_checkreport(prm_majorcheck_id IN VARCHAR2,
+                            prm_appcode       OUT VARCHAR2,
+                            prm_errmsg        OUT VARCHAR2,
+                            prm_reportid      OUT VARCHAR2) IS
+    v_checktype       VARCHAR2(3) := '';
+    v_reportid        VARCHAR2(20) := '';
+    n_act_score       NUMBER(10, 2) := 0;
+    v_prj_progress    VARCHAR2(1000) := '';
+    v_checkcontent_up VARCHAR2(1000) := '';
+    n_deserve_point   NUMBER(10, 2) := 0;
+    n_sum_point       NUMBER(10, 2) := 0;
+    n_sum_deserve     NUMBER(10, 2) := 0;
+    n_sum_act         NUMBER(10, 2) := 0;
+    v_checkgroup_no   VARCHAR2(20) := '';
+    n_max_sort        NUMBER(10) := 0;
+  BEGIN
+    prm_appcode := '1';
+    SELECT to_char(current_timestamp(5), 'YYYYMMDDHH24MISSFF')
+      INTO v_reportid
+      FROM dual;
+    prm_reportid := v_reportid;
+    -- 1.根据majorcheck_id获得
+    SELECT check_type, checkgroup_no
+      INTO v_checktype, v_checkgroup_no
+      FROM v_prj_majorcheck
+     WHERE id = prm_majorcheck_id;
+    -- 2.获取checklist
+    FOR c IN (SELECT *
+                FROM t_checklist_prj
+               WHERE check_type = v_checktype
+                 AND MEMBER = '1'
+                 AND valid = '1'
+               ORDER BY sort_number) LOOP
+      -- 取上一项
+      SELECT checkcontent || '(' || trunc(point) || '分)'
+        INTO v_checkcontent_up
+        FROM t_checklist_prj
+       WHERE check_code = c.upper_code;
+      -- 检查是否有评分
+      BEGIN
+        SELECT act_score, prj_progress, point
+          INTO n_act_score, v_prj_progress, n_deserve_point
+          FROM v_prj_check t
+         WHERE t.checkgroup_no = v_checkgroup_no
+           AND t.checkitem = c.check_code;
+      EXCEPTION
+        WHEN no_data_found THEN
+          n_act_score     := 0;
+          v_prj_progress  := '';
+          n_deserve_point := 0;
+        WHEN OTHERS THEN
+          prm_appcode := '-1';
+          prm_errmsg  := '检查项目:' || c.check_code || SQLERRM;
+          raise_application_error(-20001, prm_errmsg);
+      END;
+      -- 插入报告表
+      INSERT INTO prj_checkreport
+        (id,
+         checkcontent_up,
+         checkcontent,
+         point,
+         deserve_point,
+         act_score,
+         prj_progress,
+         report_id,
+         checkgroup_no,
+         sort_number)
+      VALUES
+        (to_char(current_timestamp(5), 'YYYYMMDDHH24MISSFF'),
+         v_checkcontent_up,
+         c.checkcontent,
+         c.point,
+         n_deserve_point,
+         n_act_score,
+         v_prj_progress,
+         v_reportid,
+         v_checkgroup_no,
+         c.sort_number);
+    END LOOP;
+    -- 生成总计
+    SELECT nvl(SUM(point), 0),
+           nvl(SUM(deserve_point), 0),
+           nvl(SUM(act_score), 0),
+           nvl(MAX(sort_number), 0)
+      INTO n_sum_point, n_sum_deserve, n_sum_act, n_max_sort
+      FROM prj_checkreport
+    -- 插入总计
+     WHERE report_id = v_reportid;
+    INSERT INTO prj_checkreport
+      (id,
+       checkcontent_up,
+       checkcontent,
+       point,
+       deserve_point,
+       act_score,
+       prj_progress,
+       report_id,
+       checkgroup_no,
+       sort_number)
+    VALUES
+      (to_char(current_timestamp(5), 'YYYYMMDDHH24MISSFF'),
+       '',
+       '总计',
+       n_sum_point,
+       n_sum_deserve,
+       n_sum_act,
+       '得分率:' || to_char(trunc(n_sum_act / n_sum_deserve, 2) * 100) || '%',
+       v_reportid,
+       v_checkgroup_no,
+       n_max_sort + 1);
   EXCEPTION
     WHEN OTHERS THEN
       prm_appcode := '-1';

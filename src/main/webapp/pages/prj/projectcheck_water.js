@@ -135,7 +135,7 @@ var gridOption = {
 	id : "projectcheck_water_grid",
 	loadURL : MyURL + 'common/doPageQuery?sql=' + sql,
 	width : "100%", // "100%", // 700,
-	height : c - header - 67, // "100%", // 330,
+	height : c - header -40, // "100%", // 330,
 	container : "gridbox_projectcheck_water",
 	toolbarPosition : 'bottom',
 	toolbarContent : 'nav | pagesize | reload | print | xls | filter chart | state',
@@ -185,7 +185,7 @@ var gridOption = {
 	},
 	customRowAttribute : function(record, rn, grid) {
 		if (record['JOIN_TYPE'] == '不参与') {
-			return 'style="color:#ff0000"';
+			return 'style="color:#0000ff"';
 		}
 	}
 };
