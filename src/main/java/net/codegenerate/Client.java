@@ -16,20 +16,20 @@ public class Client {
 			// path.package
 			Generator.getParam().put("path.package", "net.biz.project");
 			// 设置临时路径
-			Generator.getParam().put("path.temp", "e:/temp/");
+			Generator.getParam().put("path.temp", "e:/temp/code/");
 			// path.web
-			Generator.getParam().put("path.web", "prj");
-			Generator.getParam().put("path.web.jsp", "resources.prj.view");
-			Generator.getParam().put("path.web.js", "pages.prj");
+			Generator.getParam().put("path.web", "chk");
+			Generator.getParam().put("path.web.jsp", "resources.chk.view");
+			Generator.getParam().put("path.web.js", "pages.chk");
 			// path.web.rest
-			Generator.getParam().put("path.web.rest", "showcheckgroup");
+			Generator.getParam().put("path.web.rest", "showdepartcheck");
 			// path.web.rest.init首字母大写
-			Generator.getParam().put("path.web.rest.init", "ShowCheckGroup");
+			Generator.getParam().put("path.web.rest.init", "ShowDepartCheck");
 			// ActionClassName
-			Generator.getParam().put("name.action", "PRJAction");
+			Generator.getParam().put("name.action", "CheckAction");
 			// ---------------js-----------------
 			// data.table 要查询的表
-			Generator.getParam().put("data.table", "PRJ_CHECK");
+			Generator.getParam().put("data.table", "PRJ_SUPERVISOR_MAJORCHECK");
 			// data.sql SQL语句，自动转换成大写，先生成SQL
 			List<String> originalCols = GenerateSQL.generateCode();
 			// ${data.fileds}，数据列的内容
