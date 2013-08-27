@@ -14,6 +14,7 @@ import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_MAJORCHECK;
 import net.biz.project.vo.PRJ_ORG;
+import net.biz.project.vo.PRJ_SUPERVISOR_MAJORCHECK;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.PRJ_UNIT_RELATE;
 import net.biz.project.vo.ProjectQueryParam;
@@ -953,5 +954,47 @@ public class PRJServiceImpl implements IPRJService {
 			}
 		}
 		return wb;
+	}
+
+	/**
+	 * 保存新建的项目监理部检查单
+	 */
+	public void saveNewSupervisorCheck(PRJ_SUPERVISOR_MAJORCHECK prj)
+			throws Exception {
+		Connection conn = null;
+		try {
+			conn = JDBCOracleUtil.getConnection();
+			List<String> inList = new ArrayList<String>();
+			List<String> outList = new ArrayList<String>();
+			inList.add(prj.getCHECKGROUP_NO());
+			inList.add(prj.getBATCHNO());
+			inList.add(prj.getPRJ_ID());
+			inList.add(prj.getDEPT_ID());
+			inList.add(prj.getCHECKDATE());
+			inList.add(prj.getCHECK_USER());
+			inList.add(prj.getPROGRESS());
+			inList.add(prj.getMEMO());
+			inList.add(prj.getCONSTRUCTION_COMMENT());
+			inList.add(prj.getWATER_COMMENT());
+			inList.add(prj.getELECTRIC_COMMENT());
+			inList.add(prj.getSECURITY_COMMENT());
+
+			// 输出参数
+			outList.add("");
+			outList.add("");
+			List<String> resultList = JDBCOracleUtil.callProc(inList, outList,
+					"pkg_prjcheck.prc_newsuperchk", conn);
+			// 如果保存成功
+			if ("1".equals(resultList.get(0))) {
+				conn.commit();
+			} else {
+				conn.rollback();
+				throw new AppException("保存项目监理部检查单失败，" + resultList.get(1));
+			}
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
 	}
 }

@@ -1,4 +1,11 @@
 CREATE OR REPLACE PACKAGE pkg_prjcheck IS
+  def_checktype_safe      CONSTANT VARCHAR2(3) := '01';
+  def_checktype_construct CONSTANT VARCHAR2(3) := '02';
+  def_checktype_water     CONSTANT VARCHAR2(3) := '03';
+  def_checktype_electric  CONSTANT VARCHAR2(3) := '04';
+  ------
+  def_jointype_join   CONSTANT VARCHAR2(3) := '1';
+  def_jointype_nojoin CONSTANT VARCHAR2(3) := '0';
   -- 保存检查点信息
   PROCEDURE prc_savepoint(prm_prjid          IN VARCHAR2,
                           prm_checkgroup     IN VARCHAR2, -- 检查单编号
@@ -18,9 +25,29 @@ CREATE OR REPLACE PACKAGE pkg_prjcheck IS
                             prm_appcode       OUT VARCHAR2,
                             prm_errmsg        OUT VARCHAR2,
                             prm_reportid      OUT VARCHAR2);
+  ------------------------------------------------------------------
+  /*项目监理部检查新建检查单
+  *
+  *
+  ------------------------------------------------------------------*/
+  PROCEDURE prc_newsuperchk(prm_checkgroup           IN VARCHAR2,
+                            prm_batchno              IN VARCHAR2,
+                            prm_prjid                IN VARCHAR2,
+                            prm_deptid               IN VARCHAR2,
+                            prm_checktime            IN VARCHAR2,
+                            prm_checkuser            IN VARCHAR2,
+                            prm_progress             IN VARCHAR2,
+                            prm_memo                 IN VARCHAR2,
+                            prm_construction_comment IN VARCHAR2,
+                            prm_water_comment        IN VARCHAR2,
+                            prm_electric_comment     IN VARCHAR2,
+                            prm_safe_comment         IN VARCHAR2,
+                            prm_appcode              OUT VARCHAR2,
+                            prm_errmsg               OUT VARCHAR2);
 END pkg_prjcheck;
 /
 CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
+
   -- 保存检查点信息
   PROCEDURE prc_savepoint(prm_prjid          IN VARCHAR2,
                           prm_checkgroup     IN VARCHAR2, -- 检查单编号
@@ -362,6 +389,298 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
        v_reportid,
        v_checkgroup_no,
        n_max_sort + 1);
+  EXCEPTION
+    WHEN OTHERS THEN
+      prm_appcode := '-1';
+      prm_errmsg  := SQLERRM;
+  END;
+  ------------------------------------------------------------------
+  /*项目监理部检查新建检查单
+  *
+  *
+  ------------------------------------------------------------------*/
+  PROCEDURE prc_newsuperchk(prm_checkgroup           IN VARCHAR2, --新检查单号
+                            prm_batchno              IN VARCHAR2,
+                            prm_prjid                IN VARCHAR2,
+                            prm_deptid               IN VARCHAR2,
+                            prm_checktime            IN VARCHAR2,
+                            prm_checkuser            IN VARCHAR2,
+                            prm_progress             IN VARCHAR2,
+                            prm_memo                 IN VARCHAR2,
+                            prm_construction_comment IN VARCHAR2,
+                            prm_water_comment        IN VARCHAR2,
+                            prm_electric_comment     IN VARCHAR2,
+                            prm_safe_comment         IN VARCHAR2,
+                            prm_appcode              OUT VARCHAR2,
+                            prm_errmsg               OUT VARCHAR2) IS
+  
+    n_count           NUMBER(10) := 0;
+    n_ratio_construct NUMBER(5, 2) := 0; -- 土建占比
+    n_ratio_electric  NUMBER(5, 2) := 0; -- 电气占比
+    n_ratio_water     NUMBER(5, 2) := 0; -- 水暖占比
+    n_count_construct NUMBER(10) := 0; -- 土建数量
+    n_count_electric  NUMBER(10) := 0; -- 电气数量
+    n_count_water     NUMBER(10) := 0; -- 水暖数量
+    --------------
+    v_contructtype VARCHAR2(200) := ''; -- 结构类型
+    v_actbegin     VARCHAR2(20) := '';
+    v_actend       VARCHAR2(20) := '';
+    v_progress     VARCHAR2(200) := ''; -- 形象进度
+    v_area         VARCHAR2(200) := ''; -- 项目面积
+    v_prjlevel     VARCHAR2(3) := ''; -- 项目等级
+    --------------
+    n_sum_construct NUMBER(10, 2) := 0; -- 土建分数
+    n_sum_electric  NUMBER(10, 2) := 0; -- 电气分数
+    n_sum_water     NUMBER(10, 2) := 0; -- 水暖分数
+    n_sum_safe      NUMBER(10, 2) := 0; -- 安全分数
+  BEGIN
+    prm_appcode := '1';
+    --1.检查轮次，是否完成了安全检查和质量检查
+    IF prm_batchno = '' OR prm_batchno IS NULL THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '没有输入有效的检查轮次号。';
+      RETURN;
+    END IF;
+    -- 1.1.检查该轮次是否做过安全检查
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_majorcheck t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND t.batchno = to_number(prm_batchno)
+       AND t.check_type = def_checktype_safe
+       AND t.join_type = def_jointype_join;
+    IF n_count <= 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '该项目在检查轮次' || prm_batchno || '没有有效的参加评比的安全检查。';
+      RETURN;
+    END IF;
+    n_count := 0;
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_majorcheck t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND t.batchno = to_number(prm_batchno)
+       AND t.check_type = def_checktype_construct
+       AND t.join_type = def_jointype_join;
+    IF n_count <= 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '该项目在检查轮次' || prm_batchno || '没有有效的参加评比的土建检查。';
+      RETURN;
+    END IF;
+    -- 判断是否有水暖
+    n_count := 0;
+    SELECT COUNT(1)
+      INTO n_count_water
+      FROM v_prj_majorcheck t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND t.batchno = to_number(prm_batchno)
+       AND t.check_type = def_checktype_water
+       AND t.join_type = def_jointype_join;
+    -- 判断是否有电气
+    n_count := 0;
+    SELECT COUNT(1)
+      INTO n_count_electric
+      FROM v_prj_majorcheck t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND t.batchno = to_number(prm_batchno)
+       AND t.check_type = def_checktype_electric
+       AND t.join_type = def_jointype_join;
+    -- 1.3.如果有水暖，并且有电气
+    IF n_count_water > 0 AND n_count_electric > 0 THEN
+      n_ratio_electric  := 0.1;
+      n_ratio_water     := 0.1;
+      n_ratio_construct := 0.35;
+    END IF;
+    -- 如果有水暖，没电气
+    IF n_count_water > 0 AND n_count_electric <= 0 THEN
+      n_ratio_water     := 0.1;
+      n_ratio_electric  := 0;
+      n_ratio_construct := 0.45;
+    END IF;
+    -- 如果有电气没水暖
+    IF n_count_water <= 0 AND n_count_electric > 0 THEN
+      n_ratio_water     := 0;
+      n_ratio_electric  := 0.1;
+      n_ratio_construct := 0.45;
+    END IF;
+    -- 如果没电气没水暖
+    IF n_count_water <= 0 AND n_count_electric <= 0 THEN
+      n_ratio_water     := 0;
+      n_ratio_electric  := 0;
+      n_ratio_construct := 0.55;
+    END IF;
+    --2.获取结构类型
+    BEGIN
+      SELECT fun_getconstruct(to_number(prm_prjid))
+        INTO v_contructtype
+        FROM dual;
+    EXCEPTION
+      WHEN OTHERS THEN
+        prm_appcode := '-1';
+        prm_errmsg  := '获取结构类型出错,PRJID:' || prm_prjid || SQLERRM;
+        raise_application_error(-20001, prm_errmsg);
+    END;
+    --3.获取实际开工日期
+    BEGIN
+      SELECT fun_getactbegin(to_number(prm_prjid))
+        INTO v_actbegin
+        FROM dual;
+    EXCEPTION
+      WHEN OTHERS THEN
+        prm_appcode := '-1';
+        prm_errmsg  := '获取实际开工日期出错,PRJID:' || prm_prjid || SQLERRM;
+        raise_application_error(-20001, prm_errmsg);
+    END;
+    --4.获取计划结束日期
+    BEGIN
+      SELECT fun_getactend(to_number(prm_prjid)) INTO v_actend FROM dual;
+    EXCEPTION
+      WHEN OTHERS THEN
+        prm_appcode := '-1';
+        prm_errmsg  := '获取计划结束日期出错,PRJID:' || prm_prjid || SQLERRM;
+        raise_application_error(-20001, prm_errmsg);
+    END;
+    ---
+    BEGIN
+      SELECT fun_getimage(to_number(prm_prjid)) INTO v_progress FROM dual;
+    EXCEPTION
+      WHEN OTHERS THEN
+        prm_appcode := '-1';
+        prm_errmsg  := '获取形象进度出错,PRJID:' || prm_prjid || SQLERRM;
+        raise_application_error(-20001, prm_errmsg);
+    END;
+    --5.获取项目面积--6.获取项目等级
+    BEGIN
+      SELECT to_char(t.prj_area), prj_level
+        INTO v_area, v_prjlevel
+        FROM v_prj_info t
+       WHERE t.id = to_number(prm_prjid);
+    EXCEPTION
+      WHEN OTHERS THEN
+        prm_appcode := '-1';
+        prm_errmsg  := '获取项目面积和项目等级出错,PRJID:' || prm_prjid || SQLERRM;
+        raise_application_error(-20001, prm_errmsg);
+    END;
+    --7.计算土建
+    SELECT nvl(SUM(act_score), 0)
+      INTO n_sum_construct
+      FROM v_prj_check t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND EXISTS (SELECT 1 checkgroup_no
+              FROM v_prj_majorcheck
+             WHERE prj_id = to_number(prm_prjid)
+               AND checkgroup_no = t.
+             checkgroup_no
+               AND batchno = to_number(prm_batchno)
+               AND check_type = def_checktype_construct
+               AND join_type = def_jointype_join);
+    --8.计算水暖
+    SELECT nvl(SUM(act_score), 0)
+      INTO n_sum_water
+      FROM v_prj_check t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND EXISTS (SELECT 1 checkgroup_no
+              FROM v_prj_majorcheck
+             WHERE prj_id = to_number(prm_prjid)
+               AND checkgroup_no = t.
+             checkgroup_no
+               AND batchno = to_number(prm_batchno)
+               AND check_type = def_checktype_water
+               AND join_type = def_jointype_join);
+    --9.计算电气
+    SELECT nvl(SUM(act_score), 0)
+      INTO n_sum_electric
+      FROM v_prj_check t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND EXISTS (SELECT 1 checkgroup_no
+              FROM v_prj_majorcheck
+             WHERE prj_id = to_number(prm_prjid)
+               AND checkgroup_no = t.
+             checkgroup_no
+               AND batchno = to_number(prm_batchno)
+               AND check_type = def_checktype_electric
+               AND join_type = def_jointype_join);
+    --10.计算安全
+    SELECT nvl(SUM(act_score), 0)
+      INTO n_sum_safe
+      FROM v_prj_check t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND EXISTS (SELECT 1 checkgroup_no
+              FROM v_prj_majorcheck
+             WHERE prj_id = to_number(prm_prjid)
+               AND checkgroup_no = t.
+             checkgroup_no
+               AND batchno = to_number(prm_batchno)
+               AND check_type = def_checktype_safe
+               AND join_type = def_jointype_join);
+    --11.计算总分
+    --12.插入
+    INSERT INTO prj_supervisor_majorcheck
+      (id,
+       prj_id,
+       dept_id,
+       progress,
+       batchno,
+       checkdate,
+       check_user,
+       memo,
+       construct,
+       act_begin,
+       act_end,
+       prj_area,
+       prj_level,
+       checkgroup_no,
+       construction,
+       construction_sum,
+       construction_comment,
+       water,
+       water_sum,
+       water_comment,
+       electric,
+       electric_sum,
+       electric_comment,
+       security,
+       security_sum,
+       security_comment,
+       construction_ratio,
+       water_ratio,
+       electric_ratio,
+       security_ratio,
+       total_sum,
+       valid)
+    VALUES
+      (to_number(to_char(current_timestamp(5), 'YYYYMMDDHH24MISSFF')),
+       to_number(prm_prjid),
+       prm_deptid,
+       prm_progress || v_progress,
+       to_number(prm_batchno),
+       to_date(prm_checktime, 'yyyy-mm-dd'),
+       prm_checkuser,
+       prm_memo,
+       v_contructtype,
+       to_date(v_actbegin, 'yyyy-mm-dd'),
+       to_date(v_actend, 'yyyy-mm-dd'),
+       v_area,
+       v_prjlevel,
+       prm_checkgroup,
+       '占总分比例为' || to_char(n_ratio_construct * 100) || '%',
+       n_sum_construct,
+       prm_construction_comment,
+       '占总分比例为' || to_char(n_ratio_water * 100) || '%',
+       n_sum_water,
+       prm_water_comment,
+       '占总分比例为' || to_char(n_ratio_electric * 100) || '%',
+       n_sum_electric,
+       prm_electric_comment,
+       '占总分比例为35%',
+       n_sum_safe,
+       prm_safe_comment,
+       n_ratio_construct,
+       n_ratio_water,
+       n_ratio_electric,
+       0.35, -- 安全比例
+       n_sum_construct + n_sum_electric + n_sum_safe + n_sum_water,
+       '1');
   EXCEPTION
     WHEN OTHERS THEN
       prm_appcode := '-1';

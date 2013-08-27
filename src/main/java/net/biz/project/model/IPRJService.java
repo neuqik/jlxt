@@ -8,6 +8,7 @@ import net.biz.project.vo.PRJ_CHECK;
 import net.biz.project.vo.PRJ_INFO;
 import net.biz.project.vo.PRJ_MAJORCHECK;
 import net.biz.project.vo.PRJ_ORG;
+import net.biz.project.vo.PRJ_SUPERVISOR_MAJORCHECK;
 import net.biz.project.vo.PRJ_UNIT;
 import net.biz.project.vo.ProjectQueryParam;
 
@@ -177,5 +178,15 @@ public interface IPRJService {
 	 * @throws Exception
 	 */
 	public HSSFWorkbook exportCheckReport(String id) throws Exception;
+
+	/**
+	 * 保存新建的项目监理部检查单
+	 * 
+	 * @param prjInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public void saveNewSupervisorCheck(PRJ_SUPERVISOR_MAJORCHECK prjInfo)
+			throws Exception;
 
 }

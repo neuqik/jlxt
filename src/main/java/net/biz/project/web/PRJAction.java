@@ -723,7 +723,6 @@ public class PRJAction extends BaseAction {
 
 		// 获取对应的PRJ_ID
 
-		Map a = CodeList.getCodeMap();
 		try {
 			String[] codes = code1.split("[|]");
 			for (int i = 0; i < codes.length; i++) {

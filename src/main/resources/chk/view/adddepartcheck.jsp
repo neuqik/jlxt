@@ -24,7 +24,7 @@
 </script>
 <div class="page">
 	<div class="pageContent">
-		<form method="post" action="${BaseURL}prj/${SaveForm}"
+		<form method="post" action="${BaseURL}chk/${SaveForm}"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this, navTabAjaxDone)">
 			<div class="pageFormContent" layoutH="58">
@@ -103,7 +103,7 @@
 						readonly="readonly" />
 				</p>
 				<p>
-					<label>项目等级：</label> <select name="PRJ_LEVEL" readonly="readonly"><option
+					<label>项目等级：</label> <select name="PRJ_LEVEL" readonly="readonly" disabled><option
 							value="">请选择...</option>
 						<c:forEach var="item" items="${PRJ_LEVEL}">
 							<option value="${item.codeValue}"
@@ -131,7 +131,7 @@
 				<p>
 					<label>土建问题：</label><input type="text" size="30"
 						name="CONSTRUCTION_COMMENT" value="${chk.CONSTRUCTION_COMMENT}"
-						maxlength="500" readonly="readonly" />
+						maxlength="500" />
 				</p>
 				<p>
 					<label>土建占比：</label><input type="text" size="30"
@@ -149,8 +149,7 @@
 				</p>
 				<p>
 					<label>水暖问题：</label><input type="text" size="30"
-						name="WATER_COMMENT" value="${chk.WATER_COMMENT}" maxlength="500"
-						readonly="readonly" />
+						name="WATER_COMMENT" value="${chk.WATER_COMMENT}" maxlength="500" />
 				</p>
 				<p>
 					<label>水暖占比：</label><input type="text" size="30" name="WATER_RATIO"
@@ -169,7 +168,7 @@
 				<p>
 					<label>电气问题：</label><input type="text" size="30"
 						name="ELECTRIC_COMMENT" value="${chk.ELECTRIC_COMMENT}"
-						maxlength="500" readonly="readonly" />
+						maxlength="500" />
 				</p>
 				<p>
 					<label>电气占比：</label><input type="text" size="30"
@@ -189,7 +188,7 @@
 				<p>
 					<label>安全问题：</label><input type="text" size="30"
 						name="SECURITY_COMMENT" value="${chk.SECURITY_COMMENT}"
-						maxlength="500" readonly="readonly" />
+						maxlength="500" />
 				</p>
 				<p>
 					<label>安全占比：</label><input type="text" size="30"
