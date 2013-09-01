@@ -1,5 +1,6 @@
 package net.biz.project.web;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -8,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.eweb4j.mvc.MVC;
 
 import net.biz.component.BaseAction;
@@ -15,6 +17,7 @@ import net.biz.project.model.IPRJService;
 import net.biz.project.vo.PRJ_MAJORCHECK;
 import net.biz.project.vo.PRJ_SUPERVISOR_MAJORCHECK;
 import net.biz.util.BeanUtil;
+import net.biz.util.JDBCOracleUtil;
 
 @Path("/chk")
 public class CheckAction extends BaseAction {
@@ -54,6 +57,39 @@ public class CheckAction extends BaseAction {
 			model.put("chk", psm);
 			model.put("SaveForm", "savenewsupervisorcheck");
 			model.put("WRITE", true);
+			return "forward:chk/view/adddepartcheck.jsp";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		}
+	}
+
+	/**
+	 * 编辑检查单
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@Path("/editdepartcheck")
+	@GET
+	@POST
+	public String toEditDepartCheck(Map<String, Object> model) {
+		try {
+			String id = getParam("ID");
+			String sql = "SELECT ID,(SELECT PRJ_NAME FROM PRJ_INFO WHERE ID = PRJ_ID) PRJ_NAME,(SELECT PRJNO FROM PRJ_INFO WHERE ID = PRJ_ID) PRJNO,FUN_GETCODEDESC('DEPT_ID',DEPT_ID) DEPT_NAME,PRJ_ID,DEPT_ID,PROGRESS,BATCHNO,CHECKDATE,CHECK_USER,MEMO,CONSTRUCT,ACT_BEGIN,ACT_END,PRJ_AREA,PRJ_LEVEL,CHECKGROUP_NO,CONSTRUCTION,CONSTRUCTION_SUM,CONSTRUCTION_COMMENT,WATER,WATER_SUM,WATER_COMMENT,ELECTRIC,ELECTRIC_SUM,ELECTRIC_COMMENT,SECURITY,SECURITY_SUM,SECURITY_COMMENT,CONSTRUCTION_RATIO,WATER_RATIO,ELECTRIC_RATIO,SECURITY_RATIO,TOTAL_SUM FROM V_PRJ_SUPERVISOR_MAJORCHECK WHERE ID="
+					+ id;
+			String code1 = "PRJ_LEVEL";
+			String[] codes = code1.split("[|]");
+			for (int i = 0; i < codes.length; i++) {
+				model.put(codes[i], getCodeList(codes[i]));
+			}
+			List<Map<String, Object>> result = JDBCOracleUtil.executeQuery(sql);
+
+			PRJ_SUPERVISOR_MAJORCHECK psm = new PRJ_SUPERVISOR_MAJORCHECK();
+			BeanUtils.populate(psm, result.get(0));
+			model.put("chk", psm);
+			model.put("SaveForm", "savesupervisorcheck");
+			model.put("WRITE", false);
 			return "forward:chk/view/adddepartcheck.jsp";
 		} catch (Exception e) {
 			e.printStackTrace();

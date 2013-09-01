@@ -87,9 +87,13 @@
 				</p>
 				<p>
 					<label>实际开工日期：</label> <input type="text" name="ACT_BEGIN"
-						class="date" size="30" yearstart="-80" yearend="5"
-						value="${chk.ACT_BEGIN}" readonly="readonly" /><a
-						class="inputDateButton" href="javascript:;">选择</a>
+						<c:if test="${WRITE}">
+						class="date" </c:if> size="30"
+						yearstart="-80" yearend="5" value="${chk.ACT_BEGIN}"
+						readonly="readonly" />
+					<c:if test="${WRITE}">
+						<a class="inputDateButton" href="javascript:;">选择</a>
+					</c:if>
 				</p>
 				<p>
 					<label>计划结束：</label> <input type="text" name="ACT_END" class="date"
@@ -103,8 +107,8 @@
 						readonly="readonly" />
 				</p>
 				<p>
-					<label>项目等级：</label> <select name="PRJ_LEVEL" readonly="readonly" disabled><option
-							value="">请选择...</option>
+					<label>项目等级：</label> <select name="PRJ_LEVEL" readonly="readonly"
+						disabled><option value="">请选择...</option>
 						<c:forEach var="item" items="${PRJ_LEVEL}">
 							<option value="${item.codeValue}"
 								<c:if test="${item.codeValue == chk.PRJ_LEVEL}"> 	selected="selected"</c:if>>${item.codeDesc}</option>
