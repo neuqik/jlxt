@@ -38,7 +38,7 @@
 				</p>
 				<p>
 					<label>轮次：</label><input type="text" size="30" name="BATCHNO"
-						class="required" value="${chk.BATCHNO}" maxlength="22"
+						class="required number" value="${chk.BATCHNO}" maxlength="22"
 						alt="请输入正确的检查轮次" />
 				</p>
 				<div class="divider"></div>
@@ -67,7 +67,7 @@
 				<!-- 查找带回需要指定id属性 -->
 				<p>
 					<label>分公司名称：</label> <input id="DEPT_NAME" name="DEPT_NAME"
-						type="text" size="30" readonly="readonly" value="${prj.DEPT_NAME}" />
+						type="text" size="30" readonly="readonly" value="${chk.DEPT_NAME}" />
 				</p>
 
 
@@ -121,6 +121,74 @@
 				<p>
 					<label>备注：</label><input type="text" size="30" name="MEMO"
 						value="${chk.MEMO}" maxlength="500" />
+				</p>
+				<div class="divider">检查项目1</div>
+				<p>
+					<label>检查项目1：</label><input type="text" size="30" name="CHECKITEM1"
+						value="项目部人员配置" maxlength="100" readonly="readonly" />
+				</p>
+				<p>
+					<label>检查子项：</label><input type="text" size="30" name="ITEMCHILD1"
+						value="总监、总代、土建、水暖、电气、文档" maxlength="500" readonly="readonly" />
+				</p>
+				<p>
+					<label>满分：</label><input type="text" size="30" name="CHILD1"
+						value="6" maxlength="22" readonly="readonly" />
+				</p>
+				<p>
+					<label>实得：</label><input type="text" size="30" name="CHILD1_SUM"
+						value="${chk.CHILD1_SUM}" maxlength="22" class="required number" />
+				</p>
+				<p>
+					<label>存在问题：</label><input type="text" size="30"
+						name="CHILD1_COMMENT" value="${chk.CHILD1_COMMENT}"
+						maxlength="500" />
+				</p>
+				<div class="divider"></div>
+				<p>
+					<label>检查项目2：</label><input type="text" size="30" name="CHECKITEM2"
+						value="监理办公环境" maxlength="100" readonly="readonly" />
+				</p>
+				<p>
+					<label>检查子项：</label><input type="text" size="30" name="ITEMCHILD2"
+						value="电脑、打印机、相机 机构图、条例、制度、强条、整洁性等" maxlength="500"
+						readonly="readonly" />
+				</p>
+				<p>
+					<label>满分：</label><input type="text" size="30" name="CHILD2"
+						value="2" maxlength="22" readonly="readonly" />
+				</p>
+				<p>
+					<label>实得：</label><input type="text" size="30" name="CHILD2_SUM"
+						value="${chk.CHILD2_SUM}" maxlength="22" class="required number" />
+				</p>
+				<p>
+					<label>存在问题：</label><input type="text" size="30"
+						name="CHILD2_COMMENT" value="${chk.CHILD2_COMMENT}"
+						maxlength="500" />
+				</p>
+				<div class="divider"></div>
+				<p>
+					<label>检查项目3：</label><input type="text" size="30" name="CHECKITEM3"
+						value="工程项目管理" maxlength="100" readonly="readonly" />
+				</p>
+				<p>
+					<label>检查子项：</label><input type="text" size="30" name="ITEMCHILD3"
+						value="监理规划、监理交底、图纸会审、会议纪要、进度控制、投资控制、合同及分包单位管理" maxlength="500"
+						readonly="readonly" />
+				</p>
+				<p>
+					<label>满分：</label><input type="text" size="30" name="CHILD3"
+						value="2" maxlength="22" readonly="readonly" />
+				</p>
+				<p>
+					<label>实得：</label><input type="text" size="30" name="CHILD3_SUM"
+						value="${chk.CHILD3_SUM}" maxlength="22" class="required number" />
+				</p>
+				<p>
+					<label>存在问题：</label><input type="text" size="30"
+						name="CHILD3_COMMENT" value="${chk.CHILD3_COMMENT}"
+						maxlength="500" />
 				</p>
 				<div class="divider"></div>
 				<p>

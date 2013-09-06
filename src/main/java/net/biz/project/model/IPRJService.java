@@ -189,4 +189,15 @@ public interface IPRJService {
 	public void saveNewSupervisorCheck(PRJ_SUPERVISOR_MAJORCHECK prjInfo)
 			throws Exception;
 
+	/**
+	 * 保存修改的项目监理部检查单
+	 * 
+	 * @param prjInfo
+	 * @throws Exception
+	 */
+	public void saveEditSupervisorCheck(PRJ_SUPERVISOR_MAJORCHECK prjInfo)
+			throws Exception;
+
+	public void delDepartCheckgroup(String id) throws Exception;
+
 }

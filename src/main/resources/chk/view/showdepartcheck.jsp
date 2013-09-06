@@ -103,8 +103,6 @@
 				rel="tjjlbjcd"><span>新建监理部检查单</span></a></li>
 			<li><a class="edit" onclick="doEditJLBCheckgroup();"
 				rel="bjjlbjcd"><span>编辑检查单</span></a></li>
-			<li><a class="add" onclick="doEditCheckItemJLB();"
-				rel="bjjlbjcx"><span>编辑检查项</span></a></li>
 			<li><a class="delete" onclick="doDelJLBCheckgroup();"
 				rel="scjlbjcx"><span>删除检查单</span></a></li>
 			<li class="line">line</li>

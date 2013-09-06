@@ -344,7 +344,159 @@ public class PRJ_SUPERVISOR_MAJORCHECK {
 		return VALID;
 	}
 
-	private String PRJNO = "";
+	private String CHECKITEM1;
+
+	public void setCHECKITEM1(String theCHECKITEM1) {
+		CHECKITEM1 = theCHECKITEM1;
+	}
+
+	public String getCHECKITEM1() {
+		return CHECKITEM1;
+	}
+
+	private String ITEMCHILD1;
+
+	public void setITEMCHILD1(String theITEMCHILD1) {
+		ITEMCHILD1 = theITEMCHILD1;
+	}
+
+	public String getITEMCHILD1() {
+		return ITEMCHILD1;
+	}
+
+	private String CHILD1;
+
+	public void setCHILD1(String theCHILD1) {
+		CHILD1 = theCHILD1;
+	}
+
+	public String getCHILD1() {
+		return CHILD1;
+	}
+
+	private String CHILD1_SUM;
+
+	public void setCHILD1_SUM(String theCHILD1_SUM) {
+		CHILD1_SUM = theCHILD1_SUM;
+	}
+
+	public String getCHILD1_SUM() {
+		return CHILD1_SUM;
+	}
+
+	private String CHILD1_COMMENT;
+
+	public void setCHILD1_COMMENT(String theCHILD1_COMMENT) {
+		CHILD1_COMMENT = theCHILD1_COMMENT;
+	}
+
+	public String getCHILD1_COMMENT() {
+		return CHILD1_COMMENT;
+	}
+
+	private String CHECKITEM2;
+
+	public void setCHECKITEM2(String theCHECKITEM2) {
+		CHECKITEM2 = theCHECKITEM2;
+	}
+
+	public String getCHECKITEM2() {
+		return CHECKITEM2;
+	}
+
+	private String ITEMCHILD2;
+
+	public void setITEMCHILD2(String theITEMCHILD2) {
+		ITEMCHILD2 = theITEMCHILD2;
+	}
+
+	public String getITEMCHILD2() {
+		return ITEMCHILD2;
+	}
+
+	private String CHILD2;
+
+	public void setCHILD2(String theCHILD2) {
+		CHILD2 = theCHILD2;
+	}
+
+	public String getCHILD2() {
+		return CHILD2;
+	}
+
+	private String CHILD2_SUM;
+
+	public void setCHILD2_SUM(String theCHILD2_SUM) {
+		CHILD2_SUM = theCHILD2_SUM;
+	}
+
+	public String getCHILD2_SUM() {
+		return CHILD2_SUM;
+	}
+
+	private String CHILD2_COMMENT;
+
+	public void setCHILD2_COMMENT(String theCHILD2_COMMENT) {
+		CHILD2_COMMENT = theCHILD2_COMMENT;
+	}
+
+	public String getCHILD2_COMMENT() {
+		return CHILD2_COMMENT;
+	}
+
+	private String CHECKITEM3;
+
+	public void setCHECKITEM3(String theCHECKITEM3) {
+		CHECKITEM3 = theCHECKITEM3;
+	}
+
+	public String getCHECKITEM3() {
+		return CHECKITEM3;
+	}
+
+	private String ITEMCHILD3;
+
+	public void setITEMCHILD3(String theITEMCHILD3) {
+		ITEMCHILD3 = theITEMCHILD3;
+	}
+
+	public String getITEMCHILD3() {
+		return ITEMCHILD3;
+	}
+
+	private String CHILD3;
+
+	public void setCHILD3(String theCHILD3) {
+		CHILD3 = theCHILD3;
+	}
+
+	public String getCHILD3() {
+		return CHILD3;
+	}
+
+	private String CHILD3_SUM;
+
+	public void setCHILD3_SUM(String theCHILD3_SUM) {
+		CHILD3_SUM = theCHILD3_SUM;
+	}
+
+	public String getCHILD3_SUM() {
+		return CHILD3_SUM;
+	}
+
+	private String CHILD3_COMMENT;
+
+	public void setCHILD3_COMMENT(String theCHILD3_COMMENT) {
+		CHILD3_COMMENT = theCHILD3_COMMENT;
+	}
+
+	public String getCHILD3_COMMENT() {
+		return CHILD3_COMMENT;
+	}
+
+	private String PRJNO;
+	private String PRJ_NAME;
+	private String DEPT_NAME;
 
 	public String getPRJNO() {
 		return PRJNO;
@@ -353,9 +505,6 @@ public class PRJ_SUPERVISOR_MAJORCHECK {
 	public void setPRJNO(String pRJNO) {
 		PRJNO = pRJNO;
 	}
-
-	private String PRJ_NAME = "";
-	private String DEPT_NAME = "";
 
 	public String getPRJ_NAME() {
 		return PRJ_NAME;

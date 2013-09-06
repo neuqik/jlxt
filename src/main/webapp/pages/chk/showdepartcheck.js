@@ -330,7 +330,13 @@ var gridOption = {
 	},
 	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
 			columnObj, grid) {
-		// TODO:双击行事件
+		// 如果只有一条
+		navTab.openTab("bjjlbjcx", MyURL + "chk/editdepartcheckitem?ID="
+				+ record.ID, {
+			title : "编辑监理部检查项",
+			fresh : false,
+			data : {}
+		});
 	}
 };
 

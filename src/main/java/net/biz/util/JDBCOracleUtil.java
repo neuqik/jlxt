@@ -13,6 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eweb4j.mvc.MVC;
+import org.eweb4j.solidbase.user.model.User;
+import org.eweb4j.solidbase.user.model.UserCons;
+
 import net.biz.component.appinfo.AppInfo;
 import net.biz.component.appinfo.RequestInfo;
 import oracle.jdbc.OracleCallableStatement;
@@ -41,8 +45,21 @@ public class JDBCOracleUtil {
 		Class.forName(driver).newInstance();
 		Connection conn = DriverManager.getConnection(url, db.getUsername(),
 				db.getPassword());
-
 		conn.setAutoCommit(false);
+		// 执行一个加入登录用户名到context的过程
+		if (MVC.ctx() != null) {
+			String userName = ((User) MVC.ctx().getSession()
+					.getAttribute(UserCons.LOGIN_USER_ATTR_NAME()))
+					.getAccount();
+
+			List inList = new ArrayList<String>();
+			List outList = new ArrayList<String>();
+
+			inList.add(userName);
+			callProc(inList, outList, "set_my_app_ctx", conn);
+
+			// 执行结束
+		}
 		return conn;
 	}
 
@@ -68,6 +85,20 @@ public class JDBCOracleUtil {
 				db.getPassword());
 
 		conn.setAutoCommit(false);
+		// 执行一个加入登录用户名到context的过程
+		if (MVC.ctx() != null) {
+			String userName = ((User) MVC.ctx().getSession()
+					.getAttribute(UserCons.LOGIN_USER_ATTR_NAME()))
+					.getAccount();
+
+			List inList = new ArrayList<String>();
+			List outList = new ArrayList<String>();
+
+			inList.add(userName);
+			callProc(inList, outList, "set_my_app_ctx", conn);
+
+			// 执行结束
+		}
 		return conn;
 
 	}
@@ -98,6 +129,20 @@ public class JDBCOracleUtil {
 		Connection conn = DriverManager.getConnection(url, user, password);
 
 		conn.setAutoCommit(false);
+		// 执行一个加入登录用户名到context的过程
+		if (MVC.ctx() != null) {
+			String userName = ((User) MVC.ctx().getSession()
+					.getAttribute(UserCons.LOGIN_USER_ATTR_NAME()))
+					.getAccount();
+
+			List inList = new ArrayList<String>();
+			List outList = new ArrayList<String>();
+
+			inList.add(userName);
+			callProc(inList, outList, "set_my_app_ctx", conn);
+
+			// 执行结束
+		}
 		return conn;
 	}
 
@@ -121,6 +166,20 @@ public class JDBCOracleUtil {
 		Connection conn = DriverManager.getConnection(url, user, password);
 
 		conn.setAutoCommit(false);
+		// 执行一个加入登录用户名到context的过程
+		if (MVC.ctx() != null) {
+			String userName = ((User) MVC.ctx().getSession()
+					.getAttribute(UserCons.LOGIN_USER_ATTR_NAME()))
+					.getAccount();
+
+			List inList = new ArrayList<String>();
+			List outList = new ArrayList<String>();
+
+			inList.add(userName);
+			callProc(inList, outList, "set_my_app_ctx", conn);
+
+			// 执行结束
+		}
 		return conn;
 	}
 

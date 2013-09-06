@@ -978,7 +978,21 @@ public class PRJServiceImpl implements IPRJService {
 			inList.add(prj.getWATER_COMMENT());
 			inList.add(prj.getELECTRIC_COMMENT());
 			inList.add(prj.getSECURITY_COMMENT());
-
+			inList.add(prj.getCHECKITEM1());
+			inList.add(prj.getITEMCHILD1());
+			inList.add(prj.getCHILD1());
+			inList.add(prj.getCHILD1_SUM());
+			inList.add(prj.getCHILD1_COMMENT());
+			inList.add(prj.getCHECKITEM2());
+			inList.add(prj.getITEMCHILD2());
+			inList.add(prj.getCHILD2());
+			inList.add(prj.getCHILD2_SUM());
+			inList.add(prj.getCHILD2_COMMENT());
+			inList.add(prj.getCHECKITEM3());
+			inList.add(prj.getITEMCHILD3());
+			inList.add(prj.getCHILD3());
+			inList.add(prj.getCHILD3_SUM());
+			inList.add(prj.getCHILD3_COMMENT());
 			// 输出参数
 			outList.add("");
 			outList.add("");
@@ -996,5 +1010,72 @@ public class PRJServiceImpl implements IPRJService {
 				conn.close();
 			}
 		}
+	}
+
+	/**
+	 * 保存项目监理部检查单
+	 */
+	public void saveEditSupervisorCheck(PRJ_SUPERVISOR_MAJORCHECK prj)
+			throws Exception {
+		Connection conn = null;
+		try {
+			conn = JDBCOracleUtil.getConnection();
+			List<String> inList = new ArrayList<String>();
+			List<String> outList = new ArrayList<String>();
+			inList.add(prj.getCHECKGROUP_NO());
+			inList.add(prj.getBATCHNO());
+			inList.add(prj.getPRJ_ID());
+			inList.add(prj.getDEPT_ID());
+			inList.add(prj.getCHECKDATE());
+			inList.add(prj.getCHECK_USER());
+			inList.add(prj.getPROGRESS());
+			inList.add(prj.getMEMO());
+			inList.add(prj.getCONSTRUCTION_COMMENT());
+			inList.add(prj.getWATER_COMMENT());
+			inList.add(prj.getELECTRIC_COMMENT());
+			inList.add(prj.getSECURITY_COMMENT());
+			inList.add(prj.getCHECKITEM1());
+			inList.add(prj.getITEMCHILD1());
+			inList.add(prj.getCHILD1());
+			inList.add(prj.getCHILD1_SUM());
+			inList.add(prj.getCHILD1_COMMENT());
+			inList.add(prj.getCHECKITEM2());
+			inList.add(prj.getITEMCHILD2());
+			inList.add(prj.getCHILD2());
+			inList.add(prj.getCHILD2_SUM());
+			inList.add(prj.getCHILD2_COMMENT());
+			inList.add(prj.getCHECKITEM3());
+			inList.add(prj.getITEMCHILD3());
+			inList.add(prj.getCHILD3());
+			inList.add(prj.getCHILD3_SUM());
+			inList.add(prj.getCHILD3_COMMENT());
+			// 输出参数
+			outList.add("");
+			outList.add("");
+			List<String> resultList = JDBCOracleUtil.callProc(inList, outList,
+					"pkg_prjcheck.prc_editsuperchk", conn);
+			// 如果保存成功
+			if ("1".equals(resultList.get(0))) {
+				conn.commit();
+			} else {
+				conn.rollback();
+				throw new AppException("保存项目监理部检查单失败，" + resultList.get(1));
+			}
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
+	}
+
+	@Override
+	public void delDepartCheckgroup(String id) throws Exception {
+		Connection conn = JDBCOracleUtil.getConnection();
+		List<Object> params = new ArrayList<Object>();
+		String sql = "UPDATE V_PRJ_SUPERVISOR_MAJORCHECK SET VALID='0' WHERE ID=?";
+		params.add(id);
+		JDBCOracleUtil.ExecuteDML(sql, params, conn);
+		conn.commit();
+		conn.close();
 	}
 }

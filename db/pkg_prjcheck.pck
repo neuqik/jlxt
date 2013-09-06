@@ -30,7 +30,7 @@ CREATE OR REPLACE PACKAGE pkg_prjcheck IS
   *
   *
   ------------------------------------------------------------------*/
-  PROCEDURE prc_newsuperchk(prm_checkgroup           IN VARCHAR2,
+  PROCEDURE prc_newsuperchk(prm_checkgroup           IN VARCHAR2, --新检查单号
                             prm_batchno              IN VARCHAR2,
                             prm_prjid                IN VARCHAR2,
                             prm_deptid               IN VARCHAR2,
@@ -42,8 +42,57 @@ CREATE OR REPLACE PACKAGE pkg_prjcheck IS
                             prm_water_comment        IN VARCHAR2,
                             prm_electric_comment     IN VARCHAR2,
                             prm_safe_comment         IN VARCHAR2,
+                            prm_checkitem1           IN VARCHAR2,
+                            prm_itemchild1           IN VARCHAR2,
+                            prm_child1               IN VARCHAR2,
+                            prm_child1_sum           IN VARCHAR2,
+                            prm_child1_comment       IN VARCHAR2,
+                            prm_checkitem2           IN VARCHAR2,
+                            prm_itemchild2           IN VARCHAR2,
+                            prm_child2               IN VARCHAR2,
+                            prm_child2_sum           IN VARCHAR2,
+                            prm_child2_comment       IN VARCHAR2,
+                            prm_checkitem3           IN VARCHAR2,
+                            prm_itemchild3           IN VARCHAR2,
+                            prm_child3               IN VARCHAR2,
+                            prm_child3_sum           IN VARCHAR2,
+                            prm_child3_comment       IN VARCHAR2,
                             prm_appcode              OUT VARCHAR2,
                             prm_errmsg               OUT VARCHAR2);
+  ------------------------------------------------------------------
+  /*项目监理部检查保存检查单
+  *
+  *
+  ------------------------------------------------------------------*/
+  PROCEDURE prc_editsuperchk(prm_checkgroup           IN VARCHAR2, --新检查单号
+                             prm_batchno              IN VARCHAR2,
+                             prm_prjid                IN VARCHAR2,
+                             prm_deptid               IN VARCHAR2,
+                             prm_checktime            IN VARCHAR2,
+                             prm_checkuser            IN VARCHAR2,
+                             prm_progress             IN VARCHAR2,
+                             prm_memo                 IN VARCHAR2,
+                             prm_construction_comment IN VARCHAR2,
+                             prm_water_comment        IN VARCHAR2,
+                             prm_electric_comment     IN VARCHAR2,
+                             prm_safe_comment         IN VARCHAR2,
+                             prm_checkitem1           IN VARCHAR2,
+                             prm_itemchild1           IN VARCHAR2,
+                             prm_child1               IN VARCHAR2,
+                             prm_child1_sum           IN VARCHAR2,
+                             prm_child1_comment       IN VARCHAR2,
+                             prm_checkitem2           IN VARCHAR2,
+                             prm_itemchild2           IN VARCHAR2,
+                             prm_child2               IN VARCHAR2,
+                             prm_child2_sum           IN VARCHAR2,
+                             prm_child2_comment       IN VARCHAR2,
+                             prm_checkitem3           IN VARCHAR2,
+                             prm_itemchild3           IN VARCHAR2,
+                             prm_child3               IN VARCHAR2,
+                             prm_child3_sum           IN VARCHAR2,
+                             prm_child3_comment       IN VARCHAR2,
+                             prm_appcode              OUT VARCHAR2,
+                             prm_errmsg               OUT VARCHAR2);
 END pkg_prjcheck;
 /
 CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
@@ -394,79 +443,44 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
       prm_appcode := '-1';
       prm_errmsg  := SQLERRM;
   END;
-  ------------------------------------------------------------------
-  /*项目监理部检查新建检查单
+  /***************************************************************
+  * 计算监理部检查单数据
   *
   *
-  ------------------------------------------------------------------*/
-  PROCEDURE prc_newsuperchk(prm_checkgroup           IN VARCHAR2, --新检查单号
-                            prm_batchno              IN VARCHAR2,
-                            prm_prjid                IN VARCHAR2,
-                            prm_deptid               IN VARCHAR2,
-                            prm_checktime            IN VARCHAR2,
-                            prm_checkuser            IN VARCHAR2,
-                            prm_progress             IN VARCHAR2,
-                            prm_memo                 IN VARCHAR2,
-                            prm_construction_comment IN VARCHAR2,
-                            prm_water_comment        IN VARCHAR2,
-                            prm_electric_comment     IN VARCHAR2,
-                            prm_safe_comment         IN VARCHAR2,
-                            prm_appcode              OUT VARCHAR2,
-                            prm_errmsg               OUT VARCHAR2) IS
-  
+  ***************************************************************/
+  PROCEDURE prc_calcsuperchk(prm_checkgroup           IN VARCHAR2, --新检查单号
+                             prm_batchno              IN VARCHAR2,
+                             prm_prjid                IN VARCHAR2,
+                             prm_deptid               IN VARCHAR2,
+                             prm_checktime            IN VARCHAR2,
+                             prm_checkuser            IN VARCHAR2,
+                             prm_progress             IN VARCHAR2,
+                             prm_memo                 IN VARCHAR2,
+                             prm_construction_comment IN VARCHAR2,
+                             prm_water_comment        IN VARCHAR2,
+                             prm_electric_comment     IN VARCHAR2,
+                             prm_safe_comment         IN VARCHAR2,
+                             prm_appcode              OUT VARCHAR2,
+                             prm_errmsg               OUT VARCHAR2,
+                             v_progress               OUT VARCHAR2,
+                             v_contructtype           OUT VARCHAR2,
+                             v_actbegin               OUT VARCHAR2,
+                             v_actend                 OUT VARCHAR2,
+                             v_area                   OUT VARCHAR2,
+                             v_prjlevel               OUT VARCHAR2,
+                             n_ratio_construct        OUT NUMBER,
+                             n_sum_construct          OUT NUMBER,
+                             n_ratio_water            OUT NUMBER,
+                             n_sum_water              OUT NUMBER,
+                             n_ratio_electric         OUT NUMBER,
+                             n_sum_electric           OUT NUMBER,
+                             n_sum_safe               OUT NUMBER) IS
     n_count           NUMBER(10) := 0;
-    n_ratio_construct NUMBER(5, 2) := 0; -- 土建占比
-    n_ratio_electric  NUMBER(5, 2) := 0; -- 电气占比
-    n_ratio_water     NUMBER(5, 2) := 0; -- 水暖占比
     n_count_construct NUMBER(10) := 0; -- 土建数量
     n_count_electric  NUMBER(10) := 0; -- 电气数量
     n_count_water     NUMBER(10) := 0; -- 水暖数量
-    --------------
-    v_contructtype VARCHAR2(200) := ''; -- 结构类型
-    v_actbegin     VARCHAR2(20) := '';
-    v_actend       VARCHAR2(20) := '';
-    v_progress     VARCHAR2(200) := ''; -- 形象进度
-    v_area         VARCHAR2(200) := ''; -- 项目面积
-    v_prjlevel     VARCHAR2(3) := ''; -- 项目等级
-    --------------
-    n_sum_construct NUMBER(10, 2) := 0; -- 土建分数
-    n_sum_electric  NUMBER(10, 2) := 0; -- 电气分数
-    n_sum_water     NUMBER(10, 2) := 0; -- 水暖分数
-    n_sum_safe      NUMBER(10, 2) := 0; -- 安全分数
   BEGIN
     prm_appcode := '1';
-    --1.检查轮次，是否完成了安全检查和质量检查
-    IF prm_batchno = '' OR prm_batchno IS NULL THEN
-      prm_appcode := '-1';
-      prm_errmsg  := '没有输入有效的检查轮次号。';
-      RETURN;
-    END IF;
-    -- 1.1.检查该轮次是否做过安全检查
-    SELECT COUNT(1)
-      INTO n_count
-      FROM v_prj_majorcheck t
-     WHERE t.prj_id = to_number(prm_prjid)
-       AND t.batchno = to_number(prm_batchno)
-       AND t.check_type = def_checktype_safe
-       AND t.join_type = def_jointype_join;
-    IF n_count <= 0 THEN
-      prm_appcode := '-1';
-      prm_errmsg  := '该项目在检查轮次' || prm_batchno || '没有有效的参加评比的安全检查。';
-      RETURN;
-    END IF;
-    n_count := 0;
-    SELECT COUNT(1)
-      INTO n_count
-      FROM v_prj_majorcheck t
-     WHERE t.prj_id = to_number(prm_prjid)
-       AND t.batchno = to_number(prm_batchno)
-       AND t.check_type = def_checktype_construct
-       AND t.join_type = def_jointype_join;
-    IF n_count <= 0 THEN
-      prm_appcode := '-1';
-      prm_errmsg  := '该项目在检查轮次' || prm_batchno || '没有有效的参加评比的土建检查。';
-      RETURN;
-    END IF;
     -- 判断是否有水暖
     n_count := 0;
     SELECT COUNT(1)
@@ -613,7 +627,148 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
                AND batchno = to_number(prm_batchno)
                AND check_type = def_checktype_safe
                AND join_type = def_jointype_join);
-    --11.计算总分
+  EXCEPTION
+    WHEN OTHERS THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '计算检查单出错。' || SQLERRM;
+  END;
+  ------------------------------------------------------------------
+  /*项目监理部检查新建检查单
+  *
+  *
+  ------------------------------------------------------------------*/
+  PROCEDURE prc_newsuperchk(prm_checkgroup           IN VARCHAR2, --新检查单号
+                            prm_batchno              IN VARCHAR2,
+                            prm_prjid                IN VARCHAR2,
+                            prm_deptid               IN VARCHAR2,
+                            prm_checktime            IN VARCHAR2,
+                            prm_checkuser            IN VARCHAR2,
+                            prm_progress             IN VARCHAR2,
+                            prm_memo                 IN VARCHAR2,
+                            prm_construction_comment IN VARCHAR2,
+                            prm_water_comment        IN VARCHAR2,
+                            prm_electric_comment     IN VARCHAR2,
+                            prm_safe_comment         IN VARCHAR2,
+                            prm_checkitem1           IN VARCHAR2,
+                            prm_itemchild1           IN VARCHAR2,
+                            prm_child1               IN VARCHAR2,
+                            prm_child1_sum           IN VARCHAR2,
+                            prm_child1_comment       IN VARCHAR2,
+                            prm_checkitem2           IN VARCHAR2,
+                            prm_itemchild2           IN VARCHAR2,
+                            prm_child2               IN VARCHAR2,
+                            prm_child2_sum           IN VARCHAR2,
+                            prm_child2_comment       IN VARCHAR2,
+                            prm_checkitem3           IN VARCHAR2,
+                            prm_itemchild3           IN VARCHAR2,
+                            prm_child3               IN VARCHAR2,
+                            prm_child3_sum           IN VARCHAR2,
+                            prm_child3_comment       IN VARCHAR2,
+                            prm_appcode              OUT VARCHAR2,
+                            prm_errmsg               OUT VARCHAR2) IS
+  
+    n_count           NUMBER(10) := 0;
+    n_ratio_construct NUMBER(5, 2) := 0; -- 土建占比
+    n_ratio_electric  NUMBER(5, 2) := 0; -- 电气占比
+    n_ratio_water     NUMBER(5, 2) := 0; -- 水暖占比
+    n_ratio_safe      NUMBER(5, 2) := 0.35;
+    n_count_construct NUMBER(10) := 0; -- 土建数量
+    n_count_electric  NUMBER(10) := 0; -- 电气数量
+    n_count_water     NUMBER(10) := 0; -- 水暖数量
+    --------------
+    v_contructtype VARCHAR2(200) := ''; -- 结构类型
+    v_actbegin     VARCHAR2(20) := '';
+    v_actend       VARCHAR2(20) := '';
+    v_progress     VARCHAR2(200) := ''; -- 形象进度
+    v_area         VARCHAR2(200) := ''; -- 项目面积
+    v_prjlevel     VARCHAR2(3) := ''; -- 项目等级
+    --------------
+    n_sum_construct NUMBER(10, 2) := 0; -- 土建分数
+    n_sum_electric  NUMBER(10, 2) := 0; -- 电气分数
+    n_sum_water     NUMBER(10, 2) := 0; -- 水暖分数
+    n_sum_safe      NUMBER(10, 2) := 0; -- 安全分数
+  BEGIN
+    prm_appcode := '1';
+    IF to_number(prm_child1_sum) > to_number(prm_child1) OR
+       to_number(prm_child1_sum) < 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '输入的检查项目1实得分数大于满分或实得分数小于0';
+      RETURN;
+    END IF;
+    IF to_number(prm_child2_sum) > to_number(prm_child2) OR
+       to_number(prm_child2_sum) < 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '输入的检查项目2实得分数大于满分或实得分数小于0';
+      RETURN;
+    END IF;
+    IF to_number(prm_child3_sum) > to_number(prm_child3) OR
+       to_number(prm_child3_sum) < 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '输入的检查项目3实得分数大于满分或实得分数小于0';
+      RETURN;
+    END IF;
+    --1.检查轮次，是否完成了安全检查和质量检查
+    IF prm_batchno = '' OR prm_batchno IS NULL THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '没有输入有效的检查轮次号。';
+      RETURN;
+    END IF;
+    -- 1.1.检查该轮次是否做过安全检查
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_majorcheck t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND t.batchno = to_number(prm_batchno)
+       AND t.check_type = def_checktype_safe
+       AND t.join_type = def_jointype_join;
+    IF n_count <= 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '该项目在检查轮次' || prm_batchno || '没有有效的参加评比的安全检查。';
+      RETURN;
+    END IF;
+    n_count := 0;
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_majorcheck t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND t.batchno = to_number(prm_batchno)
+       AND t.check_type = def_checktype_construct
+       AND t.join_type = def_jointype_join;
+    IF n_count <= 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '该项目在检查轮次' || prm_batchno || '没有有效的参加评比的土建检查。';
+      RETURN;
+    END IF;
+    prc_calcsuperchk(prm_checkgroup,
+                     prm_batchno,
+                     prm_prjid,
+                     prm_deptid,
+                     prm_checktime,
+                     prm_checkuser,
+                     prm_progress,
+                     prm_memo,
+                     prm_construction_comment,
+                     prm_water_comment,
+                     prm_electric_comment,
+                     prm_safe_comment,
+                     prm_appcode,
+                     prm_errmsg,
+                     v_progress,
+                     v_contructtype,
+                     v_actbegin,
+                     v_actend,
+                     v_area,
+                     v_prjlevel,
+                     n_ratio_construct,
+                     n_sum_construct,
+                     n_ratio_water,
+                     n_sum_water,
+                     n_ratio_electric,
+                     n_sum_electric,
+                     n_sum_safe);
+    IF prm_appcode <> '1' THEN
+      RETURN;
+    END IF;
     --12.插入
     INSERT INTO prj_supervisor_majorcheck
       (id,
@@ -647,7 +802,22 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
        electric_ratio,
        security_ratio,
        total_sum,
-       valid)
+       valid,
+       checkitem1,
+       itemchild1,
+       child1,
+       child1_sum,
+       child1_comment,
+       checkitem2,
+       itemchild2,
+       child2,
+       child2_sum,
+       child2_comment,
+       checkitem3,
+       itemchild3,
+       child3,
+       child3_sum,
+       child3_comment)
     VALUES
       (to_number(to_char(current_timestamp(5), 'YYYYMMDDHH24MISSFF')),
        to_number(prm_prjid),
@@ -663,28 +833,233 @@ CREATE OR REPLACE PACKAGE BODY pkg_prjcheck IS
        v_area,
        v_prjlevel,
        prm_checkgroup,
-       '占总分比例为' || to_char(n_ratio_construct * 100) || '%',
+       '占总分比例为' || to_char(n_ratio_construct * 100) || '％',
        n_sum_construct,
        prm_construction_comment,
-       '占总分比例为' || to_char(n_ratio_water * 100) || '%',
+       '占总分比例为' || to_char(n_ratio_water * 100) || '％',
        n_sum_water,
        prm_water_comment,
-       '占总分比例为' || to_char(n_ratio_electric * 100) || '%',
+       '占总分比例为' || to_char(n_ratio_electric * 100) || '％',
        n_sum_electric,
        prm_electric_comment,
-       '占总分比例为35%',
+       '占总分比例为35％',
        n_sum_safe,
        prm_safe_comment,
        n_ratio_construct,
        n_ratio_water,
        n_ratio_electric,
-       0.35, -- 安全比例
-       n_sum_construct + n_sum_electric + n_sum_safe + n_sum_water,
-       '1');
+       n_ratio_safe, -- 安全比例
+       n_sum_construct * n_ratio_construct +
+       n_sum_electric * n_ratio_electric + n_sum_safe * n_ratio_safe +
+       n_sum_water * n_ratio_water + nvl(to_number(prm_child1_sum), 0) +
+       nvl(to_number(prm_child2_sum), 0) +
+       nvl(to_number(prm_child3_sum), 0),
+       '1',
+       prm_checkitem1,
+       prm_itemchild1,
+       to_number(prm_child1),
+       to_number(prm_child1_sum),
+       prm_child1_comment,
+       prm_checkitem2,
+       prm_itemchild2,
+       to_number(prm_child2),
+       to_number(prm_child2_sum),
+       prm_child2_comment,
+       prm_checkitem3,
+       prm_itemchild3,
+       to_number(prm_child3),
+       to_number(prm_child3_sum),
+       prm_child3_comment);
   EXCEPTION
     WHEN OTHERS THEN
       prm_appcode := '-1';
       prm_errmsg  := SQLERRM;
   END;
+  ------------------------------------------------------------------
+  /*项目监理部检查保存检查单
+  *
+  *
+  ------------------------------------------------------------------*/
+  PROCEDURE prc_editsuperchk(prm_checkgroup           IN VARCHAR2, --新检查单号
+                             prm_batchno              IN VARCHAR2,
+                             prm_prjid                IN VARCHAR2,
+                             prm_deptid               IN VARCHAR2,
+                             prm_checktime            IN VARCHAR2,
+                             prm_checkuser            IN VARCHAR2,
+                             prm_progress             IN VARCHAR2,
+                             prm_memo                 IN VARCHAR2,
+                             prm_construction_comment IN VARCHAR2,
+                             prm_water_comment        IN VARCHAR2,
+                             prm_electric_comment     IN VARCHAR2,
+                             prm_safe_comment         IN VARCHAR2,
+                             prm_checkitem1           IN VARCHAR2,
+                             prm_itemchild1           IN VARCHAR2,
+                             prm_child1               IN VARCHAR2,
+                             prm_child1_sum           IN VARCHAR2,
+                             prm_child1_comment       IN VARCHAR2,
+                             prm_checkitem2           IN VARCHAR2,
+                             prm_itemchild2           IN VARCHAR2,
+                             prm_child2               IN VARCHAR2,
+                             prm_child2_sum           IN VARCHAR2,
+                             prm_child2_comment       IN VARCHAR2,
+                             prm_checkitem3           IN VARCHAR2,
+                             prm_itemchild3           IN VARCHAR2,
+                             prm_child3               IN VARCHAR2,
+                             prm_child3_sum           IN VARCHAR2,
+                             prm_child3_comment       IN VARCHAR2,
+                             prm_appcode              OUT VARCHAR2,
+                             prm_errmsg               OUT VARCHAR2) IS
+  
+    n_count           NUMBER(10) := 0;
+    n_ratio_construct NUMBER(5, 2) := 0; -- 土建占比
+    n_ratio_electric  NUMBER(5, 2) := 0; -- 电气占比
+    n_ratio_water     NUMBER(5, 2) := 0; -- 水暖占比
+    n_ratio_safe      NUMBER(5, 2) := 0.35;
+    --------------
+    v_contructtype VARCHAR2(200) := ''; -- 结构类型
+    v_actbegin     VARCHAR2(20) := '';
+    v_actend       VARCHAR2(20) := '';
+    v_progress     VARCHAR2(200) := ''; -- 形象进度
+    v_area         VARCHAR2(200) := ''; -- 项目面积
+    v_prjlevel     VARCHAR2(3) := ''; -- 项目等级
+    --------------
+    n_sum_construct NUMBER(10, 2) := 0; -- 土建分数
+    n_sum_electric  NUMBER(10, 2) := 0; -- 电气分数
+    n_sum_water     NUMBER(10, 2) := 0; -- 水暖分数
+    n_sum_safe      NUMBER(10, 2) := 0; -- 安全分数
+  
+  BEGIN
+    prm_appcode := '1';
+    IF to_number(prm_child1_sum) > to_number(prm_child1) OR
+       to_number(prm_child1_sum) < 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '输入的检查项目1实得分数大于满分或实得分数小于0';
+      RETURN;
+    END IF;
+    IF to_number(prm_child2_sum) > to_number(prm_child2) OR
+       to_number(prm_child2_sum) < 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '输入的检查项目2实得分数大于满分或实得分数小于0';
+      RETURN;
+    END IF;
+    IF to_number(prm_child3_sum) > to_number(prm_child3) OR
+       to_number(prm_child3_sum) < 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '输入的检查项目3实得分数大于满分或实得分数小于0';
+      RETURN;
+    END IF;
+    --1.检查轮次，是否完成了安全检查和质量检查
+    IF prm_batchno = '' OR prm_batchno IS NULL THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '没有输入有效的检查轮次号。';
+      RETURN;
+    END IF;
+    -- 1.1.检查该轮次是否做过安全检查
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_majorcheck t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND t.batchno = to_number(prm_batchno)
+       AND t.check_type = def_checktype_safe
+       AND t.join_type = def_jointype_join;
+    IF n_count <= 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '该项目在检查轮次' || prm_batchno || '没有有效的参加评比的安全检查。';
+      RETURN;
+    END IF;
+    n_count := 0;
+    SELECT COUNT(1)
+      INTO n_count
+      FROM v_prj_majorcheck t
+     WHERE t.prj_id = to_number(prm_prjid)
+       AND t.batchno = to_number(prm_batchno)
+       AND t.check_type = def_checktype_construct
+       AND t.join_type = def_jointype_join;
+    IF n_count <= 0 THEN
+      prm_appcode := '-1';
+      prm_errmsg  := '该项目在检查轮次' || prm_batchno || '没有有效的参加评比的土建检查。';
+      RETURN;
+    END IF;
+    -- 获取监理部计分
+    prc_calcsuperchk(prm_checkgroup,
+                     prm_batchno,
+                     prm_prjid,
+                     prm_deptid,
+                     prm_checktime,
+                     prm_checkuser,
+                     prm_progress,
+                     prm_memo,
+                     prm_construction_comment,
+                     prm_water_comment,
+                     prm_electric_comment,
+                     prm_safe_comment,
+                     prm_appcode,
+                     prm_errmsg,
+                     v_progress,
+                     v_contructtype,
+                     v_actbegin,
+                     v_actend,
+                     v_area,
+                     v_prjlevel,
+                     n_ratio_construct,
+                     n_sum_construct,
+                     n_ratio_water,
+                     n_sum_water,
+                     n_ratio_electric,
+                     n_sum_electric,
+                     n_sum_safe);
+    IF prm_appcode <> '1' THEN
+      RETURN;
+    END IF;
+    UPDATE v_prj_supervisor_majorcheck
+       SET dept_id              = prm_deptid,
+           progress             = v_progress,
+           batchno              = to_number(prm_batchno),
+           checkdate            = to_date(prm_checktime, 'yyyy-mm-dd'),
+           check_user           = prm_checkuser,
+           memo                 = prm_memo,
+           construct            = v_contructtype,
+           act_begin            = to_date(v_actbegin, 'yyyy-mm-dd'),
+           act_end              = to_date(v_actend, 'yyyy-mm-dd'),
+           prj_area             = v_area,
+           prj_level            = v_prjlevel,
+           construction         = '占总分比例为' ||
+                                  to_char(n_ratio_construct * 100) || '％',
+           construction_sum     = n_sum_construct,
+           construction_comment = prm_construction_comment,
+           water                = '占总分比例为' || to_char(n_ratio_water * 100) || '％',
+           water_sum            = n_sum_water,
+           water_comment        = prm_water_comment,
+           electric             = '占总分比例为' ||
+                                  to_char(n_ratio_electric * 100) || '％',
+           electric_sum         = n_sum_electric,
+           electric_comment     = prm_electric_comment,
+           security_sum         = n_sum_safe,
+           security_comment     = prm_safe_comment,
+           construction_ratio   = n_ratio_construct,
+           water_ratio          = n_ratio_water,
+           electric_ratio       = n_ratio_electric,
+           total_sum            = n_sum_construct * n_ratio_construct +
+                                  n_sum_electric * n_ratio_electric +
+                                  n_sum_safe * n_ratio_safe +
+                                  n_sum_water * n_ratio_water +
+                                  nvl(to_number(prm_child1_sum), 0) +
+                                  nvl(to_number(prm_child2_sum), 0) +
+                                  nvl(to_number(prm_child3_sum), 0),
+           
+           child1_sum     = to_number(prm_child1_sum),
+           child1_comment = prm_child1_comment,
+           child2_sum     = to_number(prm_child2_sum),
+           child2_comment = prm_child2_comment,
+           child3_sum     = to_number(prm_child3_sum),
+           child3_comment = prm_child3_comment
+     WHERE checkgroup_no = prm_checkgroup;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      prm_appcode := '-1';
+      prm_errmsg  := SQLERRM;
+  END;
+
 END pkg_prjcheck;
 /

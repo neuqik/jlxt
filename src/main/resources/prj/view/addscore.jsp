@@ -104,7 +104,7 @@
 
 				<p>
 					<label>实际得分：</label><input type="text" size="30" name="ACT_SCORE"
-						value="${prj.ACT_SCORE}" maxlength="22" class="required" />
+						value="${prj.ACT_SCORE}" maxlength="22" class="required number" />
 				</p>
 				<p>
 					<label>存在问题：</label><input type="text" size="30"
