@@ -119,13 +119,13 @@ public class GenerateJava {
 
 	public static void main(String[] args) {
 		try {
-			 //1.生成VO的代码
-			 GenerateJava
-			 .generateVO("PRJ_SUPERVISOR_MAJORCHECK",
-			 "D:\\eclipse\\workspace\\building\\src\\main\\java\\net\\biz\\project\\vo\\");
+			// 1.生成VO的代码
+			// GenerateJava
+			// .generateVO("T_CODELIST",
+			// "D:\\eclipse\\workspace\\building\\src\\main\\java\\net\\biz\\mgr\\vo\\");
 			// 2.生成service中保存新对象的代码
-//			 GenerateJava.generateINSERTMethod("PRJ_MAJORCHECK", "prjInfo");
-//			GenerateJava.generateUPDATEMethod("PRJ_MAJORCHECK", "prjInfo");
+//			GenerateJava.generateINSERTMethod("T_CODELIST", "inserts");
+			GenerateJava.generateUPDATEMethod("T_CODELIST", "row");
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
