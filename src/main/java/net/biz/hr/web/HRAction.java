@@ -987,10 +987,12 @@ public class HRAction extends BaseAction {
 		try {
 
 			String empId = getParam("empId");
-			String path = ConfigConstant.ROOT_PATH + "pictures/emp/" + empId
+			String idcard = getParam("IDCARD");
+			String path = ConfigConstant.ROOT_PATH + "pictures/emp/" + idcard
 					+ ".jpg";
 			model.put("EMP_ID", empId);
-			String randFileName = empId + "_"
+			model.put("IDCARD", idcard);
+			String randFileName = idcard + "_"
 					+ String.valueOf(Math.round(Math.random() * 10000));
 			model.put("RANDOMFILE", randFileName);
 			Map<String, List<UploadFile>> result = MVC.ctx().getUploadMap();

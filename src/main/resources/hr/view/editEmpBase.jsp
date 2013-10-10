@@ -161,7 +161,7 @@
 						</p>
 					</th>
 					<th align="left"><img alt="员工照片"
-						src="${BaseURL}pictures/emp/${EMP_ID}.jpg" width="150px"
+						src="${BaseURL}pictures/emp/${emp.IDCARD}.jpg" width="150px"
 						height="220px" border="3" /></th>
 				</table>
 				<div class="divider"></div>

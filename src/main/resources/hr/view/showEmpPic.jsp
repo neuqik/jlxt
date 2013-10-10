@@ -61,7 +61,7 @@
 	</div>
 	<div class="pageContent">
 		<form enctype="multipart/form-data" method="post"
-			action="${BaseURL}hrs/saveEmpPic?empId=${EMP_ID}"
+			action="${BaseURL}hrs/saveEmpPic?empId=${EMP_ID}&IDCARD=${IDCARD}"
 			class="pageForm required-validate" name="upload"
 			onsubmit="return iframeCallback(this);">
 			<div class="formBar">
@@ -96,7 +96,7 @@
 					</p>
 				</c:if>
 				<div id="pic_img">
-					<img alt="员工照片" src="${BaseURL}pictures/emp/${EMP_ID}.jpg"
+					<img alt="员工照片" src="${BaseURL}pictures/emp/${IDCARD}.jpg"
 						width="150px" height="220px" id="empic" name="pic" border="2" />
 				</div>
 				<font color="red">图片大小不能超过100k，提交后请点击刷新按钮查看</font>
