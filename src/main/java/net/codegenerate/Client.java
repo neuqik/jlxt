@@ -22,14 +22,14 @@ public class Client {
 			Generator.getParam().put("path.web.jsp", "resources.mgr.view");
 			Generator.getParam().put("path.web.js", "pages.mgr");
 			// path.web.rest
-			Generator.getParam().put("path.web.rest", "showcodelist");
+			Generator.getParam().put("path.web.rest", "remindersetup");
 			// path.web.rest.init首字母大写
-			Generator.getParam().put("path.web.rest.init", "ShowCodeList");
+			Generator.getParam().put("path.web.rest.init", "ReminderSetup");
 			// ActionClassName
 			Generator.getParam().put("name.action", "MgrAction");
 			// ---------------js-----------------
 			// data.table 要查询的表
-			Generator.getParam().put("data.table", "T_CODELIST");
+			Generator.getParam().put("data.table", "ADM_REMIND");
 			// data.sql SQL语句，自动转换成大写，先生成SQL
 			List<String> originalCols = GenerateSQL.generateCode();
 			// ${data.fileds}，数据列的内容

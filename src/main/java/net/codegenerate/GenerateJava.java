@@ -121,11 +121,11 @@ public class GenerateJava {
 		try {
 			// 1.生成VO的代码
 			// GenerateJava
-			// .generateVO("T_CODELIST",
+			// .generateVO("ADM_REMIND",
 			// "D:\\eclipse\\workspace\\building\\src\\main\\java\\net\\biz\\mgr\\vo\\");
 			// 2.生成service中保存新对象的代码
-//			GenerateJava.generateINSERTMethod("T_CODELIST", "inserts");
-			GenerateJava.generateUPDATEMethod("T_CODELIST", "row");
+			GenerateJava.generateINSERTMethod("ADM_REMIND", "row");
+			GenerateJava.generateUPDATEMethod("ADM_REMIND", "row");
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
