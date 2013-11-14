@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.eweb4j.component.dwz.DWZ;
 import org.eweb4j.component.dwz.DWZCons;
 import org.eweb4j.component.dwz.menu.MenuException;
@@ -41,17 +42,21 @@ public class MainControl {
 	private String pageName = null;
 
 	private DWZ dwz = IOC.getBean(DWZCons.IOC_DWZ_BEAN_ID());
-	private NavMenuService navMenuService = IOC.getBean(NavMenuCons.IOC_SERVICE_BEAN_ID());
-	private TreeMenuService treeMenuService = IOC.getBean(TreeMenuCons.IOC_SERVICE_BEAN_ID());
+	private NavMenuService navMenuService = IOC.getBean(NavMenuCons
+			.IOC_SERVICE_BEAN_ID());
+	private TreeMenuService treeMenuService = IOC.getBean(TreeMenuCons
+			.IOC_SERVICE_BEAN_ID());
 
 	private final static String format = "<div class=\"accordion\" fillSpace=\"sideBar\">%s</div>";
 
-	private boolean findPerm(List<Long> permissions, List<TreeMenu> parents) throws MenuException {
+	private boolean findPerm(List<Long> permissions, List<TreeMenu> parents)
+			throws MenuException {
 		if (permissions == null)
 			return false;
 
 		for (TreeMenu parent : parents) {
-			List<TreeMenu> children = treeMenuService.getChildren(parent.getTreeMenuId());
+			List<TreeMenu> children = treeMenuService.getChildren(parent
+					.getTreeMenuId());
 			if (children == null || children.size() == 0)
 				continue;
 
@@ -110,6 +115,9 @@ public class MainControl {
 
 					if (_navMenus != null) {
 						for (NavMenu n : _navMenus) {
+							// qik added for IE cache
+							n.setHref(n.getHref() + "?code="
+									+ RandomUtils.nextInt());
 							List<TreeMenu> parent = treeMenuService
 									.getTopParent(n.getNavMenuId());
 							if (parent == null || parent.size() == 1) {

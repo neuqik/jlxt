@@ -108,8 +108,8 @@
 	}
 	// 删除员工
 	function doDelete() {
-		console.log(showemployee_grid.getCellValue(1, 1));
-		return;
+//		console.log(showemployee_grid.getCellValue(1, 1));
+//		return;
 		var id_delete = doCheckIsOnlyRow();
 		if (id_delete < 0) {
 			alertMsg.error("请选择一位员工来删除！");
