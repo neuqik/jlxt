@@ -9,7 +9,7 @@
                 </div>
                 <div class="unit">
                     <label for="role.description">角色描述</label>
-                    <input name="role.description" type="text"  maxlength="50" value="" />
+                    <input name="role.description" type="text"  maxlength="50" value="" class="required"/>
                 </div>
             </div>
             <div class="formBar">

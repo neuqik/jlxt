@@ -75,6 +75,7 @@ public class LoginAction extends BaseAction {
 
 		} catch (Exception e) {
 			model.put(UserCons.LOGIN_ERR_ATTR_NAME(), e.getMessage());
+			e.printStackTrace();
 			return UserCons.LOGIN_ACTION_RESULT();
 		}
 

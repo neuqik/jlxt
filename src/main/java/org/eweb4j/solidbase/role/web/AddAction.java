@@ -12,7 +12,6 @@ import org.eweb4j.solidbase.role.model.Role;
 import org.eweb4j.solidbase.role.model.RoleCons;
 import org.eweb4j.solidbase.role.model.RoleException;
 
-
 @Path("${RoleConstant.MODEL_NAME}")
 public class AddAction extends BaseAction {
 
@@ -33,6 +32,10 @@ public class AddAction extends BaseAction {
 			service.addRole(role);
 			return RoleCons.DWZ_SUCCESS_JSON("添加角色信息成功");
 		} catch (RoleException e) {
+			e.printStackTrace();
+			return dwz.getFailedJson(e.getMessage()).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
 			return dwz.getFailedJson(e.getMessage()).toString();
 		}
 	}
