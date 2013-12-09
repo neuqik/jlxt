@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showemployee_head").height();
-var sql = "SELECT ID,EMP_ID,EMP_NAME,fun_getcodedesc('EMPTYPE',EMPTYPE) EMPTYPE,TO_CHAR(BIRTH,'YYYY-MM-DD') BIRTH,AGE,fun_getcodedesc('DEPT_ID',DEPT_ID) DEPT_ID,fun_getcodedesc('GENDER',GENDER) GENDER,IDCARD,fun_getcodedesc('ROLENAME',ROLENAME) ROLENAME,TO_CHAR(WORKDATE,'YYYY-MM-DD') WORKDATE,TO_CHAR(JOINDATE,'YYYY-MM-DD') JOINDATE,TEL,EMERGENCY,fun_getloc(LOCATION1) LOCATION1,fun_getloc(LOCATION2) LOCATION2,fun_getloc(LOCATION3) LOCATION3,fun_getcodedesc('ARCHIVEKEEP',ARCHIVEKEEP) ARCHIVEKEEP,PENSION_NO,MEDICA_NO,MEMO FROM V_HRD_EMP";
+var sql = "SELECT ID,EMP_ID,EMP_NAME,fun_getcodedesc('EMPTYPE',EMPTYPE) EMPTYPE,TO_CHAR(BIRTH,'YYYY-MM-DD') BIRTH,AGE,fun_getcodedesc('DEPT_ID',DEPT_ID) DEPT_ID,fun_getcodedesc('GENDER',GENDER) GENDER,IDCARD,fun_getcodedesc('ROLENAME',ROLENAME) ROLENAME,TO_CHAR(WORKDATE,'YYYY-MM-DD') WORKDATE,TO_CHAR(JOINDATE,'YYYY-MM-DD') JOINDATE,TEL,EMERGENCY,fun_getloc(LOCATION1) LOCATION1,fun_getloc(LOCATION2) LOCATION2,fun_getloc(LOCATION3) LOCATION3,fun_getcodedesc('ARCHIVEKEEP',ARCHIVEKEEP) ARCHIVEKEEP,PENSION_NO,MEDICA_NO,MEMO,fun_getcodedesc('POLITIC',POLITIC) POLITIC,fun_getcodedesc('NATION',NATION) NATION,JOINAGE,EDUCATION,GRADUATE,fun_getcodedesc('MASTER',MASTER) MASTER,fun_getcodedesc('TITLEWORK',TITLEWORK) TITLEWORK,fun_getcodedesc('TITLE_ID',TITLE_ID) TITLE_ID,fun_getcodedesc('TITLENAME',TITLENAME) TITLENAME FROM V_HRD_EMP";
 // 定义数据类型
 var dsOption = {
 	fields : [ {
@@ -48,6 +48,24 @@ var dsOption = {
 		name : 'MEDICA_NO'
 	}, {
 		name : 'MEMO'
+	}, {
+		name : 'POLITIC'
+	}, {
+		name : 'NATION'
+	}, {
+		name : 'JOINAGE'
+	}, {
+		name : 'EDUCATION'
+	}, {
+		name : 'GRADUATE'
+	}, {
+		name : 'MASTER'
+	}, {
+		name : 'TITLEWORK'
+	}, {
+		name : 'TITLE_ID'
+	}, {
+		name : 'TITLENAME'
 	} ],
 	uniqueField : 'EMP_ID',
 	recordType : 'json'
@@ -186,6 +204,107 @@ var colsOption = [ {
 	header : "备注",
 	width : 150,
 	editable : false
+}, {
+	id : 'POLITIC',
+	header : "政治面貌",
+	width : 100,
+	editable : false,
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
+}, {
+	id : 'NATION',
+	header : "民族",
+	width : 100,
+	editable : false,
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
+}, {
+	id : 'JOINAGE',
+	header : "本单位工龄",
+	width : 100,
+	editable : false
+}, {
+	id : 'EDUCATION',
+	header : "文化程度",
+	width : 100,
+	editable : false,
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
+}, {
+	id : 'GRADUATE',
+	header : "毕业院校",
+	width : 100,
+	editable : false,
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
+}, {
+	id : 'MASTER',
+	header : "主修专业",
+	width : 100,
+	editable : false,
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
+}, {
+	id : 'TITLEWORK',
+	header : "从事专业",
+	width : 100,
+	editable : false,
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
+}, {
+	id : 'TITLE_ID',
+	header : "职称",
+	width : 100,
+	editable : false,
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
+}, {
+	id : 'TITLENAME',
+	header : "职称专业",
+	width : 100,
+	editable : false,
+	toolTip : true,
+	toolTipWidth : 150,
+	editor : {
+		type : "textarea",
+		width : "300px",
+		height : "200px"
+	}
 }
 
 ];

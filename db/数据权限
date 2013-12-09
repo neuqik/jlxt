@@ -1,0 +1,9 @@
+create context my_app_ctx using set_my_app_ctx;
+create or replace procedure set_my_app_ctx
+(
+   p_app_user in varchar2 := USER
+)
+is
+begin
+   dbms_session.set_context('MY_APP_CTX','APP_USERID', p_app_user);
+end;

@@ -331,9 +331,9 @@ var gridOption = {
 	onCellDblClick : function(value, record, cell, row, colNO, rowNO,
 			columnObj, grid) {
 		// 如果只有一条
-		navTab.openTab("bjjlbjcx", MyURL + "chk/editdepartcheckitem?ID="
+		navTab.openTab("bjjlbjcd", MyURL + "chk/editdepartcheck?ID="
 				+ record.ID, {
-			title : "编辑监理部检查项",
+			title : "编辑监理部检查但",
 			fresh : false,
 			data : {}
 		});
