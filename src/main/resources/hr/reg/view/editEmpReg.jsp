@@ -10,7 +10,7 @@
 				<input name="ID" type="hidden" value="${reg.ID}" />
 				<p>
 					<label>员工编号：</label> <input name="EMP_ID" type="text" size="30"
-						value="${EMP_ID}" readonly="readonly" />
+						value="${reg.EMP_ID}" readonly="readonly" />
 				</p>
 				<p>
 					<!-- class不能选择combox，如果增加，则会添加一个超链接的对象，导致修改value不能实时显示 -->
@@ -122,8 +122,8 @@
 				<p>
 					<label>继续教育时间：</label> <input type="text" size="30"
 						name="CONTINUE_DATE" class="date " size="30" yearstart="-80"
-						yearend="20" value="${reg.CONTINUE_DATE}" /><a class="inputDateButton"
-						href="javascript:;">选择</a>
+						yearend="20" value="${reg.CONTINUE_DATE}" /><a
+						class="inputDateButton" href="javascript:;">选择</a>
 				</p>
 				<p>
 					<label>备注：</label> <input type="text" size="30" name="MEMO"

@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript"
 	src="${BaseURL}pages/hr/reg/showRegEmployee.js"></script>
-	
+
 <!-- script type="text/javascript"
 	src="http://localhost:8080/myproject/grid/calendar/calendar.js"></script>
 <script type="text/javascript"
@@ -91,14 +91,18 @@
 
 <div class="pageContent" id="showregemployee_head"
 	style="overflow-x: hidden; overflow-y: hidden">
-	<input id="regwhere"  name="regwhere" type="hidden" value="${regwhere}" />
+	<input id="regwhere" name="regwhere" type="hidden" value="${regwhere}" />
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="edit" onclick="doEditReg();" rel="zcbj"><span>注册编辑</span></a></li>
+			<!-- <li><a class="add" onclick="doEditReg();" rel="zcbj"><span>添加注册</span></a></li>
+			<li><a class="edit" onclick="doEditReg();" rel="zcbj"><span>编辑注册</span></a></li>
+			<li><a class="delete" onclick="doEditReg();" rel="zcbj"><span>删除注册</span></a></li>
+			 -->
+			<li class="line">line</li>
 			<li><a class="edit" onclick="doEditEdu();" rel="xlbj"><span>学历编辑</span></a></li>
-			<li><a class="edit" href="${BaseURL}labour/showAdvanceQuery"
+			<!-- <li><a class="edit" href="${BaseURL}labour/showAdvanceQuery"
 				target="dialog" mask="true" title="查询框" width="640" height="480"
-				close="test"><span>高级检索</span></a></li>
+				close="test"><span>高级检索</span></a></li> -->
 		</ul>
 	</div>
 	<div>

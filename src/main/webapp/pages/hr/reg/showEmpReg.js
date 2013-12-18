@@ -1,8 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showempreg_head").height();
-
-var sql = "select ID,EMP_ID,fun_getcodedesc('REGTYPE',REGTYPE) REGTYPE,fun_getcodedesc('REGLEVEL',REGLEVEL) REGLEVEL, fun_getcodedesc('REGMAJOR',REGMAJOR1) REGMAJOR1, fun_getcodedesc('REGMAJOR',REGMAJOR2) REGMAJOR2,fun_getcodedesc('REGMAJOR',REGMAJOR3) REGMAJOR3,REGNO,CERTIFICATE,TO_CHAR(VALIDDATE,'YYYY-MM-DD') VALIDDATE,TO_CHAR(ISSUEDATE,'YYYY-MM-DD') ISSUEDATE,CERTNUMBER,TO_CHAR(CERTDATE,'YYYY-MM-DD') CERTDATE,TO_CHAR(CERTVALIDDATE,'YYYY-MM-DD') CERTVALIDDATE,MEMO,PERF_STUDY,CONTINUE_EDU,TO_CHAR(CONTINUE_DATE,'YYYY-MM-DD') CONTINUE_DATE,CONTINUE_NO from V_HRD_EMP_REG WHERE EMP_ID='"
-		+ empId + "'";
+var sql = "select ID,EMP_ID,fun_getempname(EMP_ID) EMP_NAME, fun_getdeptbyemp(EMP_ID) DEPT_ID, fun_getgenderbyemp(EMP_ID) GENDER, fun_getrolebyemp(EMP_ID) ROLENAME, fun_gettitlebyemp(EMP_ID) TITLENAME, fun_gettitleidbyemp(EMP_ID) TITLE_ID, fun_getedubyemp(EMP_ID) EDUCATION, fun_getcodedesc('REGTYPE',REGTYPE) REGTYPE,fun_getcodedesc('REGLEVEL',REGLEVEL) REGLEVEL, fun_getcodedesc('REGMAJOR',REGMAJOR1) REGMAJOR1, fun_getcodedesc('REGMAJOR',REGMAJOR2) REGMAJOR2,fun_getcodedesc('REGMAJOR',REGMAJOR3) REGMAJOR3,REGNO,CERTIFICATE,TO_CHAR(VALIDDATE,'YYYY-MM-DD') VALIDDATE,TO_CHAR(ISSUEDATE,'YYYY-MM-DD') ISSUEDATE,CERTNUMBER,TO_CHAR(CERTDATE,'YYYY-MM-DD') CERTDATE,TO_CHAR(CERTVALIDDATE,'YYYY-MM-DD') CERTVALIDDATE,MEMO from V_HRD_EMP_REG ";
 
 // 定义数据类型
 var dsOption = {
@@ -10,6 +8,20 @@ var dsOption = {
 		name : 'ID'
 	}, {
 		name : 'EMP_ID'
+	}, {
+		name : 'EMP_NAME'
+	}, {
+		name : 'GENDER'
+	}, {
+		name : 'ROLENAME'
+	}, {
+		name : 'TITLE_ID'
+	}, {
+		name : 'TITLENAME'
+	}, {
+		name : 'EDUCATION'
+	}, {
+		name : 'DEPT_ID'
 	}, {
 		name : 'REGTYPE'
 	}, {
@@ -33,14 +45,6 @@ var dsOption = {
 	}, {
 		name : 'CERTVALIDDATE'
 	}, {
-		name : 'PERF_STUDY'
-	}, {
-		name : 'CONTINUE_EDU'
-	}, {
-		name : 'CONTINUE_DATE'
-	}, {
-		name : 'CONTINUE_NO'
-	}, {
 		name : 'MEMO'
 	} ],
 	uniqueField : 'ID',
@@ -54,14 +58,22 @@ var colsOption = [ {
 	id : 'ID',
 	header : "ID",
 	width : 55,
-	editable : false,
-	hidden : true
+	editable : false
 }, {
 	id : 'EMP_ID',
 	header : "员工编号",
 	width : 100,
-	editable : false,
-	hidden : true
+	editable : false
+}, {
+	id : 'EMP_NAME',
+	header : "姓名",
+	width : 100,
+	editable : false
+}, {
+	id : 'DEPT_ID',
+	header : "分公司",
+	width : 100,
+	editable : false
 }, {
 	id : 'REGTYPE',
 	header : "注册类别",
@@ -123,23 +135,28 @@ var colsOption = [ {
 	width : 150,
 	editable : false
 }, {
-	id : 'PERF_STUDY',
-	header : "所学专业(注册)",
+	id : 'GENDER',
+	header : "性别",
 	width : 100,
 	editable : false
 }, {
-	id : 'CONTINUE_EDU',
-	header : "继续教育专业",
+	id : 'ROLENAME',
+	header : "岗位",
 	width : 100,
 	editable : false
 }, {
-	id : 'CONTINUE_DATE',
-	header : "继续教育时间",
+	id : 'TITLE_ID',
+	header : "职称",
 	width : 100,
 	editable : false
 }, {
-	id : 'CONTINUE_NO',
-	header : "继续培训证编号",
+	id : 'TITLENAME',
+	header : "职称专业",
+	width : 100,
+	editable : false
+}, {
+	id : 'EDUCATION',
+	header : "学历",
 	width : 100,
 	editable : false
 }, {

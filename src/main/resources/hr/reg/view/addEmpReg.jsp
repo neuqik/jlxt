@@ -9,7 +9,14 @@
 			<div class="pageFormContent" layoutH="58">
 				<p>
 					<label>员工编号：</label> <input name="EMP_ID" type="text" size="30"
-						value="${EMP_ID}" readonly="readonly" />
+						value="${EMP_ID}" readonly="readonly" lookupGroup=""
+						lookupName="EMP_ID" /><a class="btnLook"
+						href="${BaseURL}common/doEmpLookup" lookupGroup=""
+						lookupName="EMP_ID" lookupPk="ID">查找</a>
+				</p>
+				<p>
+					<label>姓名：</label> <input id="EMP_NAME" name="EMP_NAME" type="text"
+						size="30" readonly="readonly" value="${EMP_NAME}" />
 				</p>
 				<p>
 					<!-- class不能选择combox，如果增加，则会添加一个超链接的对象，导致修改value不能实时显示 -->

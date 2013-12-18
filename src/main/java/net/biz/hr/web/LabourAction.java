@@ -143,7 +143,7 @@ public class LabourAction extends BaseAction {
 	}
 
 	/**
-	 * 显示员工注册信息
+	 * 显示员工学历注册管理信息
 	 * 
 	 * @return
 	 */
@@ -154,7 +154,18 @@ public class LabourAction extends BaseAction {
 		model.put("regwhere", ""); // 清空初始查询条件
 		return "forward:hr/reg/view/showRegEmployee.jsp";
 	}
-
+	/**
+	 * 显示员工资质注册管理信息
+	 * 
+	 * @return
+	 */
+	@Path("/showReg")
+	@GET
+	@POST
+	public String toShowReg(Map<String, Object> model) {
+		model.put("regwhere", ""); // 清空初始查询条件
+		return "forward:hr/reg/view/showEmpReg.jsp";
+	}
 	/**
 	 * 添加员工学历信息
 	 * 
