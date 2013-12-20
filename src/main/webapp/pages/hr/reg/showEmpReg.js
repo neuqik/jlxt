@@ -1,6 +1,6 @@
 var c = $("#myContent").height();
 var header = $("#showempreg_head").height();
-var sql = "select ID,EMP_ID,fun_getempname(EMP_ID) EMP_NAME, fun_getdeptbyemp(EMP_ID) DEPT_ID, fun_getgenderbyemp(EMP_ID) GENDER, fun_getrolebyemp(EMP_ID) ROLENAME, fun_gettitlebyemp(EMP_ID) TITLENAME, fun_gettitleidbyemp(EMP_ID) TITLE_ID, fun_getedubyemp(EMP_ID) EDUCATION, fun_getcodedesc('REGTYPE',REGTYPE) REGTYPE,fun_getcodedesc('REGLEVEL',REGLEVEL) REGLEVEL, fun_getcodedesc('REGMAJOR',REGMAJOR1) REGMAJOR1, fun_getcodedesc('REGMAJOR',REGMAJOR2) REGMAJOR2,fun_getcodedesc('REGMAJOR',REGMAJOR3) REGMAJOR3,REGNO,CERTIFICATE,TO_CHAR(VALIDDATE,'YYYY-MM-DD') VALIDDATE,TO_CHAR(ISSUEDATE,'YYYY-MM-DD') ISSUEDATE,CERTNUMBER,TO_CHAR(CERTDATE,'YYYY-MM-DD') CERTDATE,TO_CHAR(CERTVALIDDATE,'YYYY-MM-DD') CERTVALIDDATE,MEMO from V_HRD_EMP_REG ";
+var sql = "select ID,EMP_ID,fun_getempname(EMP_ID) EMP_NAME, fun_getidcardbyemp(EMP_ID) IDCARD, fun_getagebyemp(EMP_ID) AGE, fun_getinsustatbyemp(EMP_ID) INSUSTATUS,fun_getpensionbyemp(EMP_ID) PENSION_NO, fun_getdeptbyemp(EMP_ID) DEPT_ID, fun_getemptypebyemp(EMP_ID) EMPTYPE, fun_getgenderbyemp(EMP_ID) GENDER, fun_getrolebyemp(EMP_ID) ROLENAME, fun_gettitlebyemp(EMP_ID) TITLENAME, fun_gettitleidbyemp(EMP_ID) TITLE_ID, fun_getedubyemp(EMP_ID) EDUCATION, fun_getcodedesc('REGTYPE',REGTYPE) REGTYPE,fun_getcodedesc('REGLEVEL',REGLEVEL) REGLEVEL, fun_getcodedesc('REGMAJOR',REGMAJOR1) REGMAJOR1, fun_getcodedesc('REGMAJOR',REGMAJOR2) REGMAJOR2,fun_getcodedesc('REGMAJOR',REGMAJOR3) REGMAJOR3,REGNO,CERTIFICATE,TO_CHAR(VALIDDATE,'YYYY-MM-DD') VALIDDATE,TO_CHAR(ISSUEDATE,'YYYY-MM-DD') ISSUEDATE,CERTNUMBER,TO_CHAR(CERTDATE,'YYYY-MM-DD') CERTDATE,TO_CHAR(CERTVALIDDATE,'YYYY-MM-DD') CERTVALIDDATE,MEMO,TO_CHAR(CONTINUE_DATE,'YYYY-MM-DD') CONTINUE_DATE,CONTINUE_EDU from V_HRD_EMP_REG ";
 
 // 定义数据类型
 var dsOption = {
@@ -8,6 +8,16 @@ var dsOption = {
 		name : 'ID'
 	}, {
 		name : 'EMP_ID'
+	}, {
+		name : 'IDCARD'
+	}, {
+		name : 'AGE'
+	}, {
+		name : 'EMPTYPE'
+	}, {
+		name : 'INSUSTATUS'
+	}, {
+		name : 'PENSION_NO'
 	}, {
 		name : 'EMP_NAME'
 	}, {
@@ -45,6 +55,10 @@ var dsOption = {
 	}, {
 		name : 'CERTVALIDDATE'
 	}, {
+		name : 'CONTINUE_DATE'
+	}, {
+		name : 'CONTINUE_EDU'
+	}, {
 		name : 'MEMO'
 	} ],
 	uniqueField : 'ID',
@@ -53,27 +67,32 @@ var dsOption = {
 // 定义列选项
 var colsOption = [ {
 	id : 'chk',
-	isCheckColumn : true
+	isCheckColumn : true,
+	frozen : true
 }, {
 	id : 'ID',
 	header : "ID",
 	width : 55,
-	editable : false
+	editable : false,
+	frozen : true
 }, {
 	id : 'EMP_ID',
 	header : "员工编号",
 	width : 100,
-	editable : false
+	editable : false,
+	frozen : true
 }, {
 	id : 'EMP_NAME',
 	header : "姓名",
 	width : 100,
-	editable : false
+	editable : false,
+	frozen : true
 }, {
 	id : 'DEPT_ID',
 	header : "分公司",
-	width : 100,
-	editable : false
+	width : 150,
+	editable : false,
+	frozen : true
 }, {
 	id : 'REGTYPE',
 	header : "注册类别",
@@ -110,13 +129,23 @@ var colsOption = [ {
 	width : 100,
 	editable : false
 }, {
+	id : 'VALIDDATE',
+	header : "有效日期",
+	width : 100,
+	editable : false
+}, {
 	id : 'ISSUEDATE',
 	header : "发证日期",
 	width : 100,
 	editable : false
 }, {
-	id : 'VALIDDATE',
-	header : "截至日期",
+	id : 'CONTINUE_DATE',
+	header : "继续教育时间",
+	width : 100,
+	editable : false
+}, {
+	id : 'CONTINUE_EDU',
+	header : "继续教育专业",
 	width : 100,
 	editable : false
 }, {
@@ -133,17 +162,8 @@ var colsOption = [ {
 	id : 'CERTVALIDDATE',
 	header : "资格证有效期",
 	width : 150,
-	editable : false
-}, {
-	id : 'GENDER',
-	header : "性别",
-	width : 100,
-	editable : false
-}, {
-	id : 'ROLENAME',
-	header : "岗位",
-	width : 100,
-	editable : false
+	editable : false,
+	hidden : true
 }, {
 	id : 'TITLE_ID',
 	header : "职称",
@@ -157,6 +177,41 @@ var colsOption = [ {
 }, {
 	id : 'EDUCATION',
 	header : "学历",
+	width : 100,
+	editable : false
+}, {
+	id : 'IDCARD',
+	header : "身份证号",
+	width : 150,
+	editable : false
+}, {
+	id : 'AGE',
+	header : "年龄",
+	width : 70,
+	editable : false
+}, {
+	id : 'GENDER',
+	header : "性别",
+	width : 70,
+	editable : false
+}, {
+	id : 'ROLENAME',
+	header : "岗位",
+	width : 100,
+	editable : false
+}, {
+	id : 'EMPTYPE',
+	header : "员工类型",
+	width : 100,
+	editable : false
+}, {
+	id : 'INSUSTATUS',
+	header : "保险状态",
+	width : 100,
+	editable : false
+}, {
+	id : 'PENSION_NO',
+	header : "养老保险编号",
 	width : 100,
 	editable : false
 }, {
@@ -200,6 +255,16 @@ var gridOption = {
 		a : 123,
 		b : 222,
 		c : [ 8, 9 ]
+	},
+	customRowAttribute : function(record, rn, grid) {
+		if (record['EMPTYPE'] == '挂职') { // 挂职
+			return 'style="color:#0000ff"';
+		} else {
+			if (record['EMPTYPE'] == '终止') { // 终止
+				return 'style="color:#ff0000"';
+			}
+			return 'style="color:#000000"';
+		}
 	}
 };
 
