@@ -8,9 +8,9 @@
 			onsubmit="return validateCallback(this, navTabAjaxDone)">
 			<div class="pageFormContent" layoutH="58">
 				<p>
-					<label>员工编号：</label> <input name="EMP_ID" type="text" size="30"
+					<label>员工编号：</label> <input id="EMP_ID" name="EMP_ID" type="text" size="30"
 						value="${EMP_ID}" readonly="readonly" lookupGroup=""
-						lookupName="EMP_ID" /><a class="btnLook"
+						lookupName="EMP_ID"  class="required"/><a class="btnLook"
 						href="${BaseURL}common/doEmpLookup" lookupGroup=""
 						lookupName="EMP_ID" lookupPk="ID">查找</a>
 				</p>
